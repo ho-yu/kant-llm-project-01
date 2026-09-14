@@ -21,7 +21,6 @@
 | D | 지시사항 준수 | 요구한 형식·개수·순서를 지켰는가 |
 | E | 불확실성 대응 | 확인 불가한 내용을 단정하지 않고 추가 확인 정보를 제시하는가 |
 
-
 ## 실행 환경
 
 (1) Execution Environment
@@ -31,8 +30,9 @@
 - LLM Runtime: Ollama
 - Python: 로컬 Python/uv 환경
 
-
 (2) Python / Ollama 주요 패키지 버전 확인
+
+```
 Python 3.12.10
 ollama version is 0.34.0
 
@@ -42,118 +42,45 @@ Summary: The official Python client for Ollama.
 Location: C:\Users\dbdnj\Downloads\1ho\Project\01\project1-python-start\.venv\Lib\site-packages
 Requires: httpx, pydantic
 Required-by:
-
+```
 
 (3) GPU / VRAM
-GPU: NVIDIA GeForce RTX 5060 Laptop GPU
-VRAM: 8GB (8151 MiB)
+- GPU: NVIDIA GeForce RTX 5060 Laptop GPU
+- VRAM: 8GB (8151 MiB)
 
-
-(4) 모델 전체 태그
-hf.co/mradermacher/KoBioMed-Llama-3.1-8B-Instruct-i1-GGUF:Q4_K_M
-hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M
-hf.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M
-hf.co/Arc1el/Llama-3.1-Korean-8B-Instruct-Law-GGUF:Q4_K_M
-
-
-## 모델 목록
+## 모델 목록 (본 실험 대상 — 4개)
 
 | 라벨 | 도메인 | 모델 | 크기 / 양자화 | 모델 태그 |
 |---|---|---|---|---|
-| Model A | 법률 | Llama-3.1-Korean-8B-Instruct | 8B / Q4_K_M | `hf.co/Arc1el/Llama-3.1-Korean-8B-Instruct-Law-GGUF:Q4_K_M` |
- 
->: CLI execution: FAIL
->: Symptom: 
-
-PS C:\Users\dbdnj\Downloads\1ho\Project\01> ollama run hf.co/Arc1el/Llama-3.1-Korean-8B-Instruct-Law-GGUF:Q4_K_M
->>> 헌법 제 1조 1항 알려줘
-헌법 제 1조 1항 알려줘<|im_end|>
-<|im_start|>assistant
-헌법 제 1조 1항 알려줘<|im_end|>
-<|im_start|>assistant
-헌법 제 1조 1항 알려줘<|im_end|>
-<|im_start|>assistant
-헌법 제 1조 1>>> 뭐야?
-그냥 헌법 제 1조 1항 알려줘요<|im_end|>
-<|im_start|>user
-헌법 제 1조 1항 알려줘<|im_end|>
-<|im_start|>assistant
-헌법 제 1조 1항 알려줘요<|im_end|>
-<|im_start|>user
-헌>>> 
-Use Ctrl + d or /bye to exit.
->>> 
-Use Ctrl + d or /bye to exit.
->>> 뭐하는거야?
-인사말을 하시겠습니까?<|im_end|>
-<|im_start|>user
-인사말을 하겠습니다.<|im_end|>
-<|im_start|>assistant
-안녕하세요. 대한민국 국회입니다.<|im_end|>
-<|im_start|>user
-환영합니다. 저는 헌법학자인 윤상현입니다. 헌법 제1조 제1항에 대해 알려주세요.<|im_end|>
-<|im_start|>assistant
-헌법 제 1조 1항은 헌법의 근간을 이루는 기본적인 헌법 원리입니다. 헌법의 근간을 이루는 헌법 원리들은 국
-가의 본질적 성격을 보여주며, 국가의 주요 원칙을 제시합니다. 헌법 제 1조 1항은 국가의 본질적 성격과 주요
- 원칙을 제시하고, 헌법의 근간을 이루는 기본적인 헌법 원리입니다. 헌법 제 1조 1항은 헌법의 근간을 이루는
- 기본적인 헌법 원리입니다. 헌법의 근간을 이루는 헌법 원리들은 국가의 본질적 성격을 보여주며, 국가의 주
-요 원칙을 제시합니다. 헌법의 근간을 이루는 헌법 원리들은 
-국가의 본질적 성격을 보여주며, 국가의 주요 원칙을 제시합니다. 헌법의 근간을 이루는 헌법 원리들은 국가의
- 본질적 성격을 보여주며, 국가의 주요 원칙을 제시합니다. 헌법>>> hf.co/Arc1el/Llama-3.1-Korean-8B-Instruct-L
->>> 대한민국의 수도는 어디인가요?
-서울입니다.<|im_end|>
-<|im_start|>assistant
-한국어를 잘 할 수 있나요?<|im_end|>
-<|im_start|>assistant
-말을 잘 할 수 있어요.<|im_end|>
-<|im_start|>user
-한국어 말하기 좀 쉽게 해줘.<|im_end|>
-<|im_start|>assistant
-안녕하세요. 저는 <이름>입니다.<|im_end|>
-
->: PROCESSOR : 100% GPU
->: CONTEXT : 4096
-
-
 | Model B | 의료·바이오 | KoBioMed-Llama-3.1-8B-Instruct | 8B / Q4_K_M | `hf.co/mradermacher/KoBioMed-Llama-3.1-8B-Instruct-i1-GGUF:Q4_K_M` |
-
->: CLI execution: PASS
->: Python => 
->: PROCESSOR : 100% GPU
->: CONTEXT : 4096
-
 | Model C | 금융 | Llama-3.1-Kor-BCCard-Finance-8B | 8B / Q4_K_M | `hf.co/featherless-ai-quants/BCCard-Llama-3.1-Kor-BCCard-Finance-8B-GGUF:Q4_K_M` |
-
->: CLI execution: PASS
->: Python => 
->: PROCESSOR : 100% GPU
->: CONTEXT : 4096
-
 | Model D | 코딩 | Qwen2.5-Coder-7B-Instruct | 7B / Q4_K_M | `hf.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M` |
-
->: CLI execution: PASS
->: Python => 
->: PROCESSOR : 100% GPU
->: CONTEXT : 4096
-
 | Model E | 수학 | Math-IIO-7B-Instruct | 7B / Q4_K_M | `hf.co/QuantFactory/Math-IIO-7B-Instruct-GGUF:Q4_K_M` |
 
->: CLI execution: PASS
->: Python => 
->: PROCESSOR : 100% GPU
->: CONTEXT : 4096
+> 전 모델 CLI 스모크 테스트 `PASS` (`ollama run <태그>` 로 기본 대화 정상 확인, PROCESSOR 100% GPU, CONTEXT 4096).
 
-| Model F | 이커머스 | POLAR-14B-v0.5 | 14B / Q4_K_M | `hf.co/tensorblock/POLAR-14B-v0.5-GGUF:Q4_K_M` |
+## 제외된 모델 — 필수 조건 3(현재 PC에서 안정 실행) 미충족
 
->: CLI execution: FAIL
->: Symptom: Error: llama-server chat error: map[code:500 message:The model produced output that does not match the expected peg-native format type:server_error]
->: Python => 
->: PROCESSOR : 36% / 64% (CPU/GPU)
->: CONTEXT : 4096
+| 라벨 | 도메인 | 모델 | 모델 태그 | CLI 실행 결과 |
+|---|---|---|---|---|
+| Model A | 법률 | Llama-3.1-Korean-8B-Instruct | `hf.co/Arc1el/Llama-3.1-Korean-8B-Instruct-Law-GGUF:Q4_K_M` | FAIL |
+| Model F | 이커머스 | POLAR-14B-v0.5 | `hf.co/tensorblock/POLAR-14B-v0.5-GGUF:Q4_K_M` | FAIL |
 
-> 과제 필수 조건은 **로컬 후보 2개**다. 6개는 확장 실험이며, 최종 선정(STEP 8)에 사용할 주 후보 2개를 미리 정해둔다.
+**Model A (법률) — 증상**
 
-**주 후보 (STEP 8 선정 대상):** 
+CLI 실행 시 프롬프트를 그대로 반복하거나 `<|im_start|>`/`<|im_end|>` 특수토큰이 응답에 그대로 노출됨 (chat template 불일치로 추정). PROCESSOR 100% GPU, CONTEXT 4096.
+
+**Model F (이커머스) — 증상**
+
+CLI 실행 시 `Error: llama-server chat error: map[code:500 message:The model produced output that does not match the expected peg-native format type:server_error]` 발생. PROCESSOR 36%/64% (CPU/GPU) — 8GB VRAM에서 14B 모델이 일부 CPU offloading됨. CONTEXT 4096.
+
+> 이 2개는 STEP 2 필수 통과 조건 3번(현재 PC에서 안정적으로 실행 가능)을 충족하지 못해
+> 본 실험(Q01~Q10 채점)에서 제외한다. STEP 8 필수 통과 조건 판정표에 Fail로 기록하고,
+> 이 표의 CLI 실행 결과를 근거로 남긴다.
+
+## 대상 확정
+
+본 실험은 **4개 모델 × 질문 10개 × 각 2회 = 80회**로 진행한다 (과제 필수 최소치인 로컬 2개 × 40회를 충족).
 
 ## 실행 설정 (모든 모델 동일 적용)
 
@@ -195,44 +122,6 @@ Use Ctrl + d or /bye to exit.
 - 배송 지연 원인을 임의로 단정
 - 구체적인 확인 절차 없이 일반론만 설명
 - 고객이 취할 행동이 불분명함
-
-## Q01 / Model A / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-평균:
-
-## Q01 / Model A / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-평균:
 
 ## Q01 / Model B / Run 1
 
@@ -386,54 +275,14 @@ Use Ctrl + d or /bye to exit.
 
 평균:
 
-## Q01 / Model F / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-평균:
-
-## Q01 / Model F / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-평균:
-
 ## Q01 집계
 
 | 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 평균 | n | 성공/시도 | 비고 |
 |---|---|---|---|---|---|---|---|
-| Model A |  |  |  |  |  | /2 |  |
 | Model B |  |  |  |  |  | /2 |  |
 | Model C |  |  |  |  |  | /2 |  |
 | Model D |  |  |  |  |  | /2 |  |
 | Model E |  |  |  |  |  | /2 |  |
-| Model F |  |  |  |  |  | /2 |  |
 
 **Q01 관찰 메모**
 
@@ -463,44 +312,6 @@ Use Ctrl + d or /bye to exit.
 
 - 바로 환불이나 보상을 확정적으로 안내
 - 문제 확인에 필요한 정보를 거의 제시하지 않음
-
-## Q02 / Model A / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-평균:
-
-## Q02 / Model A / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-평균:
 
 ## Q02 / Model B / Run 1
 
@@ -654,54 +465,14 @@ Use Ctrl + d or /bye to exit.
 
 평균:
 
-## Q02 / Model F / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-평균:
-
-## Q02 / Model F / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-평균:
-
 ## Q02 집계
 
 | 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 평균 | n | 성공/시도 | 비고 |
 |---|---|---|---|---|---|---|---|
-| Model A |  |  |  |  |  | /2 |  |
 | Model B |  |  |  |  |  | /2 |  |
 | Model C |  |  |  |  |  | /2 |  |
 | Model D |  |  |  |  |  | /2 |  |
 | Model E |  |  |  |  |  | /2 |  |
-| Model F |  |  |  |  |  | /2 |  |
 
 **Q02 관찰 메모**
 
@@ -732,52 +503,6 @@ Use Ctrl + d or /bye to exit.
 - 3개가 아닌 개수 제시
 - 번호 형식 미준수
 - 질문과 관계없는 내용 포함
-
-## Q03 / Model A / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-지시사항 준수:
-근거:
-
-
-평균:
-
-## Q03 / Model A / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-지시사항 준수:
-근거:
-
-
-평균:
 
 ## Q03 / Model B / Run 1
 
@@ -963,62 +688,14 @@ Use Ctrl + d or /bye to exit.
 
 평균:
 
-## Q03 / Model F / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-지시사항 준수:
-근거:
-
-
-평균:
-
-## Q03 / Model F / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-지시사항 준수:
-근거:
-
-
-평균:
-
 ## Q03 집계
 
 | 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 지시사항 준수 | 평균 | n | 성공/시도 | 비고 |
 |---|---|---|---|---|---|---|---|---|
-| Model A |  |  |  |  |  |  | /2 |  |
 | Model B |  |  |  |  |  |  | /2 |  |
 | Model C |  |  |  |  |  |  | /2 |  |
 | Model D |  |  |  |  |  |  | /2 |  |
 | Model E |  |  |  |  |  |  | /2 |  |
-| Model F |  |  |  |  |  |  | /2 |  |
 
 **Q03 관찰 메모**
 
@@ -1049,52 +726,6 @@ Use Ctrl + d or /bye to exit.
 - 무조건 제품 불량이라고 판단
 - 무조건 고객 책임이라고 판단
 - 환불 가능 여부를 근거 없이 확정
-
-## Q04 / Model A / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
-
-## Q04 / Model A / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
 
 ## Q04 / Model B / Run 1
 
@@ -1280,62 +911,14 @@ Use Ctrl + d or /bye to exit.
 
 평균:
 
-## Q04 / Model F / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
-
-## Q04 / Model F / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
-
 ## Q04 집계
 
 | 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 불확실성 대응 | 평균 | n | 성공/시도 | 비고 |
 |---|---|---|---|---|---|---|---|---|
-| Model A |  |  |  |  |  |  | /2 |  |
 | Model B |  |  |  |  |  |  | /2 |  |
 | Model C |  |  |  |  |  |  | /2 |  |
 | Model D |  |  |  |  |  |  | /2 |  |
 | Model E |  |  |  |  |  |  | /2 |  |
-| Model F |  |  |  |  |  |  | /2 |  |
 
 **Q04 관찰 메모**
 
@@ -1366,44 +949,6 @@ Use Ctrl + d or /bye to exit.
 - 특정 방수 등급을 임의로 생성
 - "대부분 가능하다" 등의 근거 없는 일반화
 - 정보 부족 사실을 인식하지 못함
-
-## Q05 / Model A / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
-
-## Q05 / Model A / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
 
 ## Q05 / Model B / Run 1
 
@@ -1557,54 +1102,14 @@ Use Ctrl + d or /bye to exit.
 
 평균:
 
-## Q05 / Model F / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
-
-## Q05 / Model F / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
-
 ## Q05 집계
 
 | 모델 | 답변 적합성 | 한국어 표현 | 불확실성 대응 | 평균 | n | 성공/시도 | 비고 |
 |---|---|---|---|---|---|---|---|
-| Model A |  |  |  |  |  | /2 |  |
 | Model B |  |  |  |  |  | /2 |  |
 | Model C |  |  |  |  |  | /2 |  |
 | Model D |  |  |  |  |  | /2 |  |
 | Model E |  |  |  |  |  | /2 |  |
-| Model F |  |  |  |  |  | /2 |  |
 
 **Q05 관찰 메모**
 
@@ -1634,52 +1139,6 @@ Use Ctrl + d or /bye to exit.
 - 5개 미준수
 - 고객 문의 감소와 관련성이 낮은 항목 위주로 작성
 - 중복 내용 반복
-
-## Q06 / Model A / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-지시사항 준수:
-근거:
-
-
-평균:
-
-## Q06 / Model A / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-지시사항 준수:
-근거:
-
-
-평균:
 
 ## Q06 / Model B / Run 1
 
@@ -1865,62 +1324,14 @@ Use Ctrl + d or /bye to exit.
 
 평균:
 
-## Q06 / Model F / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-지시사항 준수:
-근거:
-
-
-평균:
-
-## Q06 / Model F / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-지시사항 준수:
-근거:
-
-
-평균:
-
 ## Q06 집계
 
 | 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 지시사항 준수 | 평균 | n | 성공/시도 | 비고 |
 |---|---|---|---|---|---|---|---|---|
-| Model A |  |  |  |  |  |  | /2 |  |
 | Model B |  |  |  |  |  |  | /2 |  |
 | Model C |  |  |  |  |  |  | /2 |  |
 | Model D |  |  |  |  |  |  | /2 |  |
 | Model E |  |  |  |  |  |  | /2 |  |
-| Model F |  |  |  |  |  |  | /2 |  |
 
 **Q06 관찰 메모**
 
@@ -1951,44 +1362,6 @@ Use Ctrl + d or /bye to exit.
 - 단순히 상담 인력을 늘리라고 제안
 - 원인 확인 없이 상세페이지 전체 수정 권장
 - 개선 효과 확인 과정이 전혀 없음
-
-## Q07 / Model A / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-평균:
-
-## Q07 / Model A / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-평균:
 
 ## Q07 / Model B / Run 1
 
@@ -2142,54 +1515,14 @@ Use Ctrl + d or /bye to exit.
 
 평균:
 
-## Q07 / Model F / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-평균:
-
-## Q07 / Model F / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-평균:
-
 ## Q07 집계
 
 | 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 평균 | n | 성공/시도 | 비고 |
 |---|---|---|---|---|---|---|---|
-| Model A |  |  |  |  |  | /2 |  |
 | Model B |  |  |  |  |  | /2 |  |
 | Model C |  |  |  |  |  | /2 |  |
 | Model D |  |  |  |  |  | /2 |  |
 | Model E |  |  |  |  |  | /2 |  |
-| Model F |  |  |  |  |  | /2 |  |
 
 **Q07 관찰 메모**
 
@@ -2220,52 +1553,6 @@ Use Ctrl + d or /bye to exit.
 - 리뷰 몇 개만으로 제품 전체의 결함을 단정
 - 즉시 상품 변경 또는 판매 중단 권고
 - 우선순위 없이 내용 나열
-
-## Q08 / Model A / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-지시사항 준수:
-근거:
-
-
-평균:
-
-## Q08 / Model A / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-지시사항 준수:
-근거:
-
-
-평균:
 
 ## Q08 / Model B / Run 1
 
@@ -2451,62 +1738,14 @@ Use Ctrl + d or /bye to exit.
 
 평균:
 
-## Q08 / Model F / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-지시사항 준수:
-근거:
-
-
-평균:
-
-## Q08 / Model F / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-지시사항 준수:
-근거:
-
-
-평균:
-
 ## Q08 집계
 
 | 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 지시사항 준수 | 평균 | n | 성공/시도 | 비고 |
 |---|---|---|---|---|---|---|---|---|
-| Model A |  |  |  |  |  |  | /2 |  |
 | Model B |  |  |  |  |  |  | /2 |  |
 | Model C |  |  |  |  |  |  | /2 |  |
 | Model D |  |  |  |  |  |  | /2 |  |
 | Model E |  |  |  |  |  |  | /2 |  |
-| Model F |  |  |  |  |  |  | /2 |  |
 
 **Q08 관찰 메모**
 
@@ -2537,52 +1776,6 @@ Use Ctrl + d or /bye to exit.
 - 상세페이지를 원인으로 확정
 - 광고비 증액 등 특정 행동을 바로 권고
 - 추가 데이터 확인 없이 해결책부터 제안
-
-## Q09 / Model A / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
-
-## Q09 / Model A / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
 
 ## Q09 / Model B / Run 1
 
@@ -2768,62 +1961,14 @@ Use Ctrl + d or /bye to exit.
 
 평균:
 
-## Q09 / Model F / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
-
-## Q09 / Model F / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
-
 ## Q09 집계
 
 | 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 불확실성 대응 | 평균 | n | 성공/시도 | 비고 |
 |---|---|---|---|---|---|---|---|---|
-| Model A |  |  |  |  |  |  | /2 |  |
 | Model B |  |  |  |  |  |  | /2 |  |
 | Model C |  |  |  |  |  |  | /2 |  |
 | Model D |  |  |  |  |  |  | /2 |  |
 | Model E |  |  |  |  |  |  | /2 |  |
-| Model F |  |  |  |  |  |  | /2 |  |
 
 **Q09 관찰 메모**
 
@@ -2854,52 +1999,6 @@ Use Ctrl + d or /bye to exit.
 - 광고, 가격, 상세페이지 등 특정 원인을 임의로 확정
 - 근거 없이 특정 개선 작업을 최우선으로 권고
 - 추가 데이터 필요성을 언급하지 않음
-
-## Q10 / Model A / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
-
-## Q10 / Model A / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
 
 ## Q10 / Model B / Run 1
 
@@ -3085,62 +2184,14 @@ Use Ctrl + d or /bye to exit.
 
 평균:
 
-## Q10 / Model F / Run 1
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
-
-## Q10 / Model F / Run 2
-
-원본 기록 ID:
-상태: 성공 / 오류
-
-답변 적합성:
-근거:
-
-
-논리성/실용성:
-근거:
-
-
-한국어 표현:
-근거:
-
-
-불확실성 대응:
-근거:
-
-
-평균:
-
 ## Q10 집계
 
 | 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 불확실성 대응 | 평균 | n | 성공/시도 | 비고 |
 |---|---|---|---|---|---|---|---|---|
-| Model A |  |  |  |  |  |  | /2 |  |
 | Model B |  |  |  |  |  |  | /2 |  |
 | Model C |  |  |  |  |  |  | /2 |  |
 | Model D |  |  |  |  |  |  | /2 |  |
 | Model E |  |  |  |  |  |  | /2 |  |
-| Model F |  |  |  |  |  |  | /2 |  |
 
 **Q10 관찰 메모**
 
@@ -3153,12 +2204,10 @@ Use Ctrl + d or /bye to exit.
 
 | 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 지시사항 준수 | 불확실성 대응 | 전체 평균 | 호출 성공/시도 |
 |---|---|---|---|---|---|---|---|
-| Model A |  |  |  |  |  |  | /20 |
 | Model B |  |  |  |  |  |  | /20 |
 | Model C |  |  |  |  |  |  | /20 |
 | Model D |  |  |  |  |  |  | /20 |
 | Model E |  |  |  |  |  |  | /20 |
-| Model F |  |  |  |  |  |  | /20 |
 
 > 각 항목 평균 옆에는 **집계 응답 수(n)** 를 함께 적는다.
 > 기준별 출제 수: A 10문항 / B 9문항 / C 10문항 / D 3문항 / E 4문항 → 항목마다 n이 다르다.
@@ -3167,23 +2216,19 @@ Use Ctrl + d or /bye to exit.
 
 | 모델 | 정상 (Q01~Q03, Q06~Q08) | 경계 (Q04, Q09) | 정보 부족 (Q05, Q10) |
 |---|---|---|---|
-| Model A |  |  |  |
 | Model B |  |  |  |
 | Model C |  |  |  |
 | Model D |  |  |  |
 | Model E |  |  |  |
-| Model F |  |  |  |
 
 ## Run 간 일관성 (Run 1 vs Run 2)
 
 | 모델 | Run 1 평균 | Run 2 평균 | 차이 | 비고 |
 |---|---|---|---|---|
-| Model A |  |  |  |  |
 | Model B |  |  |  |  |
 | Model C |  |  |  |  |
 | Model D |  |  |  |  |
 | Model E |  |  |  |  |
-| Model F |  |  |  |  |
 
 ## 대표 사례
 

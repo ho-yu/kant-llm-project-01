@@ -264,12 +264,26 @@ ollama pull hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M
 > 라벨 A~F는 [eval-results.md](../eval-results.md)의 Model A~F와 동일하다.
 > `문서상 최대 Context`와 `실험에 사용한 Context`는 반드시 구분해서 기재한다 (산출물 요구사항).
 
+**STEP 4 CLI 스모크 테스트 결과 — 후보 확정**
+
+| 라벨 | CLI 실행 결과 | 처리 |
+|---|---|---|
+| A (법률) | FAIL — 특수토큰 노출, 프롬프트 반복 | 제외 |
+| B (의료·바이오) | PASS | 본 실험 진행 |
+| C (금융) | PASS | 본 실험 진행 |
+| D (코딩) | PASS | 본 실험 진행 |
+| E (수학) | PASS | 본 실험 진행 |
+| F (이커머스) | FAIL — server_error (peg-native format) | 제외 |
+
+> A·F는 STEP 2 필수 조건 3(현재 PC에서 안정 실행)을 충족하지 못해 본 실험에서 제외한다.
+> 상세 로그는 [eval-results.md](../eval-results.md) '제외된 모델' 절 참조.
+
 ### 미확정 — 채워야 할 것
 
 - [ ] 후보별 **문서상 최대 Context Length** (Model Card 확인)
 - [ ] **실험에서 실제 설정한 Context Length** (STEP 6 실행 설정) — 위 항목과 반드시 구분 기재
 - [ ] 다운로드 파일 크기 / VRAM / 시스템 RAM **각각 구분해서** 실측 (STEP 4, 6)
-- [x] 최종 비교 대상 후보 확정 → **6개 전부** (6모델 × 10문제 × 2회 = 본 실험 120회)
+- [x] 최종 비교 대상 후보 확정 → **Model B/C/D/E (4개)** (A·F는 CLI 스모크 테스트 Fail로 제외, 4모델 × 10문제 × 2회 = 본 실험 80회)
 - [ ] 각 후보의 architecture / language / benchmark 정보 (본문 `2. 확인할 정보` 목록 중 미기재분)
 
 ### 제출 시 확인
