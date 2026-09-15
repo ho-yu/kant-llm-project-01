@@ -18,6 +18,35 @@
 4. 결과 해석
 
 
+
+## 실행 기록 삭제 이력
+
+원본 기록은 append 전용이며 삭제하지 않는 것이 원칙이다.
+아래는 그 예외이며, 무엇을 왜 지웠는지 남긴다.
+
+**2026-09-15 — Model F 기록 2건 삭제**
+
+| run_id | phase | timestamp | status |
+|---|---|---|---|
+| `F_warmup` | warmup | 2026-09-15T12:43:43+09:00 | error / ResponseError |
+| `F_Q01_r1` | main | 2026-09-15T12:44:46+09:00 | error / ResponseError |
+
+- 대상 모델 태그: `hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M`
+- 오류 내용 (2건 동일):
+
+  ```
+  llama-server chat error: map[code:500 message:The model produced output that
+  does not match the expected peg-native format type:server_error] (status code: 500)
+  ```
+
+- **삭제 사유**: 해당 GGUF 변환본이 응답 포맷 오류로 호출 자체가 불가능해,
+  다른 변환본을 새로 내려받아 같은 라벨(F)로 재실험하기로 했다.
+  `run_id` 가 같으면 중복으로 건너뛰므로 이전 기록을 제거했다.
+- 삭제 시점 이후의 F 기록은 **교체된 모델의 결과**이며, 위 오류는 이 표로만 남는다.
+- CLI 사전 확인에서 관측한 같은 증상은
+  [eval-results.md](../eval-results.md) 'STEP 4 CLI 스모크 테스트에서 관찰된 문제' 절에도 기록되어 있다.
+
+
 ---
 
 ## 산출물 정리
