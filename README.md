@@ -65,6 +65,8 @@ A·F는 CLI 사전 확인에서 문제가 보였으나 본 실험 결과로 판�
 | `data/derived/tables/model_comparison.md` | 산출물 2 — 제원 비교표 |
 | `data/derived/tables/local_summary.md` | 산출물 3 — 성능·품질 집계표 |
 | `data/derived/tables/local_cloud.md` | 산출물 4 — Local vs Cloud |
+| `data/derived/step04.md` | STEP 04 절 (모델마다 누적) |
+| `data/derived/step06.md` | STEP 06 성능 표 (전체 모델) |
 
 ### 문서
 

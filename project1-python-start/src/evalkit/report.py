@@ -270,3 +270,40 @@ def preflight() -> list[str]:
             "warmup_question_id 가 비어 있습니다. 워밍업이 건너뛰어집니다 (과제 필수 항목)."
         )
     return problems
+
+
+# ---------------------------------------------------------------- 파일로 쓰기
+
+HEADER = (
+    "<!-- 자동 생성됨: uv run python 10_run.py\n"
+    "     직접 수정하지 말 것. 원본: data/raw/local/runs.jsonl, docs/eval-results.md -->\n\n"
+)
+
+
+def write_step_docs(model_label: str | None = None) -> list[str]:
+    """STEP 04 / STEP 06 블록을 data/derived/ 에 파일로 남긴다.
+
+    화면 출력과 같은 내용이다. 매번 복사해 붙이지 않아도 되도록 파일로도 떨어뜨린다.
+    실행한 모델이 늘어날수록 내용이 누적된다.
+    """
+    config.DERIVED_DIR.mkdir(parents=True, exist_ok=True)
+
+    # STEP 04 는 모델마다 한 절씩 쌓는다
+    ran = []
+    for m in config.enabled_models():
+        label = m["model_label"]
+        if any(
+            r.get("model_label") == label and r.get("status") == config.STATUS_SUCCESS
+            for r in recorder.iter_records(config.LOCAL_RUNS_PATH)
+        ):
+            ran.append(label)
+
+    blocks = [step04(label) for label in ran] or ["_아직 성공한 실행 기록이 없습니다._"]
+    config.STEP04_PATH.write_text(
+        HEADER + "\n\n---\n\n".join(blocks) + "\n", encoding="utf-8"
+    )
+
+    # STEP 06 은 실행한 모델 전체를 한 표로
+    config.STEP06_PATH.write_text(HEADER + step06() + "\n", encoding="utf-8")
+
+    return [str(config.STEP04_PATH), str(config.STEP06_PATH)]

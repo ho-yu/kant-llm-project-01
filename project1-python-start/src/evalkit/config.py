@@ -38,6 +38,9 @@ LOCAL_RUNS_PATH = RAW_DIR / "local" / "runs.jsonl"
 CLOUD_RUNS_PATH = RAW_DIR / "cloud" / "runs.jsonl"
 
 # 생성물 — 언제든 재생성 가능
+STEP04_PATH = DERIVED_DIR / "step04.md"
+STEP06_PATH = DERIVED_DIR / "step06.md"
+
 LOCAL_SUMMARY_PATH = DERIVED_DIR / "local_summary.json"
 CLOUD_SUMMARY_PATH = DERIVED_DIR / "cloud_summary.json"
 

@@ -44,11 +44,18 @@ print(report.BAR)
 print(report.progress(MODEL))
 
 print("\n" + report.BAR)
-print("  아래를 docs/steps/step04.md 에 붙입니다")
+print("  STEP 04")
 print(report.BAR + "\n")
 print(report.step04(MODEL))
 
 print("\n" + report.BAR)
-print("  아래를 docs/steps/step06.md 에 붙입니다")
+print("  STEP 06")
 print(report.BAR + "\n")
 print(report.step06(MODEL))
+
+# 같은 내용을 파일로도 남긴다. 매번 복사해 붙이지 않아도 된다.
+print("\n" + report.BAR)
+print("  파일로도 저장했습니다")
+print(report.BAR)
+for path in report.write_step_docs():
+    print("  ", path)
