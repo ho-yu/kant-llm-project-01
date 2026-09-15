@@ -1,0 +1,30 @@
+{
+  "_comment": "모든 모델에 동일 적용하는 실행 설정. 본 실험 시작 전에 확정하고, 이후 변경 금지. 변경했다면 settings_version을 올리고 변경 이유를 남긴다. 실행 기록에는 이 파일의 options가 그대로 복사된다.",
+  "settings_version": "v1",
+  "confirmed_at": null,
+  "changed_reason": null,
+
+  "host": "http://127.0.0.1:11434",
+  "timeout_sec": null,
+
+  "options": {
+    "_comment": "client.chat(options=...) 에 그대로 넘기는 값. 값은 직접 정한다.",
+    "temperature": null,
+    "num_predict": null,
+    "num_ctx": null,
+    "seed": null
+  },
+
+  "system_prompt": null,
+  "use_system_prompt": false,
+
+  "repeats": 2,
+  "warmup_per_model": 1,
+  "warmup_question_id": null,
+
+  "keep_alive": null,
+  "_keep_alive_note": "client.ps() 로 size_vram을 읽으려면 응답 직후 모델이 아직 로드되어 있어야 한다.",
+
+  "independent_questions": true,
+  "_independent_questions_note": "true면 이전 질문의 대화 이력을 이어 붙이지 않는다. 각 호출은 messages=[user 1건]으로만 구성한다."
+}

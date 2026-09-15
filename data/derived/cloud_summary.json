@@ -1,0 +1,64 @@
+{
+  "scope_phases": [
+    "main"
+  ],
+  "cloud_question_ids": [
+    "Q01",
+    "Q04",
+    "Q06",
+    "Q09",
+    "Q10"
+  ],
+  "attempts": 0,
+  "success": 0,
+  "errors": 0,
+  "error_run_ids": [],
+  "metrics": {
+    "elapsed_sec": {
+      "available": false,
+      "mean": null,
+      "n": 0,
+      "min": null,
+      "max": null,
+      "values": [],
+      "source_run_ids": [],
+      "excluded_run_ids": [],
+      "unavailable_reason": "유효한 측정값 없음"
+    },
+    "input_tokens": {
+      "available": false,
+      "mean": null,
+      "n": 0,
+      "min": null,
+      "max": null,
+      "values": [],
+      "source_run_ids": [],
+      "excluded_run_ids": [],
+      "unavailable_reason": "유효한 측정값 없음"
+    },
+    "output_tokens": {
+      "available": false,
+      "mean": null,
+      "n": 0,
+      "min": null,
+      "max": null,
+      "values": [],
+      "source_run_ids": [],
+      "excluded_run_ids": [],
+      "unavailable_reason": "유효한 측정값 없음"
+    },
+    "estimated_cost": {
+      "available": false,
+      "mean": null,
+      "n": 0,
+      "min": null,
+      "max": null,
+      "values": [],
+      "source_run_ids": [],
+      "excluded_run_ids": [],
+      "unavailable_reason": "유효한 측정값 없음"
+    }
+  },
+  "run_ids": [],
+  "_note": "로컬은 질문당 2회, Cloud 는 1회다. 반복 수가 다르므로 표에 함께 표시한다."
+}

@@ -1,0 +1,58 @@
+{
+  "_comment": "실행 환경 기록. 실험 시작 전에 1회 작성하고 이후 고정. 환경이 바뀌면 새 파일(environment_v2.json)을 만들고 어느 run_id부터 적용되는지 남긴다. 측정하지 못한 값은 0이 아니라 null로 두고 notes에 사유를 적는다.",
+  "env_version": "v1",
+  "recorded_at": null,
+  "applies_from_run_id": null,
+
+  "platform": {
+    "os": null,
+    "os_version": null,
+    "execution_type": null,
+    "_execution_type_note": "예: Local PC / Colab. 둘을 섞지 않는다.",
+    "colab_used": false
+  },
+
+  "runtime": {
+    "llm_runtime": null,
+    "ollama_version": null,
+    "ollama_host": null,
+    "python_version": null,
+    "venv_tool": null,
+    "packages": {
+      "ollama": null,
+      "openai": null
+    }
+  },
+
+  "hardware": {
+    "gpu_name": null,
+    "vram_total_mib": null,
+    "cpu": null,
+    "system_ram_gb": null
+  },
+
+  "models": [
+    {
+      "model_label": null,
+      "model_tag": null,
+      "digest": null,
+      "_digest_note": "client.ps() 또는 client.list() 응답에서 채운다. 수기 입력 금지.",
+      "quantization_level": null,
+      "_quantization_note": "details.quantization_level",
+      "download_size_bytes": null,
+      "_download_size_note": "client.list() 의 size. 시스템 RAM/VRAM 사용량과 구분한다.",
+      "doc_max_context": null,
+      "_doc_max_context_note": "Model Card 문서상 최대 Context. 실험에서 실제 설정한 context_length와 반드시 구분.",
+      "doc_max_context_source_url": null,
+      "model_card_url": null,
+      "license_declared": null,
+      "license_base_model": null,
+      "license_source_url": null
+    }
+  ],
+
+  "notes": {
+    "_comment": "측정하지 못한 항목마다 {필드경로: 사유} 형태로 남긴다.",
+    "example_field_path": null
+  }
+}
