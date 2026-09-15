@@ -23,6 +23,30 @@ def _quant(env_model: dict[str, Any], run: dict[str, Any]) -> str:
     return str(listed or reported)
 
 
+def _overall_mean(model_quality: dict[str, Any]) -> tuple[float | None, int]:
+    """기준별 점수를 모두 합쳐 낸 전체 평균과 집계 응답 수."""
+    values: list[float] = []
+    for stat in (model_quality.get("per_criterion") or {}).values():
+        if stat.get("available"):
+            values.extend(stat.get("values") or [])
+    if not values:
+        return None, 0
+    return sum(values) / len(values), len(values)
+
+
+def _overall(model_quality: dict[str, Any]) -> str:
+    mean, n = _overall_mean(model_quality)
+    return "집계 불가" if mean is None else f"{mean:.2f} (n={n})"
+
+
+def _condition6(model_quality: dict[str, Any], threshold: float) -> str:
+    """STEP 2 필수 조건 6 — 채점이 끝나기 전에는 판정하지 않는다."""
+    mean, n = _overall_mean(model_quality)
+    if mean is None:
+        return "판정 전"
+    return f"{'Pass' if mean >= threshold else 'Fail'} ({mean:.2f})"
+
+
 def _fmt(stat: dict[str, Any] | None, unit: str = "", digits: int = 2) -> str:
     """집계값 한 칸. 유효값이 없으면 0 이 아니라 '집계 불가'."""
     if not stat or not stat.get("available"):
@@ -140,6 +164,19 @@ def step06(model_label: str | None = None) -> str:
     ]
     for label, fn in rows:
         lines.append(f"| {label} | " + " | ".join(fn(models[l]) for l in labels) + " |")
+
+    # 품질 평균과 STEP 2 필수 조건 6 판정 — 채점이 시작된 뒤에만 보여준다
+    quality = aggregator.aggregate_quality()["models"]
+    scale = config.load_questions().get("score_scale") or {}
+    threshold = scale.get("pass_threshold")
+    if any(quality.get(l, {}).get("scored_count") for l in labels):
+        lines.append("| 평균 품질 점수 | " + " | ".join(_overall(quality.get(l, {})) for l in labels) + " |")
+        if threshold is not None:
+            lines.append(
+                f"| 조건 6 판정 (평균 {threshold} 이상) | "
+                + " | ".join(_condition6(quality.get(l, {}), threshold) for l in labels)
+                + " |"
+            )
 
     lines += [
         "",

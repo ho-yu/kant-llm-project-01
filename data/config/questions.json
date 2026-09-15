@@ -13,7 +13,9 @@
   "score_scale": {
     "min": 1,
     "max": 5,
-    "_note": "eval-results.md 의 채점 척도와 같다. 정수로 매긴다. validator 가 이 범위를 벗어난 점수를 잡는다."
+    "_note": "eval-results.md 의 채점 척도와 같다. 정수로 매긴다. validator 가 이 범위를 벗어난 점수를 잡는다.",
+    "pass_threshold": 3.5,
+    "_pass_threshold_note": "STEP 2 필수 조건 6의 통과선. 전체 평균이 이 값 이상이어야 충족. 본 실험 전에 확정했다 (docs/steps/step02.md)."
   },
   "questions": [
     {
