@@ -34,6 +34,7 @@
 | `project1-python-start/src/evalkit/run_cloud.py` | Cloud 실험 실행 |
 | `project1-python-start/src/evalkit/collect_env.py` | 실행 환경 자동 수집 |
 | `project1-python-start/src/evalkit/prepare_scores.py` | 채점용 빈 레코드 생성 |
+| `project1-python-start/src/evalkit/peek.py` | 기록 훑어보기 / 진행 상황 |
 | `project1-python-start/0*.py`, `99_*.py` | 모델별 단발 호출 예제 |
 
 ### 입력 (1회 작성 후 고정)
@@ -132,6 +133,15 @@ uv run python -m evalkit.run_cloud
 ```
 
 `cloud_compare=true` 인 질문 5개를 각 1회 호출한다. API 키는 실행 시점에 입력받고 어떤 파일에도 저장하지 않는다.
+
+### 진행 상황 확인
+
+```bash
+uv run python -m evalkit.peek
+```
+
+모델별 진행 상황과 최근 회차를 한 줄씩 보여준다.
+`--model B` 로 한 모델만, `--run B_Q01_r1` 로 한 회차 전문을 볼 수 있다.
 
 ### 채점 준비
 
