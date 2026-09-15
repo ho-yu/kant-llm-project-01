@@ -1,8 +1,13 @@
 {
   "_comment": "본 실험 대상 모델. model_label은 run_id와 모든 집계표의 키가 되므로 확정 후 변경하지 않는다. digest/quantization_level/context_length는 실행 시 Ollama 응답에서 채운다(수기 입력 금지).",
-  "_excluded_note": "필수 조건 미충족으로 제외한 모델은 excluded 배열에 남긴다. 제외 기록도 산출물이다.",
-
+  "_excluded_note": "필수 조건 미충족으로 제외한 모델은 excluded 배열에 남긴다. 제외 기록도 산출물이다. A(법률)/F(이커머스)는 STEP 4 CLI 스모크 테스트에서 문제가 관찰됐으나, 본 실험 결과로 판정하기 위해 대상에 포함한다.",
   "models": [
+    {
+      "model_label": "A",
+      "display_name": "Model A (법률)",
+      "model_tag": "hf.co/Arc1el/Llama-3.1-Korean-8B-Instruct-Law-GGUF:Q4_K_M",
+      "enabled": true
+    },
     {
       "model_label": "B",
       "display_name": "Model B (의료·바이오)",
@@ -26,28 +31,15 @@
       "display_name": "Model E (수학)",
       "model_tag": "hf.co/QuantFactory/Math-IIO-7B-Instruct-GGUF:Q4_K_M",
       "enabled": true
-    }
-  ],
-
-  "excluded": [
-    {
-      "model_label": "A",
-      "display_name": "Model A (법률)",
-      "model_tag": "hf.co/Arc1el/Llama-3.1-Korean-8B-Instruct-Law-GGUF:Q4_K_M",
-      "excluded_at_step": "STEP 4",
-      "failed_condition": "필수 조건 3 — 현재 PC에서 안정 실행",
-      "evidence_path": "docs/eval-results.md#제외된-모델"
     },
     {
       "model_label": "F",
       "display_name": "Model F (이커머스)",
       "model_tag": "hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M",
-      "excluded_at_step": "STEP 4",
-      "failed_condition": "필수 조건 3 — 현재 PC에서 안정 실행",
-      "evidence_path": "docs/eval-results.md#제외된-모델"
+      "enabled": true
     }
   ],
-
+  "excluded": [],
   "cloud_model": {
     "model_label": "CLOUD",
     "display_name": null,

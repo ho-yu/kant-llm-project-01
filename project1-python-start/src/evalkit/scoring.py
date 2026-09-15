@@ -59,8 +59,15 @@ def parse(path: Path | None = None) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     cur: dict[str, Any] | None = None
     pending_code: str | None = None  # 방금 점수를 읽은 기준 — 다음 "근거:" 가 여기 붙는다
+    in_fence = False  # ``` 안의 작성 예시를 실제 블록으로 읽지 않는다
 
     for line in lines:
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+
         header = BLOCK_RE.match(line)
         if header:
             qid, label, rep = header.group(1), header.group(2), int(header.group(3))

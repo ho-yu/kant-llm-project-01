@@ -10,11 +10,11 @@
 
 | 구분 | 규모 |
 |---|---|
-| 로컬 본 실험 | 모델 4개 (B/C/D/E) × 질문 10개 × 각 2회 = 80회 |
+| 로컬 본 실험 | 모델 6개 (A~F) × 질문 10개 × 각 2회 = 120회 |
 | 워밍업 | 모델당 1회 (본 집계에서 분리) |
 | Cloud 비교 | 모델 1개 × 공통 질문 5개 × 각 1회 |
 
-제외한 후보와 사유: [docs/eval-results.md](docs/eval-results.md) '제외된 모델' 절
+A·F는 CLI 사전 확인에서 문제가 보였으나 본 실험 결과로 판정한다 — [docs/eval-results.md](docs/eval-results.md)
 
 ---
 
@@ -126,8 +126,8 @@ uv run python 10_run.py
 1. `MODEL = "B"`, `LIMIT = 3` 으로 실행
    출력에서 **VRAM 이 `집계 불가` 면 멈추고 `keep_alive` 를 확인한다**
 2. 문제없으면 `LIMIT = None` 으로 바꿔 재실행 (기록된 회차는 건너뜀)
-3. `MODEL` 을 `"C"` → `"D"` → `"E"` 로 바꿔 1~2 반복
-4. 80회를 채우면 `11_finish.py` 실행
+3. `MODEL` 을 `"B"`…`"F"` 로 바꿔 1~2 반복
+4. 120회를 채우면 `11_finish.py` 실행
 5. `docs/eval-results.md` 에 점수·근거를 채우고 `11_finish.py` 재실행
 
 각 설정값의 의미와 문제 상황별 대처는 [docs/usage.md](docs/usage.md) 참조.
