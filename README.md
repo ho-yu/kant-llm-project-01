@@ -35,7 +35,9 @@
 | `project1-python-start/src/evalkit/collect_env.py` | 실행 환경 자동 수집 |
 | `project1-python-start/src/evalkit/prepare_scores.py` | 채점용 빈 레코드 생성 |
 | `project1-python-start/src/evalkit/peek.py` | 기록 훑어보기 / 진행 상황 |
-| `project1-python-start/10_experiment.py` | **실행 진입점** — MODE 만 바꿔 쓴다 |
+| `project1-python-start/10_run.py` | **모델 하나 실행 + STEP 04/06 출력** |
+| `project1-python-start/11_finish.py` | 검사 · 채점 준비 · 집계 · 표 생성 |
+| `project1-python-start/src/evalkit/report.py` | STEP 04/06 형식 출력 |
 | `project1-python-start/0*.py`, `99_*.py` | 모델별 단발 호출 예제 (수동 확인용) |
 
 ### 입력 (1회 작성 후 고정)
@@ -102,35 +104,34 @@ Ollama 앱도 실행해 둔다.
 
 ### 실행 순서
 
-`project1-python-start/10_experiment.py` 하나로 전부 처리한다.
-파일 위쪽의 `MODE` 와 `MODEL` 만 바꾸고 실행한다.
+파일은 두 개뿐이다.
+
+| 파일 | 언제 | 바꿀 값 |
+|---|---|---|
+| `10_run.py` | 모델마다 | `MODEL`, `LIMIT` |
+| `11_finish.py` | 80회를 다 채운 뒤 한 번 | 없음 |
 
 ```bash
-uv run python 10_experiment.py
+cd project1-python-start
+uv run python 10_run.py
 ```
 
-| `MODE` | 하는 일 | 같이 볼 값 |
-|---|---|---|
-| `"env"` | 환경 정보 수집 → `environment.json` | — |
-| `"run"` | 모델 하나 실행 → `runs.jsonl`. 끝나면 상태·검사 결과도 출력 | `MODEL`, `LIMIT` |
-| `"check"` | 진행 상황·기록 확인 | `RUN_ID` |
-| `"score"` | 채점용 빈 레코드 생성 | — |
-| `"table"` | 집계 + 마크다운 표 생성 | — |
+`10_run.py` 는 실행한 뒤 진행 상황과 함께
+**STEP 04 / STEP 06 문서에 그대로 붙일 수 있는 표**를 출력한다.
 
 ### 모델 하나씩 도는 흐름
 
-실험 시작 전에 `data/config/run_settings.json` 을 먼저 채운다.
+실험 시작 전에 `data/config/run_settings.json` 을 채운다.
+비어 있으면 `10_run.py` 가 무엇이 빠졌는지 알려주고 실행을 거부한다.
 
-1. `MODE = "env"` — 한 번만
-2. `MODE = "run"`, `MODEL = "B"`, `LIMIT = 3` — 실행하면 기록 상태가 바로 나온다
-   **VRAM 이 `null` 이면 멈추고 `keep_alive` 를 확인한다.** 기록은 append 전용이라 되돌릴 수 없다
-3. 문제없으면 `LIMIT = None` 으로 바꿔 재실행 (이미 기록된 회차는 건너뜀)
-4. `MODEL` 을 `"C"` → `"D"` → `"E"` 로 바꿔 2~3 반복
-5. 80회를 채우면 `MODE = "score"` → `scores.jsonl` 에 점수·근거 입력 → `MODE = "table"`
+1. `MODEL = "B"`, `LIMIT = 3` 으로 실행
+   출력에서 **VRAM 이 `집계 불가` 면 멈추고 `keep_alive` 를 확인한다**
+2. 문제없으면 `LIMIT = None` 으로 바꿔 재실행 (기록된 회차는 건너뜀)
+3. `MODEL` 을 `"C"` → `"D"` → `"E"` 로 바꿔 1~2 반복
+4. 80회를 채우면 `11_finish.py` 실행
+5. `data/scoring/scores.jsonl` 에 점수·근거를 채우고 `11_finish.py` 재실행
 
-채점 중 원본 응답을 보려면 `MODE = "check"`, `RUN_ID = "B_Q01_r1"`.
-
-각 설정값의 의미, 출력 읽는 법, 문제 상황별 대처는 [docs/usage.md](docs/usage.md) 참조.
+각 설정값의 의미와 문제 상황별 대처는 [docs/usage.md](docs/usage.md) 참조.
 
 ### Cloud 비교 (STEP 7)
 

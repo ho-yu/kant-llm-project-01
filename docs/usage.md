@@ -1,11 +1,15 @@
 # 사용법
 
-실행 파일은 `project1-python-start/10_experiment.py` 하나다.
-파일 위쪽 상수만 바꾸고 아래 명령을 반복한다.
+실행 파일은 두 개다.
+
+| 파일 | 언제 | 바꿀 값 |
+|---|---|---|
+| `10_run.py` | 모델마다 | `MODEL`, `LIMIT` |
+| `11_finish.py` | 80회를 다 채운 뒤 한 번 | 없음 |
 
 ```bash
 cd project1-python-start
-uv run python 10_experiment.py
+uv run python 10_run.py
 ```
 
 `uv run` 을 반드시 쓴다. 그냥 `python` 으로 돌리면 venv 밖의 인터프리터가 잡혀
@@ -49,9 +53,7 @@ Ollama 앱이 실행 중이어야 한다.
 
 ### 1-3. 환경 정보 수집
 
-```python
-MODE = "env"
-```
+`10_run.py` 를 실행하면 매번 자동으로 갱신된다.
 
 OS / Python / Ollama / 패키지 버전, GPU·VRAM·CPU·RAM,
 모델별 digest·양자화·다운로드 크기가 `data/env/environment.json` 에 들어간다.
@@ -72,8 +74,7 @@ OS / Python / Ollama / 패키지 버전, GPU·VRAM·CPU·RAM,
 ### 2-1. 첫 모델은 몇 건만 먼저
 
 ```python
-MODE = "run"
-MODEL = "B"     # B / C / D / E
+MODEL = "B"     # B / C / D / E — 라벨이다. 태그가 아니다
 LIMIT = 3       # 먼저 3건만
 ```
 
@@ -111,11 +112,9 @@ MODEL = "C"     # 이후 "D", "E"
 모델은 한 번에 하나만 메모리에 올린다. 한 모델이 끝나면 언로드하고
 다음 모델을 올린다. 8GB VRAM 에서 두 개를 동시에 올리지 않기 위해서다.
 
-### 2-4. 진행 상황만 보고 싶을 때
+### 2-4. 진행 상황
 
-```python
-MODE = "check"
-```
+`10_run.py` 실행 때마다 함께 출력된다.
 
 ```
 모델      본실험    성공   실패  워밍업
@@ -124,22 +123,13 @@ C        20/20     19     1    있음
 D         0/20      0     0    없음
 ```
 
-한 회차의 원본 응답 전문을 보려면:
-
-```python
-MODE = "check"
-RUN_ID = "B_Q01_r1"
-```
+한 회차의 원본 응답 전문은 `data/raw/local/runs.jsonl` 에서 해당 `run_id` 줄을 본다.
 
 ---
 
 ## 3. 채점
 
-80회를 다 채운 뒤에 한다.
-
-```python
-MODE = "score"
-```
+80회를 다 채운 뒤 `11_finish.py` 를 실행한다.
 
 `data/scoring/scores.jsonl` 에 회차마다 빈 채점 레코드가 깔린다.
 `run_id` / `question_id` / 평가 기준 코드는 원본에서 그대로 가져오므로
@@ -162,15 +152,13 @@ MODE = "score"
 - 호출 실패 회차는 `not_scored_reason` 이 채워진 채로 나온다. 점수는 비워 둔다
 - 재검토 후 점수를 고쳤다면 `reviewed`, `revision_reason` 을 채운다
 
-채점하면서 원본 응답을 볼 때는 `MODE = "check"`, `RUN_ID` 를 쓴다.
+채점하면서 원본 응답을 볼 때는 `runs.jsonl` 의 해당 `run_id` 줄을 본다.
 
 ---
 
 ## 4. 집계와 표 생성
 
-```python
-MODE = "table"
-```
+`11_finish.py` 가 이어서 처리한다.
 
 `data/derived/` 에 다음이 만들어진다.
 
@@ -230,7 +218,7 @@ tables/local_summary.md    "평균 전체 응답 시간 3.42 (n=18)"
         ↓
 local_summary.json         models.B.metrics.elapsed_sec.source_run_ids
         ↓
-MODE = "check", RUN_ID = "B_Q01_r1"    원본 응답 + 측정값 + 설정
+runs.jsonl 의 해당 run_id 줄       원본 응답 + 측정값 + 설정
 ```
 
 `source_run_ids` 는 평균에 쓰인 회차, `excluded_run_ids` 는 값이 없어
@@ -242,12 +230,7 @@ MODE = "check", RUN_ID = "B_Q01_r1"    원본 응답 + 측정값 + 설정
 
 ### 모델 태그가 틀렸을 때
 
-호출이 전부 `[ERR]` 로 나온다. 실제로 내려받은 태그를 확인한다.
-
-```python
-MODE = "env"
-```
-
+호출이 전부 실패로 나온다. `10_run.py` 가 실행 때마다 환경을 수집하면서
 `client.list()` 목록에 없는 모델은 "아직 pull 하지 않았을 수 있음" 으로
 알려준다. `data/config/models.json` 의 `model_tag` 를 실제 값으로 고친다.
 
