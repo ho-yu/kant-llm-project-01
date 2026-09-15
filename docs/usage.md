@@ -75,6 +75,37 @@ OS / Python / Ollama / 패키지 버전, GPU·VRAM·CPU·RAM,
 
 ---
 
+## 1-4. STEP 04 요구 항목이 어디에 쌓이는가
+
+과제가 STEP 04 에서 기록하라고 한 것과, 그게 어느 파일에 들어가는지.
+
+| STEP 04 요구 항목 | 저장 위치 | 어떻게 |
+|---|---|---|
+| 모델 전체 태그 | `data/config/models.json` → `model_tag` | 사람이 확정 |
+| 모델 식별값 (digest) | `data/raw/local/runs.jsonl` + `environment.json` | **자동** (`client.ps()` / `list()`) |
+| 양자화 | `environment.json` → `quantization_level` | **자동** (`client.list()`) |
+| 다운로드 파일 크기 | `environment.json` → `download_size_bytes` | **자동** (`client.list()`) |
+| Python / Ollama / 패키지 버전 | `environment.json` → `runtime` | **자동** |
+| GPU / VRAM / CPU / 시스템 RAM | `environment.json` → `hardware` | **자동** |
+| 실행 환경 구분 (Local PC vs Colab) | `environment.json` → `platform.execution_type` | 사람이 1회 |
+| 실행 설정 | `data/config/run_settings.json` → `options` | 사람이 1회, 회차마다 기록에 복사됨 |
+| 실험에서 실제 확인한 Context | `runs.jsonl` → `context_length` | **자동** |
+| 문서상 최대 Context | `environment.json` → `doc_max_context` | **사람이 Model Card 에서 확인** |
+| Model Card / License 출처 | `environment.json` → `model_card_url`, `license_*` | `step03.md` 조사 결과를 옮겨둠 |
+| Python 호출 성공 + 결과 1건 저장 후 재확인 | `runs.jsonl` | **자동**, STEP 04 블록에 발췌 출력 |
+| CLI 대화 성공 | `docs/eval-results.md` → 'STEP 4 CLI 스모크 테스트' 절 | 사람이 기록 |
+| 오류 증상 (미설치 / 연결 실패 등) | `runs.jsonl` → `error_type`, `error_message` | **자동** |
+
+`10_run.py` 를 실행하면 자동 항목이 매번 갱신되고, 사람이 채울 항목이 남아 있으면
+"직접 채워야 하는 항목" 으로 목록이 뜬다.
+
+### 지금 남은 수동 항목
+
+`doc_max_context` (모델 6개) 하나뿐이다. GGUF 저장소 카드에 없으면
+`environment.json` 의 `upstream_model_card_url` 에 적힌 원본 모델 카드에서 확인한다.
+
+**실험에서 실제 설정한 Context(4096)와 반드시 구분해서 적어야 하는 산출물 요구사항이다.**
+
 ## 2. 로컬 실험 — 모델 하나씩
 
 ### 2-1. 첫 모델은 몇 건만 먼저
