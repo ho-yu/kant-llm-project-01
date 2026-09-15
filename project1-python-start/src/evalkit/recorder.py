@@ -239,7 +239,50 @@ def fill_from_ollama_response(
     else:
         record["tokens_per_sec"] = eval_count / (eval_duration / 1_000_000_000)
 
+    prompt_eval_count = getattr(response, "prompt_eval_count", None)
+    if prompt_eval_count is None:
+        _note_missing(record, "prompt_eval_count", "응답에 prompt_eval_count 없음")
+    else:
+        record["prompt_eval_count"] = prompt_eval_count
+
+    prompt_eval_duration = getattr(response, "prompt_eval_duration", None)
+    if prompt_eval_duration is None:
+        _note_missing(record, "prompt_eval_duration_sec", "응답에 prompt_eval_duration 없음")
+    else:
+        record["prompt_eval_duration_sec"] = prompt_eval_duration / 1_000_000_000
+
+    total_duration = getattr(response, "total_duration", None)
+    if total_duration is None:
+        _note_missing(record, "total_duration_sec", "응답에 total_duration 없음")
+    else:
+        record["total_duration_sec"] = total_duration / 1_000_000_000
+
+    # done_reason="length" 면 num_predict 한도에서 잘린 답변이다.
+    # 품질 채점 시 "내용이 부족한 것"과 "잘린 것"을 구분하는 근거가 된다.
+    done_reason = getattr(response, "done_reason", None)
+    if done_reason is None:
+        _note_missing(record, "done_reason", "응답에 done_reason 없음")
+    else:
+        record["done_reason"] = done_reason
+
     return record
+
+
+def compute_processor(size: int | None, size_vram: int | None) -> str | None:
+    """`ollama ps` 의 PROCESSOR 열과 같은 방식으로 CPU/GPU 적재 상태를 만든다.
+
+    GPU 이용률이나 VRAM 용량이 아니라, 모델 가중치가 어디에 올라가 있는지다.
+    """
+    if size is None or size_vram is None:
+        return None
+    if size_vram == 0:
+        return "100% CPU"
+    if size_vram == size:
+        return "100% GPU"
+    if size_vram > size or size == 0:
+        return "Unknown"
+    cpu_percent = round((size - size_vram) / size * 100)
+    return f"{cpu_percent}%/{100 - cpu_percent}% CPU/GPU"
 
 
 def fill_from_ps(
@@ -247,10 +290,15 @@ def fill_from_ps(
     ps_entries: list[Any],
     observed_at: str | None = None,
 ) -> dict[str, Any]:
-    """client.ps() 결과에서 VRAM/적재 상태를 채운다.
+    """client.ps().models 에서 VRAM/적재 상태/식별값을 채운다.
 
     응답을 받은 직후, 모델이 언로드되기 전에 조회한 결과를 넘겨야 한다.
     size_vram 은 그 시점의 값이며 최대 VRAM 이 아니다.
+
+    실측으로 확인한 ps 항목 구조:
+        model / name / digest / expires_at / size / size_vram
+        details.quantization_level / details.parameter_size
+        context_length
     """
     observed_at = observed_at or now_iso()
     target_tag = record["model_tag"]
@@ -262,23 +310,32 @@ def fill_from_ps(
             break
 
     if match is None:
-        _note_missing(record, "size_vram_mib", "client.ps() 에 해당 모델 없음 (이미 언로드되었을 수 있음)")
-        _note_missing(record, "processor", "client.ps() 에 해당 모델 없음")
-        _note_missing(record, "vram_observed_at", "조회 대상 없음")
+        for field in ("size_vram_mib", "size_total_mib", "processor", "vram_observed_at"):
+            _note_missing(record, field, "client.ps() 에 해당 모델 없음 (이미 언로드되었을 수 있음)")
+        for field in ("digest", "quantization_level", "context_length"):
+            record["measurement_notes"].setdefault(field, "client.ps() 에 해당 모델 없음")
         return record
 
+    size = getattr(match, "size", None)
     size_vram = getattr(match, "size_vram", None)
+
     if size_vram is None:
         _note_missing(record, "size_vram_mib", "ps 항목에 size_vram 없음")
+        _note_missing(record, "vram_observed_at", "size_vram 을 읽지 못함")
     else:
         record["size_vram_mib"] = size_vram / 1_048_576
         record["vram_observed_at"] = observed_at
 
-    details = getattr(match, "details", None)
-    if details is not None:
-        record["quantization_level"] = getattr(details, "quantization_level", None)
-    if record["quantization_level"] is None:
-        record["measurement_notes"]["quantization_level"] = "ps details 에서 읽지 못함"
+    if size is None:
+        _note_missing(record, "size_total_mib", "ps 항목에 size 없음")
+    else:
+        record["size_total_mib"] = size / 1_048_576
+
+    processor = compute_processor(size, size_vram)
+    if processor is None:
+        _note_missing(record, "processor", "size 또는 size_vram 이 없어 적재 상태를 계산할 수 없음")
+    else:
+        record["processor"] = processor
 
     record["digest"] = getattr(match, "digest", None)
     if record["digest"] is None:
@@ -288,11 +345,17 @@ def fill_from_ps(
     if record["context_length"] is None:
         record["measurement_notes"]["context_length"] = "ps 항목에 context_length 없음"
 
-    # TODO: processor(CPU/GPU 적재 상태)를 어디서 읽을지 확정한다.
-    #       ollama ps CLI 의 PROCESSOR 열에 해당한다. size/size_vram 비율로 계산하거나
-    #       CLI 출력을 파싱한다. 확정 전까지는 사유를 남긴다.
-    if record["processor"] is None:
-        record["measurement_notes"]["processor"] = "processor 취득 방법 미확정"
+    details = getattr(match, "details", None)
+    quant = getattr(details, "quantization_level", None) if details is not None else None
+    record["quantization_level"] = quant
+    if quant is None:
+        record["measurement_notes"]["quantization_level"] = "ps details 에서 읽지 못함"
+    elif str(quant).lower() == "unknown":
+        # 태그에는 Q4_K_M 이라고 적혀 있어도 ps 는 unknown 을 돌려줄 수 있다.
+        # 값을 덮어쓰지 않고 그대로 두되, 비교표에서 태그 기준값과 구분하도록 남긴다.
+        record["measurement_notes"]["quantization_level"] = (
+            "ps 가 'unknown' 으로 보고함 — 비교표에는 모델 태그 기준값을 함께 기재할 것"
+        )
 
     return record
 
@@ -310,7 +373,9 @@ def fill_error(record: dict[str, Any], exc: BaseException, elapsed_sec: float | 
         record["measurement_notes"]["elapsed_sec"] = "호출 실패로 측정 불가"
 
     for field in ("load_duration_sec", "eval_count", "eval_duration_sec",
-                  "tokens_per_sec", "size_vram_mib", "processor"):
+                  "tokens_per_sec", "prompt_eval_count", "prompt_eval_duration_sec",
+                  "total_duration_sec", "done_reason", "size_vram_mib",
+                  "size_total_mib", "processor"):
         if field in record and record[field] is None:
             record["measurement_notes"].setdefault(field, "호출 실패로 측정 불가")
 

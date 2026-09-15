@@ -53,9 +53,14 @@ LOCAL_RUN_FIELDS: tuple[FieldSpec, ...] = (
     ("eval_count", "int|null", True, "response.eval_count (생성 토큰 수)"),
     ("eval_duration_sec", "float|null", True, "response.eval_duration / 1e9"),
     ("tokens_per_sec", "float|null", True, "eval_count / eval_duration_sec"),
+    ("prompt_eval_count", "int|null", True, "response.prompt_eval_count (입력 토큰 수)"),
+    ("prompt_eval_duration_sec", "float|null", True, "response.prompt_eval_duration / 1e9"),
+    ("total_duration_sec", "float|null", True, "response.total_duration / 1e9. 서버 측 총 소요"),
+    ("done_reason", "str|null", True, "stop=정상 종료 / length=num_predict 한도에서 잘림"),
     ("size_vram_mib", "float|null", True, "client.ps() size_vram / 1048576. 최대값 아님"),
+    ("size_total_mib", "float|null", True, "client.ps() size / 1048576. processor 계산 근거"),
     ("vram_observed_at", "str|null", True, "size_vram 조회 시각(응답 직후, 언로드 전)"),
-    ("processor", "str|null", True, "client.ps() CPU/GPU 적재 상태. GPU 이용률 아님"),
+    ("processor", "str|null", True, "size 와 size_vram 비율로 계산한 CPU/GPU 적재 상태. GPU 이용률 아님"),
     # --- 사유
     ("measurement_notes", "dict", True, "{필드명: 사유}. 값이 null 인 지표는 여기에 사유 필수"),
 )
@@ -113,6 +118,7 @@ LOCAL_METRIC_FIELDS = (
     "eval_count",
     "eval_duration_sec",
     "tokens_per_sec",
+    "prompt_eval_count",
     "size_vram_mib",
 )
 

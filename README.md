@@ -154,7 +154,12 @@ python -m evalkit.exporter
 | `elapsed_sec` | 요청 직전 ~ 응답 수신 직후 | 초 (TTFT 아님) |
 | `load_duration_sec` | `response.load_duration` | ns ÷ 1e9 |
 | `tokens_per_sec` | `response.eval_count` / (`response.eval_duration` / 1e9) | — |
+| `prompt_eval_count` | `response.prompt_eval_count` | 입력 토큰 수 |
 | `size_vram_mib` | `client.ps()` 의 `size_vram` | bytes ÷ 1,048,576 |
+| `processor` | `size` 와 `size_vram` 비율 | `size_vram==size` → 100% GPU |
+| `done_reason` | `response.done_reason` | `length` 면 출력 한도에서 잘림 |
 
 `size_vram` 은 관측 시점의 값이며 최대 VRAM 이 아니다.
 `processor` 는 CPU/GPU 적재 상태이며 GPU 이용률이 아니다.
+`quantization_level` 은 `ps()` 가 `unknown` 을 돌려줄 수 있으므로 비교표에는 모델 태그 기준값을 함께 적는다.
+`done_reason="length"` 인 응답은 잘린 답변이므로 품질 채점 시 "내용 부족"과 구분한다.

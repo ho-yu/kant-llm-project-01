@@ -15,43 +15,79 @@ from typing import Any
 from . import config, recorder
 
 
-# ---------------------------------------------------------------- 호출부 (TODO)
+# ---------------------------------------------------------------- Ollama 호출
 
 
-def call_ollama(model_tag: str, prompt: str, options: dict[str, Any], system_prompt: str | None):
+_client = None
+
+
+def get_client():
+    """Ollama 클라이언트. run_settings.json 의 host/timeout 을 쓴다."""
+    global _client
+    if _client is None:
+        from ollama import Client
+
+        settings = config.load_run_settings()
+        _client = Client(host=settings["host"], timeout=settings.get("timeout_sec"))
+    return _client
+
+
+def build_messages(prompt: str, system_prompt: str | None) -> list[dict[str, str]]:
+    """독립 질문이므로 이전 대화 이력을 이어 붙이지 않는다."""
+    messages = []
+    if system_prompt:
+        messages.append({"role": "system", "content": system_prompt})
+    messages.append({"role": "user", "content": prompt})
+    return messages
+
+
+def call_ollama(
+    model_tag: str,
+    prompt: str,
+    options: dict[str, Any],
+    system_prompt: str | None,
+) -> tuple[Any, float]:
     """한 번 호출하고 (response, elapsed_sec) 를 돌려준다.
 
-    TODO: 구현
-      1. from ollama import Client; client = Client(host=..., timeout=...)
-      2. messages 를 구성한다.
-         - run_settings.independent_questions=true 이므로 이전 대화 이력을 붙이지 않는다.
-         - system_prompt 를 쓰는 경우에만 {"role": "system"} 을 앞에 둔다.
-      3. start = perf_counter() 직후 client.chat(..., stream=False, options=options)
-      4. elapsed = perf_counter() - start  (응답 수신 직후)
-      5. return response, elapsed
+    elapsed 는 요청 직전부터 최종 응답 수신 직후까지다. 첫 토큰 시간(TTFT)이 아니다.
     """
-    raise NotImplementedError("call_ollama 미구현")
+    from time import perf_counter
+
+    client = get_client()
+    settings = config.load_run_settings()
+
+    kwargs: dict[str, Any] = {
+        "model": model_tag,
+        "messages": build_messages(prompt, system_prompt),
+        "stream": False,
+        "options": options,
+    }
+    # keep_alive 를 0 으로 두면 응답 직후 언로드되어 ps() 로 VRAM 을 읽을 수 없다.
+    if settings.get("keep_alive") is not None:
+        kwargs["keep_alive"] = settings["keep_alive"]
+
+    start = perf_counter()
+    response = client.chat(**kwargs)
+    elapsed = perf_counter() - start
+    return response, elapsed
 
 
 def fetch_ps(model_tag: str) -> list[Any]:
-    """client.ps() 의 모델 목록을 돌려준다.
+    """client.ps().models 를 돌려준다.
 
-    반드시 응답을 받은 직후, 모델이 언로드되기 전에 호출해야 한다.
-    여기서 digest / quantization_level / context_length / size_vram 을 얻는다.
-
-    TODO: 구현
-      1. client.ps() 호출
-      2. 응답의 models 리스트를 반환
+    응답 직후, 모델이 언로드되기 전에 호출해야 한다.
+    여기서 digest / quantization_level / context_length / size / size_vram 을 얻는다.
     """
-    raise NotImplementedError("fetch_ps 미구현")
+    return get_client().ps().models
 
 
 def unload_model(model_tag: str) -> None:
     """모델을 메모리에서 내린다. 다음 모델로 넘어가기 전에 호출한다.
 
-    TODO: 구현 (예: keep_alive=0 으로 빈 요청을 보낸다)
+    keep_alive=0 인 빈 요청을 보내면 Ollama 가 즉시 언로드한다.
+    8GB VRAM 에서 다음 모델을 올리기 전에 반드시 비운다.
     """
-    raise NotImplementedError("unload_model 미구현")
+    get_client().generate(model=model_tag, prompt="", keep_alive=0)
 
 
 # ---------------------------------------------------------------- 한 회차
