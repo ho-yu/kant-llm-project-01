@@ -87,14 +87,25 @@ def render(question_id: str) -> str:
             ]
             continue
 
-        flags = []
-        if r.get("done_reason") == "length":
-            flags.append("**출력 한도에서 잘림** (`done_reason=length`) — '내용 부족'과 구분해서 채점")
+        def num(value, fmt):
+            """값이 없으면 0 이 아니라 '측정 안 됨' 으로 적는다."""
+            return fmt.format(value) if value is not None else "측정 안 됨"
+
         out += [
-            f"- 출력 {r['eval_count']}토큰 / {r['elapsed_sec']:.1f}초 / {r['tokens_per_sec']:.1f} t/s"
-            f" / 종료 `{r.get('done_reason')}`",
+            f"- 출력 {num(r['eval_count'], '{:.0f}토큰')}"
+            f" / {num(r['elapsed_sec'], '{:.1f}초')}"
+            f" / {num(r['tokens_per_sec'], '{:.1f} t/s')}"
+            f" / 종료 `{r.get('done_reason')}`"
+            f" / 응답 {len(r.get('response_text') or '')}자",
         ]
-        out += [f"- {f}" for f in flags]
+        if r.get("done_reason") == "length":
+            out.append("- **출력 한도에서 잘림** (`done_reason=length`) — '내용 부족'과 구분해서 채점")
+        missing = [k for k in ("eval_count", "tokens_per_sec") if r.get(k) is None]
+        if missing:
+            out.append(
+                f"- **응답에 통계 필드가 없어 {', '.join(missing)} 를 측정하지 못함** "
+                "— 이 회차는 해당 지표의 평균과 n 에서 빠진다"
+            )
         out += ["", "```text", (r["response_text"] or "").rstrip(), "```"]
 
     return "\n".join(out)
