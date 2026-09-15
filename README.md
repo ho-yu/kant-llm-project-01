@@ -35,7 +35,8 @@ A·F는 CLI 사전 확인에서 문제가 보였으나 본 실험 결과로 판�
 | `project1-python-start/src/evalkit/collect_env.py` | 실행 환경 자동 수집 |
 | `project1-python-start/src/evalkit/peek.py` | 기록 훑어보기 / 진행 상황 |
 | `project1-python-start/10_run.py` | **모델 하나 실행 + STEP 04/06 출력** |
-| `project1-python-start/11_finish.py` | 검사 · 채점 준비 · 집계 · 표 생성 |
+| `project1-python-start/11_finish.py` | 검사 · 집계 · 표 생성 |
+| `project1-python-start/12_read.py` | **채점용 응답 모음 생성** (질문별) |
 | `project1-python-start/src/evalkit/report.py` | STEP 04/06 형식 출력 |
 | `project1-python-start/src/evalkit/scoring.py` | `eval-results.md` 채점 읽기 |
 | `project1-python-start/0*.py`, `99_*.py` | 모델별 단발 호출 예제 (수동 확인용) |
@@ -62,6 +63,7 @@ A·F는 CLI 사전 확인에서 문제가 보였으나 본 실험 결과로 판�
 |---|---|
 | `data/derived/local_summary.json` | 로컬 집계 + 품질 집계 (기여 `run_id` 포함) |
 | `data/derived/cloud_summary.json` | Cloud 집계 |
+| `data/derived/responses/Q01~Q10.md` | 채점용 응답 모음 (질문별 6모델 × 2회) |
 | `data/derived/tables/model_comparison.md` | 산출물 2 — 제원 비교표 |
 | `data/derived/tables/local_summary.md` | 산출물 3 — 성능·품질 집계표 |
 | `data/derived/tables/local_cloud.md` | 산출물 4 — Local vs Cloud |
@@ -136,7 +138,7 @@ uv run python 10_run.py
 2. 문제없으면 `LIMIT = None` 으로 바꿔 재실행 (기록된 회차는 건너뜀)
 3. `MODEL` 을 `"B"`…`"F"` 로 바꿔 1~2 반복
 4. 120회를 채우면 `11_finish.py` 실행
-5. `docs/eval-results.md` 에 점수·근거를 채우고 `11_finish.py` 재실행
+5. `12_read.py` 로 응답 모음을 만들고, `docs/eval-results.md` 에 점수·근거를 채운 뒤 `11_finish.py` 재실행
 
 각 설정값의 의미와 문제 상황별 대처는 [docs/usage.md](docs/usage.md) 참조.
 
