@@ -246,9 +246,9 @@ ollama pull hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M
 | A | `hf.co/Arc1el/Llama-3.1-Korean-8B-Instruct-Law-GGUF:Q4_K_M` |
 | B | `hf.co/mradermacher/KoBioMed-Llama-3.1-8B-Instruct-i1-GGUF:Q4_K_M` |
 | C | `hf.co/featherless-ai-quants/BCCard-Llama-3.1-Kor-BCCard-Finance-8B-GGUF:Q4_K_M` |
-| D | `hf.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M` |
+| D | `hf.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M` |
 | E | `hf.co/QuantFactory/Math-IIO-7B-Instruct-GGUF:Q4_K_M` |
-| F | `hf.co/tensorblock/POLAR-14B-v0.5-GGUF:Q4_K_M` |
+| F | `hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M` |
 
 **Context / 자원** (STEP 4~6에서 실측 후 기입)
 

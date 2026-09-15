@@ -18,7 +18,7 @@
     {
       "model_label": "D",
       "display_name": "Model D (코딩)",
-      "model_tag": "hf.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M",
+      "model_tag": "hf.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M",
       "enabled": true
     },
     {
@@ -41,7 +41,7 @@
     {
       "model_label": "F",
       "display_name": "Model F (이커머스)",
-      "model_tag": "hf.co/tensorblock/POLAR-14B-v0.5-GGUF:Q4_K_M",
+      "model_tag": "hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M",
       "excluded_at_step": "STEP 4",
       "failed_condition": "필수 조건 3 — 현재 PC에서 안정 실행",
       "evidence_path": "docs/eval-results.md#제외된-모델"

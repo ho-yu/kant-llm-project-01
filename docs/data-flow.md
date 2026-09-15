@@ -134,23 +134,31 @@ aggregator.trace("B_Q01_r1")   # 실행 기록 + 채점 기록을 함께 반환
 
 ## 7. 실행 순서
 
+모두 `project1-python-start` 에서 `uv run` 으로 실행한다.
+
 ```bash
-# 0) 설정 확정 — run_settings / questions / environment 를 먼저 채운다
-# 1) 실행 계획 확인 (호출 없음)
-python -m evalkit.run_local --dry-run
+# 0) 설정 확정 — run_settings / questions 를 먼저 채운다
+# 1) 환경 정보 자동 수집
+uv run python -m evalkit.collect_env
 
-# 2) 로컬 실험 — 모델 하나씩, 중단해도 이어서 실행 가능(중복 run_id 는 건너뜀)
-python -m evalkit.run_local
+# 2) 실행 계획 확인 (호출 없음)
+uv run python -m evalkit.run_local --dry-run
 
-# 3) Cloud 실험
-python -m evalkit.run_cloud
+# 3) 로컬 실험 — 모델 하나씩, 중단해도 이어서 실행 가능(중복 run_id 는 건너뜀)
+uv run python -m evalkit.run_local
 
-# 4) 저장된 파일 재검증
-python -m evalkit.validator
+# 4) Cloud 실험
+uv run python -m evalkit.run_cloud
 
-# 5) 집계 + 표 생성
-python -m evalkit.aggregator
-python -m evalkit.exporter
+# 5) 저장된 파일 재검증
+uv run python -m evalkit.validator
+
+# 6) 채점용 빈 레코드 생성 -> scores.jsonl 을 사람이 채운다
+uv run python -m evalkit.prepare_scores
+
+# 7) 집계 + 표 생성
+uv run python -m evalkit.aggregator
+uv run python -m evalkit.exporter
 ```
 
-2번은 언제든 중단하고 다시 실행할 수 있다. 이미 기록된 `run_id` 는 건너뛰고 경고만 낸다.
+3번은 언제든 중단하고 다시 실행할 수 있다. 이미 기록된 `run_id` 는 건너뛰고 경고만 낸다.

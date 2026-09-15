@@ -32,6 +32,8 @@
 | `project1-python-start/src/evalkit/exporter.py` | 집계 결과 → 마크다운 표 |
 | `project1-python-start/src/evalkit/run_local.py` | 로컬 실험 실행 |
 | `project1-python-start/src/evalkit/run_cloud.py` | Cloud 실험 실행 |
+| `project1-python-start/src/evalkit/collect_env.py` | 실행 환경 자동 수집 |
+| `project1-python-start/src/evalkit/prepare_scores.py` | 채점용 빈 레코드 생성 |
 | `project1-python-start/0*.py`, `99_*.py` | 모델별 단발 호출 예제 |
 
 ### 입력 (1회 작성 후 고정)
@@ -78,7 +80,7 @@
 ```bash
 ollama pull hf.co/mradermacher/KoBioMed-Llama-3.1-8B-Instruct-i1-GGUF:Q4_K_M
 ollama pull hf.co/featherless-ai-quants/BCCard-Llama-3.1-Kor-BCCard-Finance-8B-GGUF:Q4_K_M
-ollama pull hf.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M
+ollama pull hf.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M
 ollama pull hf.co/QuantFactory/Math-IIO-7B-Instruct-GGUF:Q4_K_M
 ```
 
@@ -96,39 +98,62 @@ uv run python --version
 
 Python 3.12.x 가 나오면 준비된 것이다. Ollama 앱도 실행해 둔다.
 
-### 실험 실행
-
-아래 명령은 모두 `project1-python-start/src` 에서 실행한다.
+### 환경 정보 수집
 
 ```bash
-python -m evalkit.run_local --dry-run
+uv run python -m evalkit.collect_env
+```
+
+OS·Python·Ollama·패키지 버전, GPU/VRAM/CPU/RAM, 모델별 digest·양자화·다운로드 크기를
+`data/env/environment.json` 에 채운다. Model Card URL·License·문서상 최대 Context 는
+직접 확인해야 하므로 건드리지 않고, 비어 있는 항목을 목록으로 알려준다.
+
+### 실험 실행
+
+아래 명령은 모두 `project1-python-start` 에서 `uv run` 으로 실행한다.
+`uv run` 을 쓰지 않으면 venv 밖의 Python 이 잡혀 `openai` 가 없거나
+기록되는 패키지 버전이 실제 실험 환경과 달라진다.
+
+```bash
+uv run python -m evalkit.run_local --dry-run
 ```
 
 호출 없이 실행 계획만 출력한다.
 
 ```bash
-python -m evalkit.run_local
+uv run python -m evalkit.run_local
 ```
 
 모델을 하나씩 올려 워밍업 1회 + 질문 10개 × 2회를 실행하고 `data/raw/local/runs.jsonl` 에 append 한다.
 중단해도 다시 실행하면 이미 기록된 `run_id` 는 건너뛰고 이어서 진행한다.
 
 ```bash
-python -m evalkit.run_cloud
+uv run python -m evalkit.run_cloud
 ```
 
 `cloud_compare=true` 인 질문 5개를 각 1회 호출한다. API 키는 실행 시점에 입력받고 어떤 파일에도 저장하지 않는다.
 
+### 채점 준비
+
+```bash
+uv run python -m evalkit.prepare_scores
+```
+
+`runs.jsonl` 을 읽어 회차마다 빈 채점 레코드를 `scores.jsonl` 에 깔아둔다.
+`run_id`·`question_id`·평가 기준 코드는 원본에서 그대로 가져오므로 손으로 적을 필요가 없다.
+점수는 전부 `null` 로 나오며, 사람이 점수와 근거만 채운다.
+호출 실패 회차는 `not_scored_reason` 이 채워진 채로 나온다.
+
 ### 검증과 집계
 
 ```bash
-python -m evalkit.validator
+uv run python -m evalkit.validator
 ```
 
 저장된 JSONL 을 다시 열어 파싱·필드 누락·`run_id` 중복·규칙 위반·실험 커버리지를 검사한다.
 
 ```bash
-python -m evalkit.aggregator
+uv run python -m evalkit.aggregator
 python -m evalkit.exporter
 ```
 

@@ -1,6 +1,15 @@
 [project]
 name = "project1-python-start"
 version = "0.1.0"
-description = "Python으로 Ollama와 OpenAI 모델에 첫 질문 보내기"
+description = "로컬/Cloud LLM 비교 실험 — 실행 코드와 기록 도구"
 requires-python = ">=3.12,<3.13"
 dependencies = ["ollama==0.6.2", "openai==3.8.0"]
+
+# src/evalkit 을 패키지로 설치해 `uv run python -m evalkit.<모듈>` 이
+# 작업 디렉터리와 무관하게 동작하도록 한다.
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

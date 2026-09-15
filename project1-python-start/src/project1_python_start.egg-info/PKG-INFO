@@ -1,0 +1,7 @@
+Metadata-Version: 2.4
+Name: project1-python-start
+Version: 0.1.0
+Summary: 로컬/Cloud LLM 비교 실험 — 실행 코드와 기록 도구
+Requires-Python: <3.13,>=3.12
+Requires-Dist: ollama==0.6.2
+Requires-Dist: openai==3.8.0
