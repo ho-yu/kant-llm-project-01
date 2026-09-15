@@ -84,7 +84,7 @@ Required-by:
 | Model C | 금융 | Llama-3.1-Kor-BCCard-Finance-8B | 8B / Q4_K_M | `hf.co/featherless-ai-quants/BCCard-Llama-3.1-Kor-BCCard-Finance-8B-GGUF:Q4_K_M` |
 | Model D | 코딩 | Qwen2.5-Coder-7B-Instruct | 7B / Q4_K_M | `hf.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M` |
 | Model E | 수학 | Math-IIO-7B-Instruct | 7B / Q4_K_M | `hf.co/QuantFactory/Math-IIO-7B-Instruct-GGUF:Q4_K_M` |
-| Model F | 이커머스 | POLAR-14B-v0.5 | 14B / Q4_K_M | `hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M` |
+| Model F | 이커머스 | sam-1-base | 7.62B / Q4_K_M | `hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M` |
 
 ## STEP 4 CLI 스모크 테스트에서 관찰된 문제
 
@@ -96,9 +96,18 @@ Required-by:
 
 CLI 실행 시 프롬프트를 그대로 반복하고 `<|im_start|>`/`<|im_end|>` 특수토큰이 응답에 노출됨 (chat template 불일치로 추정). `done_reason=length` 로 정지 토큰을 내지 못하고 출력 한도까지 생성함. PROCESSOR 100% GPU, CONTEXT 4096.
 
-**Model F — 사전 관찰**
+**Model F — 사전 관찰 및 모델 교체**
 
-CLI 실행 시 `Error: llama-server chat error: map[code:500 message:The model produced output that does not match the expected peg-native format type:server_error]` 발생. PROCESSOR 36%/64% (CPU/GPU) — 8GB VRAM 에서 14B 모델이 일부 CPU offloading 됨. CONTEXT 4096.
+당초 이커머스 후보는 **POLAR-14B-v0.5** (`hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M`) 였다.
+CLI 및 Python 호출 모두에서 `Error: llama-server chat error: map[code:500 message:The model produced
+output that does not match the expected peg-native format type:server_error]` 가 발생해 응답 자체를
+받지 못했다. PROCESSOR 36%/64% (CPU/GPU) — 8GB VRAM 에서 14B 가중치(7.97 GiB)가 온전히 올라가지
+못하고 일부 CPU 로 내려간 상태였다. CONTEXT 4096.
+
+12:43 과 14:42 두 차례 모두 동일하게 실패해 일회성 오류가 아님을 확인하고,
+같은 이커머스 도메인의 **sam-1-base** (Qwen2.5-7B-Instruct 기반, 7.62B) 로 교체했다.
+교체 후 정상 동작한다 (`done_reason=stop`, 231토큰, 100% GPU, 4528 MiB).
+실패한 POLAR 기록의 삭제 이력은 [steps/step06.md](steps/step06.md) '실행 기록 삭제 이력' 절에 있다.
 
 ## 대상 확정
 

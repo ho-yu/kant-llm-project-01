@@ -286,4 +286,49 @@ run_id   : E_warmup
 3. 배송업체 연락: 배송업체에 연락하여 배송상태를 확인하고, 문제가 있다면 문의해보세요. …
 ```
 
+---
+
+## STEP 04 — 실행 환경 / F 연결 확인
+
+### 실행 환경
+
+| 항목 | 값 |
+|---|---|
+| OS | Windows 10.0.26200 |
+| Python | 3.12.13 |
+| Ollama | 0.34.0 |
+| Python `ollama` 패키지 | 0.6.2 |
+| Python `openai` 패키지 | 3.8.0 |
+| GPU | NVIDIA GeForce RTX 5060 Laptop GPU |
+| VRAM | 8151 MiB |
+| CPU | Intel64 Family 6 Model 198 Stepping 2, GenuineIntel |
+| 시스템 RAM | 31.4 GB |
+
+### Model F (이커머스) 식별값
+
+| 항목 | 값 | 출처 |
+|---|---|---|
+| 모델 태그 | `hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M` | `models.json` |
+| Parameter | 7.62B | `client.list()` |
+| digest | `90130fbbb57b5b4c...` | 실행 기록 |
+| 양자화 | unknown | `client.list()` |
+| 실험에 사용한 Context | 4096 | 실행 기록 |
+| 문서상 최대 Context | (미기재) | Model Card |
+| 다운로드 크기 | 4.36 GB | `client.list()` |
+| CPU/GPU 적재 | 100% GPU | 실행 기록 |
+
+### 저장 후 다시 읽어 확인한 기록 1건
+
+```
+파일     : data/raw/local/runs.jsonl
+run_id   : F_warmup
+질문     : Q01
+설정     : {'temperature': 0, 'num_predict': 768, 'num_ctx': 4096, 'seed': 0}
+상태     : success / done_reason=stop
+응답 앞부분:
+1. 배송 상태 확인하기: 배송업체의 웹사이트나 앱을 통해 배송 상태를 확인해보세요. 배송업체의 추정 도착일은 정확하지 않을 수 있으니, 실제 배송 상태를 확인하는 것이 중요합니다.
+2. 배송업체 연락하기: 배송업체에 연락하여 배송상태를 확인하거나, 배송이 지연된 이유를 물어보세요.
+3. 판매자에게 문의하기: 온라인 쇼핑몰이나 판매자에게 배송상태를 문의해보 …
+```
+
 <!-- evalkit:auto:end -->

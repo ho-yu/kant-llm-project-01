@@ -174,16 +174,16 @@ ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
 
 
 특징:
-- 한국어 기반 LLM
-- Plateer AI-Lab의 POLAR 계열
-- 커머스 / 이커머스 활용을 목적으로 개발된 모델 계열
+- 한국어 기반 커머스 특화 LLM
+- Qwen2.5-7B-Instruct 기반
 - 상품 검색, 추천, 비교, 리뷰 요약 등 커머스 작업 비교에 적합
 
-주의:
-- 다른 후보는 7B~8B이지만 POLAR는 14B
-- Q4_K_M 파일도 약 8GB 수준
-- 현재 8GB VRAM 환경에서는 CPU/RAM Offloading이 발생할 수 있음
-- 다른 모델보다 응답 속도가 느릴 수 있음
+교체 이력:
+- 당초 이커머스 후보는 POLAR-14B-v0.5 였으나, GGUF 변환본이
+  `peg-native format` 500 오류로 호출 자체가 불가능해 교체했다
+  (12:43·14:42 두 차례 동일 실패 — [step06.md](step06.md) '실행 기록 삭제 이력')
+- 14B → 7.62B 로 내려가면서 8GB VRAM 에 온전히 적재되어
+  CPU/RAM Offloading 이 사라졌다 (실측 100% GPU, 4528 MiB)
 
 
 # 최종 도메인 구성
@@ -209,8 +209,8 @@ ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
    - 7B / Q4_K_M
 
 6. 이커머스
-   - x2bee/POLAR-14B-v0.5
-   - 14B / Q4_K_M
+   - snapcart-ai/sam-1-base
+   - 7.62B / Q4_K_M
 
 
 
@@ -238,7 +238,7 @@ ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
 | C | 금융 | Llama-3.1-Kor-BCCard-Finance-8B | 8B | Q4_K_M | Meta Llama 3 Community | Llama 3.1 Community |
 | D | 코딩 | Qwen2.5-Coder-7B-Instruct | 7B | Q4_K_M | Apache-2.0 | Apache-2.0 |
 | E | 수학 | Math-IIO-7B-Instruct | 7B | Q4_K_M | CreativeML Open RAIL-M | Apache-2.0 |
-| F | 이커머스 | POLAR-14B-v0.5 | 14B | Q4_K_M | Apache-2.0 | Apache-2.0 |
+| F | 이커머스 | sam-1-base | 7.62B | Q4_K_M | Apache-2.0 | Apache-2.0 |
 
 **모델 태그** (`ollama pull` 대상)
 
@@ -249,7 +249,7 @@ ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
 | C | `hf.co/featherless-ai-quants/BCCard-Llama-3.1-Kor-BCCard-Finance-8B-GGUF:Q4_K_M` |
 | D | `hf.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M` |
 | E | `hf.co/QuantFactory/Math-IIO-7B-Instruct-GGUF:Q4_K_M` |
-| F | `hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M` |
+| F | `hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M` |
 
 **Context / 자원** (STEP 4~6에서 실측 후 기입)
 
@@ -260,7 +260,7 @@ ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
 | C | | | | | |
 | D | | | | | |
 | E | | | | | |
-| F | | 약 8GB | | | |
+| F | | | | | |
 
 > 라벨 A~F는 [eval-results.md](../eval-results.md)의 Model A~F와 동일하다.
 > `문서상 최대 Context`와 `실험에 사용한 Context`는 반드시 구분해서 기재한다 (산출물 요구사항).
@@ -274,7 +274,7 @@ ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
 | C (금융) | PASS | 본 실험 진행 |
 | D (코딩) | PASS | 본 실험 진행 |
 | E (수학) | PASS | 본 실험 진행 |
-| F (이커머스) | FAIL — server_error (peg-native format) | 본 실험으로 판정 |
+| F (이커머스) | POLAR-14B 는 FAIL — 교체 후 정상 (`stop`, 231토큰) | 본 실험으로 판정 |
 
 > A·F는 사전 확인에서 문제가 보였으나 제외하지 않고 본 실험을 돌린다. 재현되면 필수 조건 3 미충족으로 판정한다.
 > 상세 로그는 [eval-results.md](../eval-results.md) 'STEP 4 CLI 스모크 테스트에서 관찰된 문제' 절 참조.

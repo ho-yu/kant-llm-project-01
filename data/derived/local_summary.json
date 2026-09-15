@@ -3,538 +3,718 @@
     "scope_phases": [
       "main"
     ],
-    "total_records_in_file": 0,
-    "records_in_scope": 0,
-    "settings_version": null,
-    "questions_version": null,
+    "total_records_in_file": 12,
+    "records_in_scope": 6,
+    "settings_version": "v1",
+    "questions_version": "v1",
     "models": {
       "A": {
         "display_name": "Model A (법률)",
         "model_tag": "hf.co/Arc1el/Llama-3.1-Korean-8B-Instruct-Law-GGUF:Q4_K_M",
-        "attempts": 0,
-        "success": 0,
+        "attempts": 1,
+        "success": 1,
         "errors": 0,
         "error_run_ids": [],
         "metrics": {
           "elapsed_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 11.766721099964343,
+            "n": 1,
+            "min": 11.766721099964343,
+            "max": 11.766721099964343,
+            "values": [
+              11.766721099964343
+            ],
+            "source_run_ids": [
+              "A_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "load_duration_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 0.005133,
+            "n": 1,
+            "min": 0.005133,
+            "max": 0.005133,
+            "values": [
+              0.005133
+            ],
+            "source_run_ids": [
+              "A_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "eval_count": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 768.0,
+            "n": 1,
+            "min": 768.0,
+            "max": 768.0,
+            "values": [
+              768.0
+            ],
+            "source_run_ids": [
+              "A_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "eval_duration_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 11.696705,
+            "n": 1,
+            "min": 11.696705,
+            "max": 11.696705,
+            "values": [
+              11.696705
+            ],
+            "source_run_ids": [
+              "A_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "tokens_per_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 65.65951693233265,
+            "n": 1,
+            "min": 65.65951693233265,
+            "max": 65.65951693233265,
+            "values": [
+              65.65951693233265
+            ],
+            "source_run_ids": [
+              "A_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "prompt_eval_count": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 54.0,
+            "n": 1,
+            "min": 54.0,
+            "max": 54.0,
+            "values": [
+              54.0
+            ],
+            "source_run_ids": [
+              "A_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "size_vram_mib": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 5027.499999046326,
+            "n": 1,
+            "min": 5027.499999046326,
+            "max": 5027.499999046326,
+            "values": [
+              5027.499999046326
+            ],
+            "source_run_ids": [
+              "A_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           }
         },
-        "run_ids": []
+        "run_ids": [
+          "A_Q01_r1"
+        ]
       },
       "B": {
         "display_name": "Model B (의료·바이오)",
         "model_tag": "hf.co/mradermacher/KoBioMed-Llama-3.1-8B-Instruct-i1-GGUF:Q4_K_M",
-        "attempts": 0,
-        "success": 0,
+        "attempts": 1,
+        "success": 1,
         "errors": 0,
         "error_run_ids": [],
         "metrics": {
           "elapsed_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 15.803376199968625,
+            "n": 1,
+            "min": 15.803376199968625,
+            "max": 15.803376199968625,
+            "values": [
+              15.803376199968625
+            ],
+            "source_run_ids": [
+              "B_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "load_duration_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 0.0050669,
+            "n": 1,
+            "min": 0.0050669,
+            "max": 0.0050669,
+            "values": [
+              0.0050669
+            ],
+            "source_run_ids": [
+              "B_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "eval_count": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 768.0,
+            "n": 1,
+            "min": 768.0,
+            "max": 768.0,
+            "values": [
+              768.0
+            ],
+            "source_run_ids": [
+              "B_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "eval_duration_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 15.740763,
+            "n": 1,
+            "min": 15.740763,
+            "max": 15.740763,
+            "values": [
+              15.740763
+            ],
+            "source_run_ids": [
+              "B_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "tokens_per_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 48.79051923975985,
+            "n": 1,
+            "min": 48.79051923975985,
+            "max": 48.79051923975985,
+            "values": [
+              48.79051923975985
+            ],
+            "source_run_ids": [
+              "B_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "prompt_eval_count": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 42.0,
+            "n": 1,
+            "min": 42.0,
+            "max": 42.0,
+            "values": [
+              42.0
+            ],
+            "source_run_ids": [
+              "B_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "size_vram_mib": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 5027.499999046326,
+            "n": 1,
+            "min": 5027.499999046326,
+            "max": 5027.499999046326,
+            "values": [
+              5027.499999046326
+            ],
+            "source_run_ids": [
+              "B_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           }
         },
-        "run_ids": []
+        "run_ids": [
+          "B_Q01_r1"
+        ]
       },
       "C": {
         "display_name": "Model C (금융)",
         "model_tag": "hf.co/featherless-ai-quants/BCCard-Llama-3.1-Kor-BCCard-Finance-8B-GGUF:Q4_K_M",
-        "attempts": 0,
-        "success": 0,
+        "attempts": 1,
+        "success": 1,
         "errors": 0,
         "error_run_ids": [],
         "metrics": {
           "elapsed_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 4.806545100000221,
+            "n": 1,
+            "min": 4.806545100000221,
+            "max": 4.806545100000221,
+            "values": [
+              4.806545100000221
+            ],
+            "source_run_ids": [
+              "C_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "load_duration_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 0.0051404,
+            "n": 1,
+            "min": 0.0051404,
+            "max": 0.0051404,
+            "values": [
+              0.0051404
+            ],
+            "source_run_ids": [
+              "C_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "eval_count": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 288.0,
+            "n": 1,
+            "min": 288.0,
+            "max": 288.0,
+            "values": [
+              288.0
+            ],
+            "source_run_ids": [
+              "C_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "eval_duration_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 4.757387,
+            "n": 1,
+            "min": 4.757387,
+            "max": 4.757387,
+            "values": [
+              4.757387
+            ],
+            "source_run_ids": [
+              "C_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "tokens_per_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 60.537433679454715,
+            "n": 1,
+            "min": 60.537433679454715,
+            "max": 60.537433679454715,
+            "values": [
+              60.537433679454715
+            ],
+            "source_run_ids": [
+              "C_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "prompt_eval_count": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 53.0,
+            "n": 1,
+            "min": 53.0,
+            "max": 53.0,
+            "values": [
+              53.0
+            ],
+            "source_run_ids": [
+              "C_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "size_vram_mib": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 5027.499999046326,
+            "n": 1,
+            "min": 5027.499999046326,
+            "max": 5027.499999046326,
+            "values": [
+              5027.499999046326
+            ],
+            "source_run_ids": [
+              "C_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           }
         },
-        "run_ids": []
+        "run_ids": [
+          "C_Q01_r1"
+        ]
       },
       "D": {
         "display_name": "Model D (코딩)",
         "model_tag": "hf.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M",
-        "attempts": 0,
-        "success": 0,
+        "attempts": 1,
+        "success": 1,
         "errors": 0,
         "error_run_ids": [],
         "metrics": {
           "elapsed_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 6.062440100009553,
+            "n": 1,
+            "min": 6.062440100009553,
+            "max": 6.062440100009553,
+            "values": [
+              6.062440100009553
+            ],
+            "source_run_ids": [
+              "D_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "load_duration_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 0.0052865,
+            "n": 1,
+            "min": 0.0052865,
+            "max": 0.0052865,
+            "values": [
+              0.0052865
+            ],
+            "source_run_ids": [
+              "D_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "eval_count": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 295.0,
+            "n": 1,
+            "min": 295.0,
+            "max": 295.0,
+            "values": [
+              295.0
+            ],
+            "source_run_ids": [
+              "D_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "eval_duration_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 6.0186,
+            "n": 1,
+            "min": 6.0186,
+            "max": 6.0186,
+            "values": [
+              6.0186
+            ],
+            "source_run_ids": [
+              "D_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "tokens_per_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 49.01472103146911,
+            "n": 1,
+            "min": 49.01472103146911,
+            "max": 49.01472103146911,
+            "values": [
+              49.01472103146911
+            ],
+            "source_run_ids": [
+              "D_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "prompt_eval_count": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 46.0,
+            "n": 1,
+            "min": 46.0,
+            "max": 46.0,
+            "values": [
+              46.0
+            ],
+            "source_run_ids": [
+              "D_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "size_vram_mib": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 4528.099998474121,
+            "n": 1,
+            "min": 4528.099998474121,
+            "max": 4528.099998474121,
+            "values": [
+              4528.099998474121
+            ],
+            "source_run_ids": [
+              "D_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           }
         },
-        "run_ids": []
+        "run_ids": [
+          "D_Q01_r1"
+        ]
       },
       "E": {
         "display_name": "Model E (수학)",
         "model_tag": "hf.co/QuantFactory/Math-IIO-7B-Instruct-GGUF:Q4_K_M",
-        "attempts": 0,
-        "success": 0,
+        "attempts": 1,
+        "success": 1,
         "errors": 0,
         "error_run_ids": [],
         "metrics": {
           "elapsed_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 5.109295799979009,
+            "n": 1,
+            "min": 5.109295799979009,
+            "max": 5.109295799979009,
+            "values": [
+              5.109295799979009
+            ],
+            "source_run_ids": [
+              "E_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "load_duration_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 0.0032333,
+            "n": 1,
+            "min": 0.0032333,
+            "max": 0.0032333,
+            "values": [
+              0.0032333
+            ],
+            "source_run_ids": [
+              "E_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "eval_count": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 345.0,
+            "n": 1,
+            "min": 345.0,
+            "max": 345.0,
+            "values": [
+              345.0
+            ],
+            "source_run_ids": [
+              "E_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "eval_duration_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 5.075775,
+            "n": 1,
+            "min": 5.075775,
+            "max": 5.075775,
+            "values": [
+              5.075775
+            ],
+            "source_run_ids": [
+              "E_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "tokens_per_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 67.96991592416921,
+            "n": 1,
+            "min": 67.96991592416921,
+            "max": 67.96991592416921,
+            "values": [
+              67.96991592416921
+            ],
+            "source_run_ids": [
+              "E_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "prompt_eval_count": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 46.0,
+            "n": 1,
+            "min": 46.0,
+            "max": 46.0,
+            "values": [
+              46.0
+            ],
+            "source_run_ids": [
+              "E_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "size_vram_mib": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 4528.099998474121,
+            "n": 1,
+            "min": 4528.099998474121,
+            "max": 4528.099998474121,
+            "values": [
+              4528.099998474121
+            ],
+            "source_run_ids": [
+              "E_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           }
         },
-        "run_ids": []
+        "run_ids": [
+          "E_Q01_r1"
+        ]
       },
       "F": {
         "display_name": "Model F (이커머스)",
-        "model_tag": "hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M",
-        "attempts": 0,
-        "success": 0,
+        "model_tag": "hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M",
+        "attempts": 1,
+        "success": 1,
         "errors": 0,
         "error_run_ids": [],
         "metrics": {
           "elapsed_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 4.833838300022762,
+            "n": 1,
+            "min": 4.833838300022762,
+            "max": 4.833838300022762,
+            "values": [
+              4.833838300022762
+            ],
+            "source_run_ids": [
+              "F_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "load_duration_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 0.0042464,
+            "n": 1,
+            "min": 0.0042464,
+            "max": 0.0042464,
+            "values": [
+              0.0042464
+            ],
+            "source_run_ids": [
+              "F_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "eval_count": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 231.0,
+            "n": 1,
+            "min": 231.0,
+            "max": 231.0,
+            "values": [
+              231.0
+            ],
+            "source_run_ids": [
+              "F_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "eval_duration_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 4.795052,
+            "n": 1,
+            "min": 4.795052,
+            "max": 4.795052,
+            "values": [
+              4.795052
+            ],
+            "source_run_ids": [
+              "F_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "tokens_per_sec": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 48.1746600453968,
+            "n": 1,
+            "min": 48.1746600453968,
+            "max": 48.1746600453968,
+            "values": [
+              48.1746600453968
+            ],
+            "source_run_ids": [
+              "F_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "prompt_eval_count": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 46.0,
+            "n": 1,
+            "min": 46.0,
+            "max": 46.0,
+            "values": [
+              46.0
+            ],
+            "source_run_ids": [
+              "F_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           },
           "size_vram_mib": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 4528.099998474121,
+            "n": 1,
+            "min": 4528.099998474121,
+            "max": 4528.099998474121,
+            "values": [
+              4528.099998474121
+            ],
+            "source_run_ids": [
+              "F_Q01_r1"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "유효한 측정값 없음"
+            "unavailable_reason": null
           }
         },
-        "run_ids": []
+        "run_ids": [
+          "F_Q01_r1"
+        ]
       }
     }
   },
@@ -611,7 +791,7 @@
           }
         },
         "by_case_type": {
-          "정보 부족": {
+          "경계": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -622,7 +802,7 @@
             "excluded_run_ids": [],
             "unavailable_reason": "채점된 응답 없음"
           },
-          "경계": {
+          "정보 부족": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -708,7 +888,7 @@
           }
         },
         "by_case_type": {
-          "정보 부족": {
+          "경계": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -719,7 +899,7 @@
             "excluded_run_ids": [],
             "unavailable_reason": "채점된 응답 없음"
           },
-          "경계": {
+          "정보 부족": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -805,7 +985,7 @@
           }
         },
         "by_case_type": {
-          "정보 부족": {
+          "경계": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -816,7 +996,7 @@
             "excluded_run_ids": [],
             "unavailable_reason": "채점된 응답 없음"
           },
-          "경계": {
+          "정보 부족": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -902,7 +1082,7 @@
           }
         },
         "by_case_type": {
-          "정보 부족": {
+          "경계": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -913,7 +1093,7 @@
             "excluded_run_ids": [],
             "unavailable_reason": "채점된 응답 없음"
           },
-          "경계": {
+          "정보 부족": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -999,7 +1179,7 @@
           }
         },
         "by_case_type": {
-          "정보 부족": {
+          "경계": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -1010,7 +1190,7 @@
             "excluded_run_ids": [],
             "unavailable_reason": "채점된 응답 없음"
           },
-          "경계": {
+          "정보 부족": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -1096,7 +1276,7 @@
           }
         },
         "by_case_type": {
-          "정보 부족": {
+          "경계": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -1107,7 +1287,7 @@
             "excluded_run_ids": [],
             "unavailable_reason": "채점된 응답 없음"
           },
-          "경계": {
+          "정보 부족": {
             "available": false,
             "mean": null,
             "n": 0,

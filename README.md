@@ -82,10 +82,18 @@ A·F는 CLI 사전 확인에서 문제가 보였으나 본 실험 결과로 판�
 모델은 아래 태그로 직접 내려받는다.
 
 ```bash
+# A 법률
+ollama pull hf.co/Arc1el/Llama-3.1-Korean-8B-Instruct-Law-GGUF:Q4_K_M
+# B 의료·바이오
 ollama pull hf.co/mradermacher/KoBioMed-Llama-3.1-8B-Instruct-i1-GGUF:Q4_K_M
+# C 금융
 ollama pull hf.co/featherless-ai-quants/BCCard-Llama-3.1-Kor-BCCard-Finance-8B-GGUF:Q4_K_M
+# D 코딩
 ollama pull hf.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M
+# E 수학
 ollama pull hf.co/QuantFactory/Math-IIO-7B-Instruct-GGUF:Q4_K_M
+# F 이커머스
+ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
 ```
 
 ---
