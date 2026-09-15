@@ -121,7 +121,7 @@ def execute_once(
         model_label=model["model_label"],
         model_tag=model["model_tag"],
         prompt=prompt,
-        options=settings["options"],
+        options=config.chat_options(),
         settings_version=settings["settings_version"],
         questions_version=questions_version,
         question_id=question_id,

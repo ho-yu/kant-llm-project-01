@@ -35,7 +35,8 @@
 | `project1-python-start/src/evalkit/collect_env.py` | 실행 환경 자동 수집 |
 | `project1-python-start/src/evalkit/prepare_scores.py` | 채점용 빈 레코드 생성 |
 | `project1-python-start/src/evalkit/peek.py` | 기록 훑어보기 / 진행 상황 |
-| `project1-python-start/0*.py`, `99_*.py` | 모델별 단발 호출 예제 |
+| `project1-python-start/10_experiment.py` | **실행 진입점** — MODE 만 바꿔 쓴다 |
+| `project1-python-start/0*.py`, `99_*.py` | 모델별 단발 호출 예제 (수동 확인용) |
 
 ### 입력 (1회 작성 후 고정)
 
@@ -100,33 +101,33 @@ Ollama 앱도 실행해 둔다.
 
 ### 실행 순서
 
-`project1-python-start` 의 번호 붙은 파일을 순서대로 실행한다.
-파일 위쪽 상수만 바꾸면 되고, 명령줄 옵션은 필요 없다.
-
-| 파일 | 바꿀 값 | 하는 일 |
-|---|---|---|
-| `10_collect_env.py` | — | 환경 정보 수집 → `environment.json` |
-| `11_run_model.py` | `MODEL`, `LIMIT` | 모델 하나 실행 → `runs.jsonl` |
-| `12_check.py` | `MODEL`, `RUN_ID` | 진행 상황·기록 확인 |
-| `13_validate.py` | — | 저장된 기록 검사 |
-| `14_prepare_scores.py` | — | 채점용 빈 레코드 생성 |
-| `15_make_tables.py` | — | 집계 + 마크다운 표 생성 |
+`project1-python-start/10_experiment.py` 하나로 전부 처리한다.
+파일 위쪽의 `MODE` 와 `MODEL` 만 바꾸고 실행한다.
 
 ```bash
-uv run python 11_run_model.py
+uv run python 10_experiment.py
 ```
 
-실험 시작 전에 `data/config/run_settings.json` 을 먼저 채운다.
+| `MODE` | 하는 일 | 같이 볼 값 |
+|---|---|---|
+| `"env"` | 환경 정보 수집 → `environment.json` | — |
+| `"run"` | 모델 하나 실행 → `runs.jsonl`. 끝나면 상태·검사 결과도 출력 | `MODEL`, `LIMIT` |
+| `"check"` | 진행 상황·기록 확인 | `RUN_ID` |
+| `"score"` | 채점용 빈 레코드 생성 | — |
+| `"table"` | 집계 + 마크다운 표 생성 | — |
 
 ### 모델 하나씩 도는 흐름
 
-1. `11_run_model.py` 에서 `MODEL = "B"`, `LIMIT = 3` 으로 두고 실행
-2. `12_check.py` 로 값이 들어갔는지 확인 — **VRAM 이 `null` 이면 멈추고 `keep_alive` 확인**
-3. 문제없으면 `LIMIT = None` 으로 바꾸고 `11_run_model.py` 재실행 (이미 기록된 회차는 건너뜀)
-4. `13_validate.py` 로 검사
-5. `MODEL` 을 `"C"` → `"D"` → `"E"` 로 바꿔 1~4 반복
+실험 시작 전에 `data/config/run_settings.json` 을 먼저 채운다.
 
-80회를 다 채우면 `14_prepare_scores.py` → 채점 → `15_make_tables.py`.
+1. `MODE = "env"` — 한 번만
+2. `MODE = "run"`, `MODEL = "B"`, `LIMIT = 3` — 실행하면 기록 상태가 바로 나온다
+   **VRAM 이 `null` 이면 멈추고 `keep_alive` 를 확인한다.** 기록은 append 전용이라 되돌릴 수 없다
+3. 문제없으면 `LIMIT = None` 으로 바꿔 재실행 (이미 기록된 회차는 건너뜀)
+4. `MODEL` 을 `"C"` → `"D"` → `"E"` 로 바꿔 2~3 반복
+5. 80회를 채우면 `MODE = "score"` → `scores.jsonl` 에 점수·근거 입력 → `MODE = "table"`
+
+채점 중 원본 응답을 보려면 `MODE = "check"`, `RUN_ID = "B_Q01_r1"`.
 
 ### Cloud 비교 (STEP 7)
 

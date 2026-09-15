@@ -65,8 +65,33 @@ def _load_json(path: Path) -> dict[str, Any]:
         return json.load(f)
 
 
+def _strip_comments(value: Any) -> Any:
+    """설명용 "_" 키를 제거한다.
+
+    JSON 에는 주석을 달 수 없어 "_comment" 같은 키로 설명을 적어두는데,
+    그대로 Ollama 에 넘기면 알 수 없는 옵션이 섞인다.
+    """
+    if isinstance(value, dict):
+        return {k: _strip_comments(v) for k, v in value.items() if not k.startswith("_")}
+    if isinstance(value, list):
+        return [_strip_comments(v) for v in value]
+    return value
+
+
 def load_run_settings() -> dict[str, Any]:
     return _load_json(RUN_SETTINGS_PATH)
+
+
+def chat_options() -> dict[str, Any]:
+    """client.chat(options=...) 에 넘길 값.
+
+    설명용 키를 걷어내고, 값이 정해지지 않은(None) 항목도 뺀다.
+    None 을 그대로 넘기면 Ollama 가 기본값 대신 None 을 해석하려 한다.
+    기록에는 여기서 만든 딕셔너리가 그대로 남으므로, 실제로 넘긴 값과
+    기록이 항상 일치한다.
+    """
+    raw = _strip_comments(load_run_settings().get("options") or {})
+    return {k: v for k, v in raw.items() if v is not None}
 
 
 def load_models() -> dict[str, Any]:

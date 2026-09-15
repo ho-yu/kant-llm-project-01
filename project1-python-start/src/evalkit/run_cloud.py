@@ -93,7 +93,7 @@ def run_all(dry_run: bool = False) -> recorder.RunLog:
             question_id=qid,
             repeat=1,
             prompt=q["prompt"],
-            options=settings["options"],
+            options=config.chat_options(),
             settings_version=settings["settings_version"],
             questions_version=config.load_questions()["questions_version"],
         )
