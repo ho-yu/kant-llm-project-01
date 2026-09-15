@@ -23,12 +23,14 @@ from evalkit import aggregator, collect_env, exporter, peek, prepare_scores, run
 # "env" | "run" | "check" | "score" | "table"
 MODE = "run"
 
-# MODE="run" 일 때 실행할 모델: "B" / "C" / "D" / "E"
-MODEL = "B"
+# MODE="run" 일 때 실행할 모델.
+# 모델 "라벨" 을 적습니다. 태그(hf.co/...)가 아닙니다.
+# 라벨과 태그의 짝은 data/config/models.json 에 있습니다.
+MODEL = "B"     # "B" / "C" / "D" / "E"
 
 # 본 실험을 몇 건까지만 할지. None 이면 전부(질문 10개 x 2회 = 20건).
 # 처음 돌릴 때는 3 정도로 두고 값이 제대로 들어가는지 확인합니다.
-LIMIT = 3
+LIMIT = 1
 
 # 호출하지 않고 계획만 보려면 True.
 DRY_RUN = False

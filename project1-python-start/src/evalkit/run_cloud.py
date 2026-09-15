@@ -104,7 +104,8 @@ def run_all(dry_run: bool = False) -> recorder.RunLog:
 
         elapsed = None
         try:
-            response, elapsed = call_cloud(model_id, q["prompt"], settings["options"], api_key)
+            # 기록에 남은 options 를 그대로 넘긴다 (run_local 과 같은 이유)
+            response, elapsed = call_cloud(model_id, q["prompt"], rec["options"], api_key)
             rec["status"] = config.STATUS_SUCCESS
             rec["elapsed_sec"] = elapsed
             rec["response_text"] = getattr(response, "output_text", None)

@@ -34,7 +34,7 @@ Ollama 앱이 실행 중이어야 한다.
 |---|---|---|
 | `timeout_sec` | 한 번의 호출을 얼마나 기다릴지 | 무한 대기. 모델이 멈추면 실험이 멈춘다 |
 | `options.temperature` | 생성의 무작위성 | Ollama 기본값이 적용되고 **기록에는 남지 않는다** |
-| `options.num_predict` | 최대 출력 토큰 수 | 위와 같음. 한도에 걸리면 `done_reason="length"` 로 기록된다 |
+| `options.num_predict` | 최대 출력 토큰 수 | **생성이 폭주한다.** 실측에서 한 질문에 40,960 토큰(73,000자)까지 생성하고 13분 넘게 걸렸다. 반드시 값을 정한다 |
 | `options.num_ctx` | 입력+출력을 담을 context 크기 | 위와 같음. 산출물의 "실험에 사용한 Context" 근거가 없어진다 |
 | `options.seed` | 재현용 시드 | 값을 넣지 않으면 전달하지 않는다 |
 | `keep_alive` | 응답 뒤 모델을 메모리에 얼마나 둘지 | **기본값(5분)이 적용되며 VRAM 측정에 문제없다.** `0` 으로 두면 응답 직후 언로드되어 `size_vram` / `digest` / `context_length` 를 읽지 못한다 |

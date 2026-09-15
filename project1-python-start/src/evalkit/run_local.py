@@ -139,8 +139,10 @@ def execute_once(
 
     elapsed = None
     try:
+        # 기록에 남은 options 를 그대로 넘긴다. 둘이 갈라지면
+        # "무슨 설정으로 돌렸는지" 기록을 믿을 수 없게 된다.
         response, elapsed = call_ollama(
-            model["model_tag"], prompt, settings["options"], rec["system_prompt"]
+            model["model_tag"], prompt, rec["options"], rec["system_prompt"]
         )
         recorder.fill_from_ollama_response(rec, response, elapsed)
 
@@ -173,6 +175,13 @@ def run_all(
     qversion = questions["questions_version"]
     models = config.enabled_models()
     if only_model:
+        valid = [m["model_label"] for m in models]
+        if only_model not in valid:
+            raise SystemExit(
+                f"모델 라벨 {only_model!r} 을 찾을 수 없습니다.\n"
+                f"  MODEL 에는 모델 태그가 아니라 라벨을 적습니다: {valid}\n"
+                f"  라벨과 태그의 짝은 data/config/models.json 에 있습니다."
+            )
         models = [m for m in models if m["model_label"] == only_model]
 
     log = recorder.RunLog(config.LOCAL_RUNS_PATH)
