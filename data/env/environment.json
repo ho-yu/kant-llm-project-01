@@ -1,6 +1,6 @@
 {
   "_comment": "STEP 04(실행 환경 확인)과 산출물 2(Model Comparison Table)에 필요한 정보만 담는다. 대부분 10_run.py 실행 시 자동 수집되고, doc_max_context 만 사람이 Model Card 에서 확인한다. doc_max_context(문서상 최대 Context)와 실행 기록의 context_length(실험에서 실제 설정한 값)는 산출물에서 반드시 구분해서 적어야 하므로 서로 다른 곳에 저장한다. 측정하지 못한 값은 0 이 아니라 null 로 두고 notes 에 사유를 남긴다.",
-  "recorded_at": "2026-09-15T12:43:43+09:00",
+  "recorded_at": "2026-09-15T14:45:27+09:00",
   "platform": {
     "os": "Windows",
     "os_version": "10.0.26200",
@@ -88,19 +88,21 @@
     },
     {
       "model_label": "F",
-      "model_tag": "hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M",
-      "parameter_size": "14.2B",
-      "quantization_level": "Q4_K_M",
-      "digest": "b5bba118338e631d97d971d5496a506b4d8f59baacf8d05a373381c50a46db90",
-      "download_size_bytes": 8554896724,
+      "model_tag": "hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M",
+      "parameter_size": "7.62B",
+      "quantization_level": "unknown",
+      "digest": "90130fbbb57b5b4c59e7d1b6ae5466642094a790767b0ad9c6762c5ab27a28bc",
+      "download_size_bytes": 4683076803,
       "doc_max_context": null,
-      "model_card_url": "https://huggingface.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf",
-      "upstream_model_card_url": "https://huggingface.co/x2bee/POLAR-14B-v0.5",
-      "license_declared": "Apache-2.0",
-      "license_base_model": "Apache-2.0"
+      "model_card_url": null,
+      "upstream_model_card_url": null,
+      "license_declared": null,
+      "license_base_model": null
     }
   ],
   "notes": {
-    "models[B].quantization_level": "Ollama 가 'unknown' 으로 보고함 — 모델 태그 기준값을 함께 기재할 것"
+    "models[F]": "client.list() 목록에 없음 — 아직 pull 하지 않았을 수 있음",
+    "models[B].quantization_level": "Ollama 가 'unknown' 으로 보고함 — 모델 태그 기준값을 함께 기재할 것",
+    "models[F].quantization_level": "Ollama 가 'unknown' 으로 보고함 — 모델 태그 기준값을 함께 기재할 것"
   }
 }

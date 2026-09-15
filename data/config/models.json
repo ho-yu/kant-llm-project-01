@@ -35,7 +35,7 @@
     {
       "model_label": "F",
       "display_name": "Model F (이커머스)",
-      "model_tag": "hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M",
+      "model_tag": "hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M",
       "enabled": true
     }
   ],

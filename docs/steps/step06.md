@@ -46,6 +46,22 @@
 - CLI 사전 확인에서 관측한 같은 증상은
   [eval-results.md](../eval-results.md) 'STEP 4 CLI 스모크 테스트에서 관찰된 문제' 절에도 기록되어 있다.
 
+**2026-09-15 14:42 — Model F 기록 2건 추가 삭제**
+
+| run_id | phase | timestamp | status |
+|---|---|---|---|
+| `F_warmup` | warmup | 2026-09-15T14:42:22+09:00 | error / ResponseError |
+| `F_Q01_r1` | main | 2026-09-15T14:42:22+09:00 | error / ResponseError |
+
+- 대상 모델 태그: `hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M` (위와 동일)
+- 오류 내용: 위와 동일한 `peg-native format` 500 오류
+- **삭제 사유**: 첫 삭제 뒤 모델 태그를 바꾸기 전에 같은 변환본으로 한 번 더
+  실행되어 같은 오류가 재기록되었다. 교체 모델로 재실험하기 위해 제거했다.
+- **의미**: 이 변환본은 서로 다른 시각에 **두 차례(12:43, 14:42) 모두 동일하게 실패**했다.
+  일회성 오류가 아님을 보여주는 근거다.
+
+
+
 
 ---
 
