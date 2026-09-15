@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 .env
 .env.*
+*.egg-info/
+build/
+dist/
