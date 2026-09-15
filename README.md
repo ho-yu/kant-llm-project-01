@@ -72,7 +72,8 @@
 | `docs/steps/step01~08.md` | 단계별 작업 기록 |
 | `docs/eval-results.md` | 문제별 채점 블록 (사람이 읽는 형태) |
 | `docs/deliverables.md` | 산출물 인덱스 / 제출 체크리스트 |
-| `docs/data-flow.md` | **파일 간 연동과 역추적 경로** |
+| `docs/usage.md` | **상세 사용법** — 설정값 의미, MODE별 설명, 문제 상황 |
+| `docs/data-flow.md` | 파일 간 연동과 역추적 경로 |
 
 ### 저장소에 없는 것
 
@@ -128,6 +129,8 @@ uv run python 10_experiment.py
 5. 80회를 채우면 `MODE = "score"` → `scores.jsonl` 에 점수·근거 입력 → `MODE = "table"`
 
 채점 중 원본 응답을 보려면 `MODE = "check"`, `RUN_ID = "B_Q01_r1"`.
+
+각 설정값의 의미, 출력 읽는 법, 문제 상황별 대처는 [docs/usage.md](docs/usage.md) 참조.
 
 ### Cloud 비교 (STEP 7)
 
