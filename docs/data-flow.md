@@ -17,7 +17,7 @@ data/config/questions.json     ─┘                                           
 data/env/environment.json ───────────────────────────────────────────┐           │
                                                                      │           │
               (사람이 원본 응답을 읽고 채점)                          │           │
-                    data/raw/*/runs.jsonl ──> data/scoring/scores.jsonl           │
+                    data/raw/*/runs.jsonl ──> docs/eval-results.md           │
                                                       │              │           │
                                                       └──────────────┼───────────┤
                                                                      │           │
@@ -48,7 +48,7 @@ data/env/environment.json ──────────────────
 | `data/env/environment.json` | 1회 작성 후 고정 | 사람 | 환경이 바뀌면 새 버전 파일 + `applies_from_run_id` |
 | `data/raw/local/runs.jsonl` | **append 전용** | `run_local.py` | `"a"` 모드 고정. 한 줄 = 한 회차. 수정·삭제 금지 |
 | `data/raw/cloud/runs.jsonl` | **append 전용** | `run_cloud.py` | 위와 같음 |
-| `data/scoring/scores.jsonl` | **append 전용** | 사람 | `run_id` 로 실행 기록과 연결 |
+| `docs/eval-results.md` | **append 전용** | 사람 | `run_id` 로 실행 기록과 연결 |
 | `data/derived/*_summary.json` | 생성물 | `aggregator.py` | 직접 수정 금지 |
 | `data/derived/tables/*.md` | 생성물 | `exporter.py` | 직접 수정 금지 |
 
@@ -76,7 +76,7 @@ append 전용이므로 원래 실패 기록이 재시도 성공 결과로 덮어
 |---|---|---|---|
 | 1. 호출 성공 여부 | `runs.jsonl` | `status` = `success` / `error` | 성공 수 / 전체 시도 수 |
 | 2. 지표 측정 여부 | `runs.jsonl` | 지표 = `null` + `measurement_notes[지표]` 에 사유 | 해당 지표의 평균과 `n` 에서만 제외 |
-| 3. 답변 품질 | `scores.jsonl` | `scores[기준코드]` | 품질 평균 |
+| 3. 답변 품질 | `docs/eval-results.md` | 블록의 기준별 점수 | 품질 평균 |
 
 - `status="success"` 인데 지표가 `null` 일 수 있다 (호출은 됐지만 통계를 못 읽음).
 - `done_reason="length"` 는 실패가 아니다. 정상 응답이되 출력 한도에서 잘린 것이며, 채점 시 "내용이 부족한 것"과 구분한다.

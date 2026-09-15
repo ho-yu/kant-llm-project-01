@@ -82,7 +82,7 @@ def quality_table(quality: dict[str, Any] | None = None) -> str:
 
     out = [_table(header, rows), ""]
     out.append("> 기준마다 출제 문항 수가 달라 n 이 다르다.")
-    out.append(f"> 원본: `{_rel(config.SCORES_PATH)}` (run_id 로 실행 기록과 연결)")
+    out.append(f"> 원본: `{_rel(config.EVAL_RESULTS_PATH)}` (블록 제목이 run_id 가 된다)")
     return "\n".join(out)
 
 

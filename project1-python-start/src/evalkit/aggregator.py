@@ -15,7 +15,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from typing import Any, Iterable
 
-from . import config, recorder, schema
+from . import config, recorder, schema, scoring
 
 
 @dataclass
@@ -132,7 +132,7 @@ def aggregate_quality(phases: Iterable[str] = config.AGGREGATED_PHASES) -> dict[
         for r in recorder.iter_records(config.LOCAL_RUNS_PATH)
         if r.get("run_id") and _in_scope(r, phases)
     }
-    scores = [s for s in recorder.iter_records(config.SCORES_PATH) if s.get("run_id") in runs]
+    scores = [s for s in scoring.scored_only() if s.get("run_id") in runs]
 
     qmap = config.question_map()
     criteria = config.load_questions()["criteria"]
@@ -237,7 +237,7 @@ def trace(run_id: str) -> dict[str, Any] | None:
         for rec in recorder.iter_records(path):
             if rec.get("run_id") == run_id:
                 score = next(
-                    (s for s in recorder.iter_records(config.SCORES_PATH) if s.get("run_id") == run_id),
+                    (s for s in scoring.parse() if s.get("run_id") == run_id),
                     None,
                 )
                 return {"source_file": source, "path": str(path), "run": rec, "score": score}

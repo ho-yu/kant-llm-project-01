@@ -1,30 +1,31 @@
-"""80회를 다 채운 뒤에 한 번 실행합니다.
+"""80회를 다 채운 뒤에 실행합니다.
 
     uv run python 11_finish.py
 
 하는 일
-  1. 저장된 기록을 다시 열어 검사
-  2. 채점용 빈 레코드를 data/scoring/scores.jsonl 에 생성
-     -> 점수와 근거는 사람이 채웁니다
-  3. 집계하고 마크다운 표를 data/derived/tables/ 에 생성
-  4. 4개 모델 전체 STEP 06 표를 출력
+  1. 저장된 실행 기록과 채점 입력면을 검사
+  2. 집계하고 마크다운 표를 data/derived/tables/ 에 생성
+  3. 4개 모델 전체 STEP 06 표를 출력
 
-2번에서 만들어진 scores.jsonl 을 채운 뒤 다시 실행하면
-품질 점수가 반영된 표가 나옵니다.
+품질 채점은 docs/eval-results.md 에 직접 씁니다.
+블록 제목(## Q01 / Model B / Run 1)이 곧 run_id 이므로
+따로 적을 것은 없고, 점수와 근거만 채우면 됩니다.
+채운 뒤 이 파일을 다시 실행하면 품질 점수가 표에 반영됩니다.
 """
 
-from evalkit import aggregator, exporter, prepare_scores, report, validator
+from evalkit import aggregator, exporter, report, scoring, validator
 
 print(report.BAR)
-print("  1. 기록 검사")
+print("  1. 검사")
 print(report.BAR)
 for rep in validator.validate_all():
     print(rep.render())
 
 print("\n" + report.BAR)
-print("  2. 채점용 빈 레코드")
+print("  2. 채점 진행 상황")
 print(report.BAR)
-prepare_scores.run()
+print(scoring.summary())
+print("채점 입력면: docs/eval-results.md")
 
 print("\n" + report.BAR)
 print("  3. 집계 / 표 생성")

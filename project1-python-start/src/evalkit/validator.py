@@ -16,7 +16,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from . import config, recorder, schema
+from . import config, recorder, schema, scoring
 
 
 @dataclass
@@ -141,67 +141,65 @@ def validate_cloud_runs(path: Path | None = None) -> ValidationReport:
 
 
 def validate_scores(path: Path | None = None) -> ValidationReport:
-    """채점 기록이 실제 실행 기록과 연결되는지 확인한다."""
-    path = path or config.SCORES_PATH
+    """채점 입력면(eval-results.md)을 검사한다.
+
+    블록 제목이 run_id 가 되므로, 제목이 실제 실행 기록과 맞는지 확인한다.
+    """
+    path = path or config.EVAL_RESULTS_PATH
     report = ValidationReport(target=str(path))
-    required = schema.required_keys(schema.SCORE_FIELDS)
 
-    local = {r["run_id"]: r for r in recorder.iter_records(config.LOCAL_RUNS_PATH) if r.get("run_id")}
-    cloud = {r["run_id"]: r for r in recorder.iter_records(config.CLOUD_RUNS_PATH) if r.get("run_id")}
-
+    runs = {
+        r["run_id"]: r
+        for r in recorder.iter_records(config.LOCAL_RUNS_PATH)
+        if r.get("run_id")
+    }
     qmap = config.question_map()
     scale = config.load_questions().get("score_scale") or {}
     lo, hi = scale.get("min"), scale.get("max")
 
-    seen: set[str] = set()
-    for idx, rec in enumerate(recorder.iter_records(path), 1):
-        report.checked += 1
-        run_id = rec.get("run_id")
+    blocks = scoring.parse(path)
+    scored = [b for b in blocks if any(v is not None for v in b["scores"].values())]
+    report.checked = len(blocks)
 
-        missing = [k for k in required if k not in rec]
-        if missing:
-            report.errors.append(f"line {idx} ({run_id}): 필드 누락 {missing}")
-        if not run_id:
-            report.errors.append(f"line {idx}: run_id 없음")
-            continue
+    seen: set[str] = set()
+    for b in blocks:
+        run_id = b["run_id"]
         if run_id in seen:
-            report.errors.append(f"{run_id}: 채점 레코드 중복")
+            report.errors.append(f"{run_id}: 같은 제목의 블록이 두 번 있습니다")
         seen.add(run_id)
 
-        source = local if rec.get("source_file") == "local" else cloud
-        origin = source.get(run_id)
-        if origin is None:
-            report.errors.append(f"{run_id}: 대응하는 실행 기록 없음 — 역추적 불가")
+        q = qmap.get(b["question_id"])
+        if q is None:
+            report.errors.append(f"{run_id}: 질문 {b['question_id']} 가 questions.json 에 없습니다")
             continue
 
-        for key in ("question_id", "model_label"):
-            if rec.get(key) != origin.get(key):
-                report.errors.append(
-                    f"{run_id}: {key} 불일치 (채점={rec.get(key)!r}, 원본={origin.get(key)!r})"
-                )
+        # 블록에 적힌 기준이 그 질문의 기준과 맞는가
+        expected = set(q["criteria_codes"])
+        got = set(b["scores"])
+        if expected != got:
+            report.errors.append(
+                f"{run_id}: 평가 기준 불일치 (질문={sorted(expected)}, 블록={sorted(got)})"
+            )
 
-        if origin.get("phase") == config.PHASE_WARMUP:
-            report.warnings.append(f"{run_id}: 워밍업 회차를 채점했습니다 — 본 집계에서 제외됩니다")
+        if b not in scored:
+            continue  # 아직 채점 전 — 그 자체는 문제가 아니다
 
-        if origin.get("status") == config.STATUS_ERROR and not rec.get("not_scored_reason"):
-            report.warnings.append(f"{run_id}: 원본이 status=error 인데 not_scored_reason 없음")
+        if run_id not in runs:
+            report.errors.append(f"{run_id}: 대응하는 실행 기록이 없습니다 — 역추적 불가")
+        elif runs[run_id].get("status") == config.STATUS_ERROR:
+            report.warnings.append(f"{run_id}: 원본이 호출 실패인데 점수가 적혀 있습니다")
 
-        q = qmap.get(rec.get("question_id") or "")
-        if q:
-            expected = set(q["criteria_codes"])
-            got = set((rec.get("scores") or {}).keys())
-            if expected != got:
-                report.errors.append(
-                    f"{run_id}: 평가 기준 불일치 (질문={sorted(expected)}, 채점={sorted(got)})"
-                )
-
-        for code, value in (rec.get("scores") or {}).items():
+        for code, value in b["scores"].items():
             if value is None:
+                report.warnings.append(f"{run_id}: {code} 점수가 비어 있습니다")
                 continue
             if lo is not None and hi is not None and not (lo <= value <= hi):
-                report.errors.append(f"{run_id}: {code} 점수 {value} 가 척도 {lo}~{hi} 밖")
-            if not (rec.get("rationales") or {}).get(code):
-                report.warnings.append(f"{run_id}: {code} 점수는 있는데 근거가 비어 있음")
+                report.errors.append(f"{run_id}: {code} 점수 {value} 가 척도 {lo}~{hi} 밖입니다")
+            if not b["rationales"].get(code):
+                report.warnings.append(f"{run_id}: {code} 점수는 있는데 근거가 비어 있습니다")
+
+    if scored:
+        report.warnings.insert(0, scoring.summary())
 
     return report
 

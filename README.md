@@ -33,11 +33,11 @@
 | `project1-python-start/src/evalkit/run_local.py` | 로컬 실험 실행 |
 | `project1-python-start/src/evalkit/run_cloud.py` | Cloud 실험 실행 |
 | `project1-python-start/src/evalkit/collect_env.py` | 실행 환경 자동 수집 |
-| `project1-python-start/src/evalkit/prepare_scores.py` | 채점용 빈 레코드 생성 |
 | `project1-python-start/src/evalkit/peek.py` | 기록 훑어보기 / 진행 상황 |
 | `project1-python-start/10_run.py` | **모델 하나 실행 + STEP 04/06 출력** |
 | `project1-python-start/11_finish.py` | 검사 · 채점 준비 · 집계 · 표 생성 |
 | `project1-python-start/src/evalkit/report.py` | STEP 04/06 형식 출력 |
+| `project1-python-start/src/evalkit/scoring.py` | `eval-results.md` 채점 읽기 |
 | `project1-python-start/0*.py`, `99_*.py` | 모델별 단발 호출 예제 (수동 확인용) |
 
 ### 입력 (1회 작성 후 고정)
@@ -55,7 +55,6 @@
 |---|---|
 | `data/raw/local/runs.jsonl` | 로컬 실행 1회 = 1줄. 원본 응답 + 측정값 + 설정 |
 | `data/raw/cloud/runs.jsonl` | Cloud 실행 1회 = 1줄. 응답 + 토큰 사용량 + 추정 비용 |
-| `data/scoring/scores.jsonl` | 품질 채점. `run_id` 로 실행 기록과 연결 |
 
 ### 생성물 (언제든 재생성 가능)
 
@@ -72,7 +71,7 @@
 | 경로 | 내용 |
 |---|---|
 | `docs/steps/step01~08.md` | 단계별 작업 기록 |
-| `docs/eval-results.md` | 문제별 채점 블록 (사람이 읽는 형태) |
+| `docs/eval-results.md` | **품질 채점 입력면** — 점수와 근거를 여기에 적는다 |
 | `docs/deliverables.md` | 산출물 인덱스 / 제출 체크리스트 |
 | `docs/usage.md` | **상세 사용법** — 설정값 의미, MODE별 설명, 문제 상황 |
 | `docs/data-flow.md` | 파일 간 연동과 역추적 경로 |
@@ -129,7 +128,7 @@ uv run python 10_run.py
 2. 문제없으면 `LIMIT = None` 으로 바꿔 재실행 (기록된 회차는 건너뜀)
 3. `MODEL` 을 `"C"` → `"D"` → `"E"` 로 바꿔 1~2 반복
 4. 80회를 채우면 `11_finish.py` 실행
-5. `data/scoring/scores.jsonl` 에 점수·근거를 채우고 `11_finish.py` 재실행
+5. `docs/eval-results.md` 에 점수·근거를 채우고 `11_finish.py` 재실행
 
 각 설정값의 의미와 문제 상황별 대처는 [docs/usage.md](docs/usage.md) 참조.
 

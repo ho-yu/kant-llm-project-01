@@ -21,7 +21,6 @@ DOCS_DIR = REPO_ROOT / "docs"
 CONFIG_DIR = DATA_DIR / "config"
 ENV_DIR = DATA_DIR / "env"
 RAW_DIR = DATA_DIR / "raw"
-SCORING_DIR = DATA_DIR / "scoring"
 DERIVED_DIR = DATA_DIR / "derived"
 TABLES_DIR = DERIVED_DIR / "tables"
 
@@ -31,16 +30,18 @@ MODELS_PATH = CONFIG_DIR / "models.json"
 QUESTIONS_PATH = CONFIG_DIR / "questions.json"
 ENVIRONMENT_PATH = ENV_DIR / "environment.json"
 
+# 품질 채점 입력면 — 사람이 직접 채운다
+EVAL_RESULTS_PATH = DOCS_DIR / "eval-results.md"
+
 # append 전용 — 절대 "w" 로 열지 않는다
 LOCAL_RUNS_PATH = RAW_DIR / "local" / "runs.jsonl"
 CLOUD_RUNS_PATH = RAW_DIR / "cloud" / "runs.jsonl"
-SCORES_PATH = SCORING_DIR / "scores.jsonl"
 
 # 생성물 — 언제든 재생성 가능
 LOCAL_SUMMARY_PATH = DERIVED_DIR / "local_summary.json"
 CLOUD_SUMMARY_PATH = DERIVED_DIR / "cloud_summary.json"
 
-APPEND_ONLY_PATHS = (LOCAL_RUNS_PATH, CLOUD_RUNS_PATH, SCORES_PATH)
+APPEND_ONLY_PATHS = (LOCAL_RUNS_PATH, CLOUD_RUNS_PATH)
 
 # ---------------------------------------------------------------- 실험 단계
 
