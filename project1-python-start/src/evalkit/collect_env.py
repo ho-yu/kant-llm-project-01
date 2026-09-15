@@ -303,14 +303,11 @@ def manual_todo(env: dict[str, Any]) -> list[str]:
     return todo
 
 
-def main() -> None:
+def run(dry_run: bool = False) -> None:
+    """수집하고 결과를 출력한다. dry_run 이면 파일을 쓰지 않는다."""
     from . import use_utf8_stdout
 
     use_utf8_stdout()
-    p = argparse.ArgumentParser(description="실행 환경 정보 자동 수집")
-    p.add_argument("--dry-run", action="store_true", help="파일을 쓰지 않고 결과만 출력")
-    args = p.parse_args()
-
     existing = config.load_environment()
     env, changes, notes = build(existing)
 
@@ -332,7 +329,7 @@ def main() -> None:
         for t in todo:
             print(f"  {t}")
 
-    if args.dry_run:
+    if dry_run:
         print("\n(dry-run — 파일을 쓰지 않았습니다)")
         return
 
@@ -340,6 +337,12 @@ def main() -> None:
         json.dumps(env, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     print(f"\nwritten: {config.ENVIRONMENT_PATH}")
+
+
+def main() -> None:
+    p = argparse.ArgumentParser(description="실행 환경 정보 자동 수집")
+    p.add_argument("--dry-run", action="store_true", help="파일을 쓰지 않고 결과만 출력")
+    run(dry_run=p.parse_args().dry_run)
 
 
 if __name__ == "__main__":

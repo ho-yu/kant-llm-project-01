@@ -1,7 +1,7 @@
 {
   "_comment": "실행 환경 기록. 실험 시작 전에 1회 작성하고 이후 고정. 환경이 바뀌면 새 파일(environment_v2.json)을 만들고 어느 run_id부터 적용되는지 남긴다. 측정하지 못한 값은 0이 아니라 null로 두고 notes에 사유를 적는다.",
   "env_version": "v1",
-  "recorded_at": "2026-09-15T11:12:02+09:00",
+  "recorded_at": "2026-09-15T11:21:56+09:00",
   "applies_from_run_id": null,
   "platform": {
     "os": "Windows",

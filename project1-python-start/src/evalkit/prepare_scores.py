@@ -84,20 +84,11 @@ def _summarize(pending: list[dict[str, Any]]) -> str:
     return ", ".join(f"{k}: {v}건" for k, v in sorted(by_model.items())) or "없음"
 
 
-def main() -> None:
+def run(dry_run: bool = False, include_warmup: bool = False) -> None:
     from . import use_utf8_stdout
 
     use_utf8_stdout()
-    p = argparse.ArgumentParser(description="채점용 빈 레코드 생성")
-    p.add_argument("--dry-run", action="store_true", help="저장하지 않고 개수만 출력")
-    p.add_argument(
-        "--include-warmup",
-        action="store_true",
-        help="워밍업 회차도 채점 대상에 넣는다 (기본은 제외)",
-    )
-    args = p.parse_args()
-
-    pending, skipped = build_pending(include_warmup=args.include_warmup)
+    pending, skipped = build_pending(include_warmup=include_warmup)
 
     print(f"채점 레코드를 만들 회차: {len(pending)}건 ({_summarize(pending)})")
     if skipped:
@@ -111,7 +102,7 @@ def main() -> None:
         print("\n새로 만들 레코드가 없습니다. runs.jsonl 이 비어 있는지 확인하세요.")
         return
 
-    if args.dry_run:
+    if dry_run:
         print("\n샘플:")
         print(json.dumps(pending[0], ensure_ascii=False, indent=2))
         print("\n(dry-run — 저장하지 않았습니다)")
@@ -125,6 +116,14 @@ def main() -> None:
     print(f"파일: {config.SCORES_PATH}")
     print("\n각 줄의 scores / rationales 를 채우세요. average 는 비워두면")
     print("aggregator 가 기준별 평균을 따로 계산합니다.")
+
+
+def main() -> None:
+    p = argparse.ArgumentParser(description="채점용 빈 레코드 생성")
+    p.add_argument("--dry-run", action="store_true", help="저장하지 않고 개수만 출력")
+    p.add_argument("--include-warmup", action="store_true", help="워밍업도 채점 대상에 포함")
+    a = p.parse_args()
+    run(dry_run=a.dry_run, include_warmup=a.include_warmup)
 
 
 if __name__ == "__main__":

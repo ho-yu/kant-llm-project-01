@@ -17,11 +17,24 @@
 
 def use_utf8_stdout() -> None:
     """Windows 콘솔 기본 코드페이지(cp949)에서 한국어·em dash 출력이
-    UnicodeEncodeError 로 죽는 것을 막는다. 각 모듈의 __main__ 에서 호출한다.
+    UnicodeEncodeError 로 죽는 것을 막는다.
+
+    여러 번 불러도 안전하다. 이 패키지를 import 하는 시점에 한 번 실행되므로
+    보통은 직접 부를 일이 없다.
     """
     import sys
 
     for stream in (sys.stdout, sys.stderr):
         reconfigure = getattr(stream, "reconfigure", None)
-        if reconfigure is not None:
+        if reconfigure is None:
+            continue
+        try:
             reconfigure(encoding="utf-8", errors="replace")
+        except (ValueError, OSError):
+            # 리다이렉트되었거나 이미 닫힌 스트림이면 그냥 둔다.
+            pass
+
+
+# 이 패키지의 출력은 전부 한국어라 cp949 콘솔에서 그대로 두면 죽는다.
+# 진입점(모듈 -m 실행, 최상위 러너 스크립트)마다 적는 대신 여기서 한 번 처리한다.
+use_utf8_stdout()

@@ -163,7 +163,11 @@ def execute_once(
 # ---------------------------------------------------------------- 전체 루프
 
 
-def run_all(dry_run: bool = False, only_model: str | None = None) -> recorder.RunLog:
+def run_all(
+    dry_run: bool = False,
+    only_model: str | None = None,
+    limit: int | None = None,
+) -> recorder.RunLog:
     settings = config.load_run_settings()
     questions = config.load_questions()
     qversion = questions["questions_version"]
@@ -196,8 +200,13 @@ def run_all(dry_run: bool = False, only_model: str | None = None) -> recorder.Ru
             )
 
         # 본 실험
+        done = 0
         for q in questions["questions"]:
             for rep in range(1, settings["repeats"] + 1):
+                if limit is not None and done >= limit:
+                    print(f"  limit={limit} 도달 — 나머지는 다시 실행하면 이어집니다")
+                    break
+                done += 1
                 execute_once(
                     log,
                     run_id=config.make_run_id(label, q["question_id"], rep, config.PHASE_MAIN),
@@ -210,6 +219,9 @@ def run_all(dry_run: bool = False, only_model: str | None = None) -> recorder.Ru
                     repeat=rep,
                     dry_run=dry_run,
                 )
+            else:
+                continue
+            break
 
         if not dry_run:
             try:
@@ -228,8 +240,9 @@ def main() -> None:
     p = argparse.ArgumentParser(description="로컬 비교 실험 실행")
     p.add_argument("--dry-run", action="store_true", help="호출 없이 실행 계획만 출력")
     p.add_argument("--model", help="특정 model_label 만 실행")
+    p.add_argument("--limit", type=int, help="본 실험을 이 건수까지만 실행")
     args = p.parse_args()
-    run_all(dry_run=args.dry_run, only_model=args.model)
+    run_all(dry_run=args.dry_run, only_model=args.model, limit=args.limit)
 
 
 if __name__ == "__main__":

@@ -186,7 +186,7 @@
       },
       "D": {
         "display_name": "Model D (코딩)",
-        "model_tag": "hf.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M",
+        "model_tag": "hf.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M",
         "attempts": 0,
         "success": 0,
         "errors": 0,
