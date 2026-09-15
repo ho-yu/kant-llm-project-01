@@ -4,9 +4,23 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import aggregator, config, recorder
+from . import aggregator, config, recorder, schema
 
 BAR = "=" * 62
+
+
+def _quant(env_model: dict[str, Any], run: dict[str, Any]) -> str:
+    """양자화 표기.
+
+    client.list() 와 client.ps() 가 서로 다른 값을 돌려주는 경우가 있다
+    (list 는 Q4_K_M, ps 는 unknown). list 쪽이 정확하므로 그 값을 쓰되,
+    다르면 ps 가 무엇이라고 했는지 함께 남긴다.
+    """
+    listed = env_model.get("quantization_level")
+    reported = run.get("quantization_level")
+    if listed and listed != reported:
+        return f"{listed} (ps 보고: {reported})"
+    return str(listed or reported)
 
 
 def _fmt(stat: dict[str, Any] | None, unit: str = "", digits: int = 2) -> str:
@@ -68,7 +82,7 @@ def step04(model_label: str) -> str:
         size = env_model.get("download_size_bytes")
         lines += [
             f"| digest | `{(s.get('digest') or '')[:16]}...` | 실행 기록 |",
-            f"| 양자화 (ps 보고) | {s.get('quantization_level')} | 실행 기록 |",
+            f"| 양자화 | {_quant(env_model, s)} | `client.list()` |",
             f"| 실험에 사용한 Context | {s.get('context_length')} | 실행 기록 |",
             f"| 문서상 최대 Context | {env_model.get('doc_max_context') or '(미기재)'} | Model Card |",
             f"| 다운로드 크기 | {f'{size / 1_073_741_824:.2f} GB' if size else '(미수집)'} | `client.list()` |",
@@ -149,6 +163,11 @@ def step06(model_label: str | None = None) -> str:
         if rec.get("status") != config.STATUS_SUCCESS:
             continue
         for field, reason in (rec.get("measurement_notes") or {}).items():
+            # 성능 지표만 다룬다. quantization_level 같은 메타데이터는
+            # client.list() 로 environment.json 에 이미 들어가 있으므로
+            # ps 가 unknown 을 보고해도 "측정 누락" 이 아니다.
+            if field not in schema.LOCAL_METRIC_FIELDS:
+                continue
             missing.setdefault(f"{field} — {reason}", []).append(rec["run_id"])
 
     for key, rids in missing.items():

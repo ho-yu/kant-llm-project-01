@@ -1,7 +1,7 @@
 {
   "_comment": "실행 환경 기록. 실험 시작 전에 1회 작성하고 이후 고정. 환경이 바뀌면 새 파일(environment_v2.json)을 만들고 어느 run_id부터 적용되는지 남긴다. 측정하지 못한 값은 0이 아니라 null로 두고 notes에 사유를 적는다.",
   "env_version": "v1",
-  "recorded_at": "2026-09-15T11:49:26+09:00",
+  "recorded_at": "2026-09-15T12:21:16+09:00",
   "applies_from_run_id": null,
   "platform": {
     "os": "Windows",
@@ -28,6 +28,23 @@
     "system_ram_gb": 31.4
   },
   "models": [
+    {
+      "model_label": "A",
+      "model_tag": "hf.co/Arc1el/Llama-3.1-Korean-8B-Instruct-Law-GGUF:Q4_K_M",
+      "digest": "70c771a2fa93cd481edb876c617ee06223d3d20658b2a5921f735c0a04238f9d",
+      "_digest_note": "client.ps() 또는 client.list() 응답에서 채운다. 수기 입력 금지.",
+      "quantization_level": "Q4_K_M",
+      "_quantization_note": "details.quantization_level",
+      "download_size_bytes": 4920734484,
+      "_download_size_note": "client.list() 의 size. 시스템 RAM/VRAM 사용량과 구분한다.",
+      "doc_max_context": null,
+      "_doc_max_context_note": "Model Card 문서상 최대 Context. 실험에서 실제 설정한 context_length와 반드시 구분.",
+      "doc_max_context_source_url": null,
+      "model_card_url": null,
+      "license_declared": null,
+      "license_base_model": null,
+      "license_source_url": null
+    },
     {
       "model_label": "B",
       "model_tag": "hf.co/mradermacher/KoBioMed-Llama-3.1-8B-Instruct-i1-GGUF:Q4_K_M",
@@ -87,6 +104,23 @@
       "quantization_level": "Q4_K_M",
       "_quantization_note": "details.quantization_level",
       "download_size_bytes": 4683076323,
+      "_download_size_note": "client.list() 의 size. 시스템 RAM/VRAM 사용량과 구분한다.",
+      "doc_max_context": null,
+      "_doc_max_context_note": "Model Card 문서상 최대 Context. 실험에서 실제 설정한 context_length와 반드시 구분.",
+      "doc_max_context_source_url": null,
+      "model_card_url": null,
+      "license_declared": null,
+      "license_base_model": null,
+      "license_source_url": null
+    },
+    {
+      "model_label": "F",
+      "model_tag": "hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M",
+      "digest": "b5bba118338e631d97d971d5496a506b4d8f59baacf8d05a373381c50a46db90",
+      "_digest_note": "client.ps() 또는 client.list() 응답에서 채운다. 수기 입력 금지.",
+      "quantization_level": "Q4_K_M",
+      "_quantization_note": "details.quantization_level",
+      "download_size_bytes": 8554896724,
       "_download_size_note": "client.list() 의 size. 시스템 RAM/VRAM 사용량과 구분한다.",
       "doc_max_context": null,
       "_doc_max_context_note": "Model Card 문서상 최대 Context. 실험에서 실제 설정한 context_length와 반드시 구분.",
