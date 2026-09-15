@@ -152,13 +152,13 @@ ollama pull hf.co/QuantFactory/Math-IIO-7B-Instruct-GGUF:Q4_K_M
 
 ---
 
-## (6) 이커머스 — POLAR 14B
+## (6) 이커머스 — SAM-1 Base 7B
 
 Model Card:
-https://huggingface.co/x2bee/POLAR-14B-v0.5
+https://huggingface.co/snapcart-ai/sam-1-base
 
 GGUF:
-https://huggingface.co/tensorblock/POLAR-14B-v0.5-GGUF
+https://huggingface.co/mradermacher/sam-1-base-GGUF
 
 Repository declared license:
 Apache-2.0
@@ -167,10 +167,11 @@ Base model license:
 Apache-2.0
 
 Parent Model:
-upstage/SOLAR-10.7B-v1.0
+Qwen/Qwen2.5-7B-Instruct
 
 Ollama Pull:
-ollama pull hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M
+ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
+
 
 특징:
 - 한국어 기반 LLM

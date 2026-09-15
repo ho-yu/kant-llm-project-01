@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from . import aggregator, config, recorder, schema
@@ -273,38 +274,60 @@ def preflight() -> list[str]:
     return problems
 
 
-# ---------------------------------------------------------------- 파일로 쓰기
+# ---------------------------------------------------------------- 문서에 써넣기
 
-HEADER = (
-    "<!-- 자동 생성됨: uv run python 10_run.py\n"
-    "     직접 수정하지 말 것. 원본: data/raw/local/runs.jsonl, docs/eval-results.md -->\n\n"
-)
+AUTO_START = "<!-- evalkit:auto:start — 아래는 자동 생성 구간입니다. 직접 고치지 마세요. -->"
+AUTO_END = "<!-- evalkit:auto:end -->"
+
+
+def _inject(path: Path, body: str) -> str:
+    """문서의 자동 생성 구간만 갈아끼운다.
+
+    마커가 없으면 문서 끝에 마커와 함께 덧붙인다.
+    마커 밖의 내용(직접 쓴 서술)은 절대 건드리지 않는다.
+    """
+    block = f"{AUTO_START}\n\n{body}\n\n{AUTO_END}"
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    if not path.exists():
+        path.write_text(block + "\n", encoding="utf-8")
+        return "새로 만듦"
+
+    text = path.read_text(encoding="utf-8")
+    i, j = text.find(AUTO_START), text.find(AUTO_END)
+    if i != -1 and j != -1 and j > i:
+        path.write_text(text[:i] + block + text[j + len(AUTO_END):], encoding="utf-8")
+        return "자동 구간 갱신"
+
+    if not text.endswith("\n"):
+        text += "\n"
+    path.write_text(text + "\n---\n\n" + block + "\n", encoding="utf-8")
+    return "자동 구간 추가"
 
 
 def write_step_docs(model_label: str | None = None) -> list[str]:
-    """STEP 04 / STEP 06 블록을 data/derived/ 에 파일로 남긴다.
+    """STEP 04 / STEP 06 결과를 docs/steps/ 문서에 직접 써넣는다.
 
-    화면 출력과 같은 내용이다. 매번 복사해 붙이지 않아도 되도록 파일로도 떨어뜨린다.
-    실행한 모델이 늘어날수록 내용이 누적된다.
+    문서는 한 곳뿐이다. 직접 쓴 서술은 그대로 두고,
+    마커 사이의 자동 생성 구간만 매번 다시 계산해 갈아끼운다.
     """
-    config.DERIVED_DIR.mkdir(parents=True, exist_ok=True)
-
-    # STEP 04 는 모델마다 한 절씩 쌓는다
-    ran = []
-    for m in config.enabled_models():
-        label = m["model_label"]
+    ran = [
+        m["model_label"]
+        for m in config.enabled_models()
         if any(
-            r.get("model_label") == label and r.get("status") == config.STATUS_SUCCESS
+            r.get("model_label") == m["model_label"]
+            and r.get("status") == config.STATUS_SUCCESS
             for r in recorder.iter_records(config.LOCAL_RUNS_PATH)
-        ):
-            ran.append(label)
+        )
+    ]
 
     blocks = [step04(label) for label in ran] or ["_아직 성공한 실행 기록이 없습니다._"]
-    config.STEP04_PATH.write_text(
-        HEADER + "\n\n---\n\n".join(blocks) + "\n", encoding="utf-8"
-    )
+    out = []
+    for path, body in (
+        (config.STEP04_DOC, "\n\n---\n\n".join(blocks)),
+        (config.STEP06_DOC, step06()),
+    ):
+        out.append(f"{path}  ({_inject(path, body)})")
+    return out
 
-    # STEP 06 은 실행한 모델 전체를 한 표로
-    config.STEP06_PATH.write_text(HEADER + step06() + "\n", encoding="utf-8")
 
-    return [str(config.STEP04_PATH), str(config.STEP06_PATH)]

@@ -65,14 +65,12 @@ A·F는 CLI 사전 확인에서 문제가 보였으나 본 실험 결과로 판�
 | `data/derived/tables/model_comparison.md` | 산출물 2 — 제원 비교표 |
 | `data/derived/tables/local_summary.md` | 산출물 3 — 성능·품질 집계표 |
 | `data/derived/tables/local_cloud.md` | 산출물 4 — Local vs Cloud |
-| `data/derived/step04.md` | STEP 04 절 (모델마다 누적) |
-| `data/derived/step06.md` | STEP 06 성능 표 (전체 모델) |
 
 ### 문서
 
 | 경로 | 내용 |
 |---|---|
-| `docs/steps/step01~08.md` | 단계별 작업 기록 |
+| `docs/steps/step01~08.md` | 단계별 작업 기록. step04·step06 은 `evalkit:auto` 마커 사이가 자동 갱신된다 |
 | `docs/eval-results.md` | **품질 채점 입력면** — 점수와 근거를 여기에 적는다 |
 | `docs/deliverables.md` | 산출물 인덱스 / 제출 체크리스트 |
 | `docs/usage.md` | **상세 사용법** — 설정값 의미, MODE별 설명, 문제 상황 |

@@ -38,8 +38,9 @@ LOCAL_RUNS_PATH = RAW_DIR / "local" / "runs.jsonl"
 CLOUD_RUNS_PATH = RAW_DIR / "cloud" / "runs.jsonl"
 
 # 생성물 — 언제든 재생성 가능
-STEP04_PATH = DERIVED_DIR / "step04.md"
-STEP06_PATH = DERIVED_DIR / "step06.md"
+# STEP 결과는 별도 생성물이 아니라 스텝 문서 안의 자동 구간에 직접 써넣는다
+STEP04_DOC = DOCS_DIR / "steps" / "step04.md"
+STEP06_DOC = DOCS_DIR / "steps" / "step06.md"
 
 LOCAL_SUMMARY_PATH = DERIVED_DIR / "local_summary.json"
 CLOUD_SUMMARY_PATH = DERIVED_DIR / "cloud_summary.json"
