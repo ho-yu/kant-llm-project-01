@@ -93,6 +93,34 @@ def unload_model(model_tag: str) -> None:
 # ---------------------------------------------------------------- 한 회차
 
 
+def _one_line(rec: dict[str, Any]) -> str:
+    """회차 하나를 한 줄로. 돌아가는 중에 바로 이상을 알아채기 위한 것."""
+    if rec["status"] != config.STATUS_SUCCESS:
+        return f"ERR  {rec['run_id']:<12} {rec['error_type']}: {(rec['error_message'] or '')[:70]}"
+
+    def cell(value, fmt, width):
+        return (fmt.format(value) if value is not None else "null").rjust(width)
+
+    parts = [
+        f"ok   {rec['run_id']:<12}",
+        cell(rec["elapsed_sec"], "{:.1f}s", 7),
+        cell(rec["eval_count"], "{:.0f}tok", 8),
+        cell(rec["tokens_per_sec"], "{:.0f}t/s", 7),
+        cell(rec["size_vram_mib"], "{:.0f}MiB", 9),
+    ]
+    line = "  ".join(parts)
+
+    # 눈에 띄어야 하는 것만 덧붙인다
+    if rec.get("done_reason") == "length":
+        line += "  [한도까지 생성]"
+    if rec["size_vram_mib"] is None:
+        line += "  [VRAM 못 읽음 — keep_alive 확인]"
+    return line
+
+
+# ---------------------------------------------------------------- 실행
+
+
 def execute_once(
     log: recorder.RunLog,
     *,
@@ -158,7 +186,7 @@ def execute_once(
         recorder.fill_error(rec, e, elapsed)
 
     log.append(rec)
-    print(f"  {rec['status']}: {run_id}")
+    print("  " + _one_line(rec))
     return rec["status"] == config.STATUS_SUCCESS
 
 
