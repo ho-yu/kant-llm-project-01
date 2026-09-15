@@ -105,6 +105,7 @@ def step04(model_label: str) -> str:
         s = runs[0]
         size = env_model.get("download_size_bytes")
         lines += [
+            f"| Parameter | {env_model.get('parameter_size') or '(미수집)'} | `client.list()` |",
             f"| digest | `{(s.get('digest') or '')[:16]}...` | 실행 기록 |",
             f"| 양자화 | {_quant(env_model, s)} | `client.list()` |",
             f"| 실험에 사용한 Context | {s.get('context_length')} | 실행 기록 |",

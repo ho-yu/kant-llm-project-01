@@ -83,6 +83,7 @@ OS / Python / Ollama / 패키지 버전, GPU·VRAM·CPU·RAM,
 |---|---|---|
 | 모델 전체 태그 | `data/config/models.json` → `model_tag` | 사람이 확정 |
 | 모델 식별값 (digest) | `data/raw/local/runs.jsonl` + `environment.json` | **자동** (`client.ps()` / `list()`) |
+| Parameter | `environment.json` → `parameter_size` | **자동** (`client.list()`) |
 | 양자화 | `environment.json` → `quantization_level` | **자동** (`client.list()`) |
 | 다운로드 파일 크기 | `environment.json` → `download_size_bytes` | **자동** (`client.list()`) |
 | Python / Ollama / 패키지 버전 | `environment.json` → `runtime` | **자동** |
@@ -91,7 +92,7 @@ OS / Python / Ollama / 패키지 버전, GPU·VRAM·CPU·RAM,
 | 실행 설정 | `data/config/run_settings.json` → `options` | 사람이 1회, 회차마다 기록에 복사됨 |
 | 실험에서 실제 확인한 Context | `runs.jsonl` → `context_length` | **자동** |
 | 문서상 최대 Context | `environment.json` → `doc_max_context` | **사람이 Model Card 에서 확인** |
-| Model Card / License 출처 | `environment.json` → `model_card_url`, `license_*` | `step03.md` 조사 결과를 옮겨둠 |
+| Model Card / License 출처 | `environment.json` → `model_card_url`, `upstream_model_card_url`, `license_*` | `step03.md` 조사 결과를 옮겨둠 |
 | Python 호출 성공 + 결과 1건 저장 후 재확인 | `runs.jsonl` | **자동**, STEP 04 블록에 발췌 출력 |
 | CLI 대화 성공 | `docs/eval-results.md` → 'STEP 4 CLI 스모크 테스트' 절 | 사람이 기록 |
 | 오류 증상 (미설치 / 연결 실패 등) | `runs.jsonl` → `error_type`, `error_message` | **자동** |

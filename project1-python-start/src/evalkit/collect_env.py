@@ -156,10 +156,8 @@ def collect_model_info(notes: dict[str, str]) -> dict[str, dict[str, Any]]:
 AUTO_PATHS = (
     "platform.os",
     "platform.os_version",
-    "runtime.llm_runtime",
-    "runtime.ollama_version",
-    "runtime.ollama_host",
     "runtime.python_version",
+    "runtime.ollama_version",
     "runtime.packages.ollama",
     "runtime.packages.openai",
     "hardware.gpu_name",
@@ -170,7 +168,7 @@ AUTO_PATHS = (
 
 #: 모델 항목 중 자동으로 채우는 키. 나머지(License, Model Card URL,
 #: 문서상 최대 Context)는 사람이 직접 확인해야 하므로 손대지 않는다.
-AUTO_MODEL_KEYS = ("digest", "quantization_level", "download_size_bytes")
+AUTO_MODEL_KEYS = ("digest", "quantization_level", "download_size_bytes", "parameter_size")
 
 
 def _set(
@@ -206,14 +204,10 @@ def build(existing: dict[str, Any]) -> tuple[dict[str, Any], list[str], dict[str
     resolved: list[str] = []  # 이번에 값을 채운 경로 — 옛 실패 사유를 지운다
     env = json.loads(json.dumps(existing))  # 깊은 복사
 
-    settings = config.load_run_settings()
-
     _set(env, "platform.os", platform.system(), changes, resolved)
     _set(env, "platform.os_version", platform.version(), changes, resolved)
-    _set(env, "runtime.llm_runtime", "Ollama", changes, resolved)
-    _set(env, "runtime.ollama_version", collect_ollama_version(notes), changes, resolved)
-    _set(env, "runtime.ollama_host", settings.get("host"), changes, resolved)
     _set(env, "runtime.python_version", platform.python_version(), changes, resolved)
+    _set(env, "runtime.ollama_version", collect_ollama_version(notes), changes, resolved)
 
     for name, ver in collect_packages(notes).items():
         _set(env, f"runtime.packages.{name}", ver, changes, resolved)
@@ -296,10 +290,12 @@ def manual_todo(env: dict[str, Any]) -> list[str]:
             ("model_card_url", "Model Card URL"),
             ("license_declared", "저장소 선언 License"),
             ("license_base_model", "Base model License"),
-            ("doc_max_context", "문서상 최대 Context"),
+            ("doc_max_context", "문서상 최대 Context (실험 context_length 와 구분해서 적는다)"),
         ):
             if not m.get(key):
-                todo.append(f"models[{label}].{key} — {desc}")
+                src = m.get("upstream_model_card_url") or m.get("model_card_url")
+                hint = f" -> {src}" if key == "doc_max_context" and src else ""
+                todo.append(f"models[{label}].{key} — {desc}{hint}")
     return todo
 
 
