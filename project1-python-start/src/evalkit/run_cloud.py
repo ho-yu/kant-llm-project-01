@@ -18,31 +18,78 @@ from . import config, recorder
 def get_api_key() -> str:
     """API 키를 가져온다. 레코드·설정 파일 어디에도 남기지 않는다.
 
-    TODO: 구현
-      - getpass.getpass() 로 입력받거나 os.environ 에서 읽는다.
-      - 반환값을 로그·레코드·예외 메시지에 넣지 않는다.
+    환경변수 OPENAI_API_KEY 가 있으면 쓰고, 없으면 실행 시점에 입력받는다.
+    입력값은 화면에 표시되지 않고 파일로 저장되지 않는다.
     """
-    raise NotImplementedError("get_api_key 미구현")
+    import os
+    from getpass import getpass
+
+    key = (os.environ.get("OPENAI_API_KEY") or "").strip()
+    if key:
+        print("  API 키: 환경변수 OPENAI_API_KEY 사용")
+        return key
+
+    key = getpass("  API 키를 붙여넣고 Enter (화면에 보이지 않음): ").strip()
+    if not key:
+        raise SystemExit("키를 입력하지 않아 API를 호출하지 않았습니다.")
+    return key
+
+
+def _get_client(api_key: str):
+    """max_retries=0 — 자동 재시도하지 않는다.
+
+    재시도하면 실패한 호출도 과금되고, elapsed_sec 에 재시도 시간이 섞여
+    '한 번 호출에 걸린 시간'이라는 측정 정의가 깨진다.
+    """
+    from openai import OpenAI
+
+    settings = config.load_run_settings()
+    return OpenAI(
+        api_key=api_key,
+        base_url="https://api.openai.com/v1",
+        timeout=settings.get("timeout_sec"),
+        max_retries=0,
+    )
 
 
 def call_cloud(model_id: str, prompt: str, options: dict[str, Any], api_key: str):
     """한 번 호출하고 (response, elapsed_sec) 를 돌려준다.
 
-    TODO: 구현
-      1. 클라이언트 생성 (max_retries=0 — 자동 재시도하지 않는다)
-      2. start = perf_counter() 직후 요청
-      3. elapsed = perf_counter() - start
-      4. return response, elapsed
+    elapsed 는 요청 직전부터 최종 응답 수신 직후까지다. run_local 과 같은 정의다.
+    다만 네트워크 왕복이 포함되므로 로컬 값과 그대로 비교하지 않는다.
+
+    options 는 기록에 남은 것을 그대로 받는다 (run_local 과 같은 이유).
     """
-    raise NotImplementedError("call_cloud 미구현")
+    from time import perf_counter
+
+    client = _get_client(api_key)
+
+    kwargs: dict[str, Any] = {
+        "model": model_id,
+        "input": prompt,          # 독립 질문 — 이전 대화를 이어 붙이지 않는다
+        "reasoning": {"effort": "none"},
+        "tools": [],
+        "tool_choice": "none",
+        "store": False,           # 응답을 서버에 보관하지 않는다
+    }
+    kwargs.update(options)        # temperature / max_output_tokens
+
+    start = perf_counter()
+    response = client.responses.create(**kwargs)
+    elapsed = perf_counter() - start
+    return response, elapsed
 
 
 def extract_usage(response: Any) -> tuple[int | None, int | None, str | None]:
     """(input_tokens, output_tokens, api_status) 를 뽑는다.
 
-    TODO: 구현. 값이 없으면 0 이 아니라 None 을 돌려준다.
+    값이 없으면 0 이 아니라 None 이다. 0 으로 채우면 '토큰을 안 썼다'가 되어
+    비용 계산과 평균이 조용히 틀어진다.
     """
-    raise NotImplementedError("extract_usage 미구현")
+    usage = getattr(response, "usage", None)
+    tin = getattr(usage, "input_tokens", None) if usage is not None else None
+    tout = getattr(usage, "output_tokens", None) if usage is not None else None
+    return tin, tout, getattr(response, "status", None)
 
 
 def _fill_cost(rec: dict[str, Any], pricing: dict[str, Any]) -> None:
@@ -74,6 +121,11 @@ def run_all(dry_run: bool = False) -> recorder.RunLog:
     target_ids = config.cloud_question_ids()
     print(f"Cloud 대상 질문 {len(target_ids)}개: {target_ids}")
 
+    opts = config.cloud_options()
+    print(f"요청 파라미터: {opts}")
+    for name, why in config.cloud_option_gaps().items():
+        print(f"  로컬 {name} 는 넘기지 못함 — {why}")
+
     log = recorder.RunLog(config.CLOUD_RUNS_PATH)
     api_key = None if dry_run else get_api_key()
 
@@ -93,10 +145,14 @@ def run_all(dry_run: bool = False) -> recorder.RunLog:
             question_id=qid,
             repeat=1,
             prompt=q["prompt"],
-            options=config.chat_options(),
+            options=config.cloud_options(),
             settings_version=settings["settings_version"],
             questions_version=config.load_questions()["questions_version"],
         )
+
+        # 로컬과 조건이 갈라지는 지점을 기록에 남긴다. 나중에 표로 옮길 때 근거가 된다.
+        for name, why in config.cloud_option_gaps().items():
+            rec["measurement_notes"][f"options.{name}"] = why
 
         if dry_run:
             print(f"  dry-run: {run_id}")

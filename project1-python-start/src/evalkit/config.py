@@ -99,6 +99,50 @@ def chat_options() -> dict[str, Any]:
     return {k: v for k, v in raw.items() if v is not None}
 
 
+def cloud_options() -> dict[str, Any]:
+    """Cloud API 요청에 넘길 값. 같은 run_settings.json 에서 만든다.
+
+    로컬과 Cloud 는 파라미터 이름이 다르고, Cloud 쪽에 아예 없는 것도 있다.
+    조용히 버리지 않고 대응 관계를 남긴다 (cloud_option_gaps 참고).
+
+        temperature  -> temperature      (모델이 지정을 허용할 때만)
+        num_predict  -> max_output_tokens(출력 한도. 같은 의미)
+        num_ctx      -> 없음
+        seed         -> 없음
+    """
+    local = chat_options()
+    cloud = load_models().get("cloud_model") or {}
+
+    out: dict[str, Any] = {}
+    if "temperature" in local and cloud.get("supports_temperature"):
+        out["temperature"] = local["temperature"]
+    if "num_predict" in local:
+        out["max_output_tokens"] = local["num_predict"]
+    return out
+
+
+def cloud_option_gaps() -> dict[str, str]:
+    """Cloud 에 넘기지 못한 로컬 옵션과 그 이유.
+
+    각 Cloud 레코드의 measurement_notes 에 그대로 들어가고,
+    STEP 7 의 '동일 조건 비교가 아님' 항목의 근거가 된다.
+    """
+    local = chat_options()
+    cloud = load_models().get("cloud_model") or {}
+
+    gaps = {
+        "num_ctx": "Cloud API 에는 컨텍스트 창 지정 파라미터가 없다",
+        "seed": "Responses API 에는 seed 파라미터가 없다 — 재현성 조건이 로컬과 다르다",
+    }
+    if not cloud.get("supports_temperature"):
+        fixed = cloud.get("fixed_temperature")
+        gaps["temperature"] = (
+            f"이 모델은 temperature 를 지정할 수 없다. "
+            f"로컬 {local.get('temperature')} / Cloud {fixed} (모델 고정값) 로 다르다"
+        )
+    return gaps
+
+
 def load_models() -> dict[str, Any]:
     return _load_json(MODELS_PATH)
 
