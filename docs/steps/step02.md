@@ -4,6 +4,24 @@
 
 1. 모델 요구사항 정의
 
+(1) 실행 환경이 정하는 제약 — 바꿀 수 없는 조건
+
+- GPU: NVIDIA RTX 5060 Laptop / VRAM 8GB (8,151 MiB)
+- 실행 런타임: Ollama (GGUF 형식만)
+- OS: Windows 11 / 로컬 PC
+
+(2) 위 제약에서 나오는 모델 요구사항
+
+- 파라미터 규모: 7~8B 급
+  > 8GB VRAM 에 가중치와 KV 캐시가 함께 올라가야 한다.
+  > 14B 급은 CPU 로 일부 내려가 생성이 느려진다.
+- 양자화: Q4_K_M
+  > 7~8B 모델이 4.3~4.6GB 로 내려와 VRAM 여유가 남는다.
+- Context Length: 4,096 이상
+  > 상품 상세페이지 정보 + 질문 + 답변을 담을 수 있어야 한다.
+- 배포 형식: Ollama 에서 `ollama pull` 로 받을 수 있는 GGUF
+- License: 상업적 활용 가능
+
 2. 선정 기준
 
 (1) 필수 통과 조건
@@ -50,31 +68,47 @@
 
 ### 필수 통과 조건 (Pass/Fail 판정용 — STEP 8에서 후보별 O/X 표기)
 
-| # | 조건 | 확인 방법 | 확인 시점 |
-|---|---|---|---|
-| 1 | 한국어 Chat/QA 가능 | 실제 응답 품질 확인 | STEP 6 |
-| 2 | Ollama 실행 가능 | `ollama pull` / 호출 성공 | STEP 3~4 |
-| 3 | 현재 PC에서 안정 실행 | OOM/중단 없이 전체 실험 완주 | STEP 4, 6 |
-| 4 | 상업적 활용 가능 License | Model Card / License 원문 | STEP 3 |
-| 5 | 이커머스 질의 처리 가능한 Context Length | Model Card + 실제 실험 설정값 | STEP 3, 6 |
-| 6 | STEP 5 최소 품질 기준 통과 — **전체 평균 3.5 이상** (1~5점 척도) | 채점 결과 | STEP 5~6 |
+판정 대상은 **비교 대상 3개(C 금융 / D 코딩 / F 이커머스)** 다.
+부가 테스트 3개(A·B·E)는 실행 기록과 성능 측정만 남기고 이 판정에서는 빠진다.
+
+| # | 조건 | 확인 방법 | 근거가 나오는 곳 | 현재 |
+|---|---|---|---|---|
+| 1 | 한국어 Chat/QA 가능 | 채점 기준 C(한국어 표현) 점수 | `data/derived/tables/local_summary.md` → 품질 점수 | 채점 중 |
+| 2 | Ollama 실행 가능 | `ollama pull` / 호출 성공 | `data/raw/local/runs.jsonl` 의 `status` | 3개 모두 60/60 성공 |
+| 3 | 현재 PC에서 안정 실행 | OOM·중단 없이 전체 실험 완주 | 같은 파일의 `status` / `processor` | 3개 모두 100% GPU, 실패 0 |
+| 4 | 상업적 활용 가능 License | Model Card / License 원문 | `data/derived/tables/model_comparison.md` | 확인 완료 |
+| 5 | 이커머스 질의 처리 가능한 Context Length | Model Card 값 + 실제 실험 설정값 | 같은 표의 `문서상 최대 Context` / `실험 Context` | **문서 값 미확인** |
+| 6 | 최소 품질 기준 — **전체 평균 3.5 이상** (1~5점) | 채점 결과 | `docs/steps/step06.md` 자동 생성 구간 | 채점 중 |
+
+조건 6 판정은 손으로 계산하지 않는다. `uv run python 11_finish.py` 가
+채점된 점수를 모두 모아 평균을 내고 `Pass / Fail` 을 STEP 06 표에 찍는다.
+채점이 끝나기 전에는 `판정 전` 으로 나온다.
 
 > **확정 시점**: 본 실험(120회) 시작 전에 정했다. 과제 스펙이 요구하는 조건이며,
 > 채점 결과를 본 뒤 기준을 맞추지 않았음을 실행 기록의 timestamp 로 확인할 수 있다.
+> 조건 6 의 통과선 3.5 는 `data/config/questions.json` 의 `score_scale.pass_threshold`
+> 에 값으로 박혀 있어, 코드가 그 값을 읽어 판정한다.
 
 ### 선호 우선순위 (필수 조건 동시 충족 시 순위 결정)
 
-| 순위 | 항목 | 측정 방법 |
-|---|---|---|
-| 1 | 답변 품질 | STEP 5 채점 기준 |
-| 2 | 한국어 자연스러움 | STEP 5 채점 기준 |
-| 3 | Instruction Following | STEP 5 채점 기준 |
-| 4 | 응답 속도 | 전체 응답 시간 / 생성 속도 |
-| 5 | 메모리 사용량 | VRAM 실측 |
+| 순위 | 항목 | 측정 방법 | 값이 나오는 곳 |
+|---|---|---|---|
+| 1 | 답변 품질 | 채점 기준 A(답변 적합성) + B(논리성/실용성) | `local_summary.md` → 품질 점수 |
+| 2 | 한국어 자연스러움 | 채점 기준 C(한국어 표현) | 〃 |
+| 3 | Instruction Following | 채점 기준 D(지시사항 준수) — Q03·Q06·Q08 | 〃 |
+| 4 | 응답 속도 | 평균 전체 응답 시간 / 생성 속도 | `step06.md` STEP 06 표 |
+| 5 | 메모리 사용량 | VRAM 실측 (관측 시점) | 〃 |
+
+> 기준 D 는 3문항에서만 출제되어 모델당 최대 6회분이다. 표본이 작다는 점을
+> 순위 판단에 함께 적는다.
+> 4·5 순위는 이미 실측이 끝났다 — 응답 시간 2.89 / 4.05 / 3.33초,
+> VRAM 5,027 / 4,528 / 4,528 MiB (C / D / F).
 
 ### 미확정 — 채워야 할 것
 
-- [ ] `1. 모델 요구사항 정의` 항목이 비어 있음 (파라미터 규모 / Context 하한 / VRAM 상한 등 수치 기준)
+- [x] `1. 모델 요구사항 정의` → 8GB VRAM 제약에서 도출 (7~8B / Q4_K_M / Context 4,096 이상 / GGUF)
+- [ ] 조건 5 의 `문서상 최대 Context` 3건 미확인 — Model Card 에서 확인해
+      `data/env/environment.json` 의 `doc_max_context` 에 넣어야 판정할 수 있다
 - [x] 조건 6의 "최소 품질 기준" 확정 → **전체 평균 3.5 이상** (1~5점 척도, 본 실험 전 확정)
   - 채점 척도는 `data/config/questions.json` 의 `score_scale` 에 1~5로 고정되어 있고 validator 가 범위를 검사한다
 
