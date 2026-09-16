@@ -17,19 +17,16 @@ from . import config, recorder
 def _runs_for(question_id: str) -> list[dict[str, Any]]:
     """해당 질문의 본 실험 회차를 모델·회차 순으로."""
     order = {m["model_label"]: i for i, m in enumerate(config.enabled_models())}
+    # 채점 대상만. 부가 테스트 기록은 runs.jsonl 에 그대로 있고,
+    # models.json 의 tier 를 바꾸면 여기에도 다시 나온다.
     rows = [
         r
         for r in recorder.iter_records(config.LOCAL_RUNS_PATH)
-        if r.get("question_id") == question_id and r.get("phase") == config.PHASE_MAIN
+        if r.get("question_id") == question_id
+        and r.get("phase") == config.PHASE_MAIN
+        and config.is_primary(r.get("model_label"))
     ]
-    # 채점 대상을 먼저. 부가 테스트를 스크롤로 지나치지 않아도 된다.
-    rows.sort(
-        key=lambda r: (
-            0 if config.is_primary(r.get("model_label")) else 1,
-            order.get(r.get("model_label"), 99),
-            r.get("repeat") or 0,
-        )
-    )
+    rows.sort(key=lambda r: (order.get(r.get("model_label"), 99), r.get("repeat") or 0))
     return rows
 
 
@@ -48,7 +45,8 @@ def render(question_id: str) -> str:
         f"> 점수는 [eval-results.md](../../docs/eval-results.md) 의 `## {question_id} / Model X / Run N` 블록에 적는다.",
         "",
         "**채점 대상:** "
-        + ", ".join(m.get("display_name") or m["model_label"] for m in config.primary_models()),
+        + ", ".join(m.get("display_name") or m["model_label"] for m in config.primary_models())
+        + "  (부가 테스트 기록은 `data/raw/local/runs.jsonl` 에 남아 있다)",
         "",
         f"**구분:** {q['category']} / {q['case_type']} 사례 / 난이도 {q['difficulty']}"
         f" / Cloud 비교 {'Yes' if q.get('cloud_compare') else 'No'}",
@@ -75,19 +73,8 @@ def render(question_id: str) -> str:
         out += ["", "---", "", "_아직 이 질문의 실행 기록이 없습니다._"]
         return "\n".join(out)
 
-    shown_extra_header = False
     for r in rows:
         label = r["model_label"]
-        if not config.is_primary(label) and not shown_extra_header:
-            shown_extra_header = True
-            out += [
-                "",
-                "---",
-                "",
-                "# 여기부터 부가 테스트",
-                "",
-                "> 채점하지 않아도 된다. 같은 조건으로 돌린 기록을 참고용으로 남긴 것이다.",
-            ]
         out += [
             "",
             "---",

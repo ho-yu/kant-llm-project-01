@@ -214,8 +214,6 @@ ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
 
 
 
-일단 1, 4, 6 모델 다운로드 진행.
-
 ---
 
 ## 산출물 정리
