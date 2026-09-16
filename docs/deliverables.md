@@ -31,19 +31,23 @@
 
 작성 위치: `<파일 경로 기입>`
 
-| 항목 | 후보 1 | 후보 2 | Cloud |
-|---|---|---|---|
-| Model Name | | | |
-| Parameter | | | |
-| License | | | |
-| Context Length | | | |
-| Quantization | | | |
-| VRAM | | | |
-| 주요 특징 | | | |
-| Model Card / License 출처 | | | |
-| 실제 모델 태그 / 식별값 | | | |
-| 문서상 최대 Context | | | |
-| 실험에 사용한 Context 설정 | | | |
+| 항목 | Model C (금융) | Model D (코딩) | Model F (이커머스) | Cloud (GPT LUNA) |
+|---|---|---|---|---|
+| Model Name | | | | |
+| Parameter | | | | |
+| License | | | | |
+| Context Length | | | | |
+| Quantization | | | | |
+| VRAM | | | | |
+| 주요 특징 | | | | |
+| Model Card / License 출처 | | | | |
+| 실제 모델 태그 / 식별값 | | | | |
+| 문서상 최대 Context | | | | |
+| 실험에 사용한 Context 설정 | | | | |
+
+> 로컬 후보 3개(과제 필수는 2개)와 Cloud 1개를 비교한다.
+> 부가 테스트로 돌린 A·B·E 는 `data/derived/tables/model_comparison.md` 에
+> `부가` 로 표시되어 함께 생성된다 — 제외 근거로 쓴다.
 
 ---
 
@@ -67,7 +71,7 @@
 
 ## 4. Local LLM vs Cloud API 비교
 
-| 비교 축 | Local | Cloud |
+| 비교 축 | Local (선정 모델) | Cloud (GPT LUNA) |
 |---|---|---|
 | 품질 | | |
 | 비용 | | |
@@ -76,6 +80,11 @@
 | 인프라 | | |
 | 운영 난이도 | | |
 | 커스터마이징 가능성 | | |
+
+> Local 열은 STEP 8에서 선정한 1개를 기준으로 쓴다.
+> 후보 3개의 실측값은 `data/derived/tables/local_cloud.md` 에 모두 나온다.
+> **동일 조건이 아닌 축**을 반드시 적는다 — 반복 수(로컬 2회 / Cloud 1회),
+> temperature(로컬 0 / Cloud 모델 고정값), num_ctx·seed(Cloud 지정 불가).
 
 ---
 
