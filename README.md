@@ -36,9 +36,12 @@ A·F는 CLI 사전 확인에서 문제가 보였으나 본 실험 결과로 판�
 | `project1-python-start/src/evalkit/peek.py` | 기록 훑어보기 / 진행 상황 |
 | `project1-python-start/10_run.py` | **모델 하나 실행 + STEP 04/06 출력** |
 | `project1-python-start/11_finish.py` | 검사 · 집계 · 표 생성 |
-| `project1-python-start/12_read.py` | **채점용 응답 모음 생성** (질문별) |
+| `project1-python-start/12_read.py` | **채점 준비** — 채점표 동기화 + 응답 모음 생성 |
+| `project1-python-start/13_cloud.py` | **Cloud 비교 실행** (STEP 7) |
 | `project1-python-start/src/evalkit/report.py` | STEP 04/06 형식 출력 |
 | `project1-python-start/src/evalkit/scoring.py` | `eval-results.md` 채점 읽기 |
+| `project1-python-start/src/evalkit/scoresheet.py` | 채점표 생성 (`questions.json` + `models.json` 의 `tier`) |
+| `project1-python-start/src/evalkit/responses.py` | 채점용 응답 모음 생성 |
 | `project1-python-start/0*.py`, `99_*.py` | 모델별 단발 호출 예제 (수동 확인용) |
 
 ### 입력 (1회 작성 후 고정)
@@ -63,7 +66,8 @@ A·F는 CLI 사전 확인에서 문제가 보였으나 본 실험 결과로 판�
 |---|---|
 | `data/derived/local_summary.json` | 로컬 집계 + 품질 집계 (기여 `run_id` 포함) |
 | `data/derived/cloud_summary.json` | Cloud 집계 |
-| `data/derived/responses/Q01~Q10.md` | 채점용 응답 모음 (질문별 6모델 × 2회) |
+| `data/derived/scores.jsonl` | 채점 결과 원본 (점수·근거·재검토, `run_id` 로 실행 기록과 연결) |
+| `data/derived/responses/Q01~Q10.md` | 채점용 응답 모음 (질문별 채점 대상 3모델 × 2회) |
 | `data/derived/tables/model_comparison.md` | 산출물 2 — 제원 비교표 |
 | `data/derived/tables/local_summary.md` | 산출물 3 — 성능·품질 집계표 |
 | `data/derived/tables/local_cloud.md` | 산출물 4 — Local vs Cloud |

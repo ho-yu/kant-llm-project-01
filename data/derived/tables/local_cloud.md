@@ -1,5 +1,5 @@
 <!-- 자동 생성됨: python -m evalkit.exporter
-     직접 수정하지 말 것. 원본: data/raw/, data/scoring/ -->
+     직접 수정하지 말 것. 원본: data/raw/, docs/eval-results.md -->
 
 # Local vs Cloud (생성물)
 

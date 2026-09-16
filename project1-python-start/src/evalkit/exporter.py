@@ -395,7 +395,7 @@ def write_tables() -> list[str]:
         body = "\n".join(parts)
         header = (
             f"<!-- 자동 생성됨: python -m evalkit.exporter\n"
-            f"     직접 수정하지 말 것. 원본: data/raw/, data/scoring/ -->\n\n"
+            f"     직접 수정하지 말 것. 원본: data/raw/, docs/eval-results.md -->\n\n"
         )
         path.write_text(header + body + "\n", encoding="utf-8")
         written.append(str(path))
