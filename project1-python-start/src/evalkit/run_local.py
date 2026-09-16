@@ -22,7 +22,7 @@ _client = None
 
 
 def get_client():
-    """Ollama 클라이언트. run_settings.json 의 host/timeout 을 쓴다."""
+    """Ollama 클라이언트. execution_conditions.json 의 host/timeout 을 쓴다."""
     global _client
     if _client is None:
         from ollama import Client
@@ -199,6 +199,13 @@ def run_all(
     limit: int | None = None,
 ) -> recorder.RunLog:
     settings = config.load_run_settings()
+    if (settings.get("local_tools") != [] or settings.get("rag_search") is not False
+            or settings.get("independent_questions") is not True
+            or settings.get("warmup_per_model") != 1):
+        raise SystemExit(
+            "현재 Local 실행기는 도구·RAG 없이 독립 질문과 모델당 워밍업 1회만 지원합니다. "
+            "execution_conditions.json 을 확인하세요."
+        )
     questions = config.load_questions()
     qversion = questions["questions_version"]
     models = config.enabled_models()
@@ -222,7 +229,7 @@ def run_all(
         warmup_qid = settings.get("warmup_question_id")
         warmup_prompt = config.question_map()[warmup_qid]["prompt"] if warmup_qid else None
         if warmup_prompt is None:
-            print("  warmup 건너뜀: run_settings.warmup_question_id 미설정")
+            print("  warmup 건너뜀: execution_conditions.json 의 warmup_question_id 미설정")
         else:
             execute_once(
                 log,

@@ -129,7 +129,8 @@ def aggregate_quality(phases: Iterable[str] = config.AGGREGATED_PHASES) -> dict[
     """축 3: 품질 점수. 실행 기록과 run_id 로 조인한다."""
     runs = {
         r["run_id"]: r
-        for r in recorder.iter_records(config.LOCAL_RUNS_PATH)
+        for path in (config.LOCAL_RUNS_PATH, config.CLOUD_RUNS_PATH)
+        for r in recorder.iter_records(path)
         if r.get("run_id") and _in_scope(r, phases)
     }
     scores = [s for s in scoring.scored_only() if s.get("run_id") in runs]

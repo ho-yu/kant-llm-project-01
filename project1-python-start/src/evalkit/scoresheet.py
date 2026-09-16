@@ -20,7 +20,7 @@ from . import config
 #: 이 줄부터 파일 끝까지가 생성 구간이다.
 SECTION_START = re.compile(r"^# (Q\d+) — ")
 
-BLOCK_RE = re.compile(r"^## (Q\d+) / Model ([A-Z]) / Run (\d+)\s*$")
+BLOCK_RE = re.compile(r"^## (Q\d+) / Model ([A-Z]+) / Run (\d+)\s*$")
 
 #: 화면에 보일 때만 붙이는 우리말 풀이. 집계 키는 questions.json 의 category 다.
 CATEGORY_LABEL = {
@@ -64,9 +64,15 @@ def _existing_blocks(text: str) -> dict[str, list[str]]:
 
 
 def _trim(lines: list[str]) -> list[str]:
+    """앞뒤 빈 줄과 끝에 딸려 온 구분선을 걷어낸다.
+
+    블록 본문은 다음 제목 직전까지 모으는데, 제목이 아닌 `---` 구분선은
+    거기서 걸러지지 않는다. 그대로 두면 다시 만들 때마다 구분선이 쌓인다.
+    채점 블록이 구분선으로 끝나는 경우는 없으므로 잘라도 안전하다.
+    """
     while lines and not lines[0].strip():
         lines.pop(0)
-    while lines and not lines[-1].strip():
+    while lines and (not lines[-1].strip() or lines[-1].strip() == "---"):
         lines.pop()
     return lines
 

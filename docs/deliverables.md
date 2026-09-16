@@ -84,7 +84,7 @@
 > Local 열은 STEP 8에서 선정한 1개를 기준으로 쓴다.
 > 후보 3개의 실측값은 `data/derived/tables/local_cloud.md` 에 모두 나온다.
 > **동일 조건이 아닌 축**을 반드시 적는다 — 반복 수(로컬 2회 / Cloud 1회),
-> temperature(로컬 0 / Cloud 모델 고정값), num_ctx·seed(Cloud 지정 불가).
+> temperature(로컬 0 / Cloud 요청 미지정·실제 적용값 미확인), num_ctx·seed(Cloud 요청 미지정).
 
 ---
 

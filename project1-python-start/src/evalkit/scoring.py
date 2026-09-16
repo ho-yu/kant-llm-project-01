@@ -32,7 +32,8 @@ CRITERION_CODE = {
     "정보 부족 / 불확실성 대응": "E",
 }
 
-BLOCK_RE = re.compile(r"^##\s+(Q\d+)\s*/\s*Model\s+([A-Z])\s*/\s*Run\s+(\d+)\s*$")
+#: 라벨은 한 글자(A~F)이거나 CLOUD 처럼 여러 글자일 수 있다.
+BLOCK_RE = re.compile(r"^##\s+(Q\d+)\s*/\s*Model\s+([A-Z]+)\s*/\s*Run\s+(\d+)\s*$")
 FIELD_RE = re.compile(r"^([^:]+?)\s*:\s*(.*)$")
 
 #: 템플릿이 비워 둔 채로 남긴 자리표시자. 채워진 값으로 보지 않는다.
@@ -50,8 +51,17 @@ def _num(raw: str) -> float | None:
 
 
 def parse(path: Path | None = None) -> list[dict[str, Any]]:
-    """블록을 읽어 채점 레코드 목록으로 돌려준다."""
-    path = path or config.EVAL_RESULTS_PATH
+    """블록을 읽어 채점 레코드 목록으로 돌려준다.
+
+    경로를 주지 않으면 채점면 **두 곳**을 모두 읽는다 —
+    STEP 6 로컬 채점표(eval-results.md)와 STEP 7 Cloud 비교면(cloud-compare.md).
+    두 파일은 대상도 회차도 달라 분리해 두었지만 집계는 함께 한다.
+    """
+    if path is None:
+        out: list[dict[str, Any]] = []
+        for p in (config.EVAL_RESULTS_PATH, config.CLOUD_COMPARE_PATH):
+            out += parse(p)
+        return out
     if not path.exists():
         return []
 

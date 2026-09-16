@@ -200,11 +200,26 @@ def local_cloud_table(
     local: dict[str, Any] | None = None,
     cloud: dict[str, Any] | None = None,
 ) -> str:
-    """산출물 4 — Local vs Cloud. 실측 항목만 채우고 정성 항목은 비워 둔다."""
+    """산출물 4 — Local vs Cloud. 실측 항목만 채우고 정성 항목은 비워 둔다.
+
+    로컬은 질문 10개 x 2회, Cloud 는 공통 5문항 x 1회다.
+    두 열의 문항 수와 반복 수가 다르므로 표 안과 주석에 그 사실을 함께 적는다.
+    문항 단위로 맞춰 보려면 step07.md 의 '동일 문항 비교표' 를 쓴다.
+    """
     local = local or aggregator.aggregate_local()
     cloud = cloud or aggregator.aggregate_cloud()
 
+    n_q = len(config.load_questions()["questions"])
+    n_cq = len(cloud["cloud_question_ids"])
+    repeats = config.load_run_settings()["repeats"]
+
     rows = [
+        [
+            "집계 범위",
+            f"질문 {n_q}개 x {repeats}회",
+            f"공통 {n_cq}문항 x 1회",
+            "**같은 문항 수가 아니다**",
+        ],
         ["Quality", "(품질표 참조)", "(품질표 참조)", "실측"],
         [
             "Latency",
@@ -225,7 +240,18 @@ def local_cloud_table(
 
     out = [_table(["기준", "Local LLM", "Cloud API", "구분"], rows), ""]
     out.append(_tier_note())
-    out.append(f"> 반복 수: 로컬 질문당 2회, Cloud 질문당 1회. Cloud 대상 문항 {cloud['cloud_question_ids']}")
+    out.append(
+        f"> **집계 범위가 다르다** — 로컬은 질문 {n_q}개 x {repeats}회, "
+        f"Cloud 는 공통 {n_cq}문항 {cloud['cloud_question_ids']} x 1회다. "
+        "이 표의 Local 열은 10문항 전체 평균이므로 Cloud 열과 같은 질문 집합이 아니다."
+    )
+    out.append(
+        "> 문항 단위로 맞춰 보려면 `docs/steps/step07.md` 의 '동일 문항 비교표' 를 쓴다 — "
+        "거기서는 같은 질문끼리 비교한다."
+    )
+    out.append(
+        "> 로컬 값은 Run 1·Run 2 **평균**이다. 회차 중 좋은 쪽만 골라 쓰지 않는다."
+    )
     for name, why in config.cloud_option_gaps().items():
         out.append(f"> 동일 조건 아님 — {name}: {why}")
     out.append("> 실측 결과와 운영 조건 분석을 구분한다. 로컬 총비용을 0 으로 적지 않는다.")

@@ -25,13 +25,15 @@ DERIVED_DIR = DATA_DIR / "derived"
 TABLES_DIR = DERIVED_DIR / "tables"
 
 # 1회 작성 후 고정
-RUN_SETTINGS_PATH = CONFIG_DIR / "run_settings.json"
+RUN_SETTINGS_PATH = CONFIG_DIR / "execution_conditions.json"
 MODELS_PATH = CONFIG_DIR / "models.json"
 QUESTIONS_PATH = CONFIG_DIR / "questions.json"
 ENVIRONMENT_PATH = ENV_DIR / "environment.json"
 
 # 품질 채점 입력면 — 사람이 직접 채운다
 EVAL_RESULTS_PATH = DOCS_DIR / "eval-results.md"
+#: STEP 7 전용 면. Cloud 채점은 여기서 하고 STEP 6 채점표와 섞지 않는다.
+CLOUD_COMPARE_PATH = DOCS_DIR / "cloud-compare.md"
 
 # append 전용 — 절대 "w" 로 열지 않는다
 LOCAL_RUNS_PATH = RAW_DIR / "local" / "runs.jsonl"
@@ -102,7 +104,7 @@ def chat_options() -> dict[str, Any]:
 
 
 def cloud_options() -> dict[str, Any]:
-    """Cloud API 요청에 넘길 값. 같은 run_settings.json 에서 만든다.
+    """Cloud API 요청에 넘길 값. 같은 execution_conditions.json 에서 만든다.
 
     로컬과 Cloud 는 파라미터 이름이 다르고, Cloud 쪽에 아예 없는 것도 있다.
     조용히 버리지 않고 대응 관계를 남긴다 (cloud_option_gaps 참고).
@@ -113,7 +115,7 @@ def cloud_options() -> dict[str, Any]:
         seed         -> 없음
     """
     local = chat_options()
-    cloud = load_models().get("cloud_model") or {}
+    cloud = load_run_settings().get("cloud") or {}
 
     out: dict[str, Any] = {}
     if "temperature" in local and cloud.get("supports_temperature"):
@@ -130,17 +132,16 @@ def cloud_option_gaps() -> dict[str, str]:
     STEP 7 의 '동일 조건 비교가 아님' 항목의 근거가 된다.
     """
     local = chat_options()
-    cloud = load_models().get("cloud_model") or {}
+    cloud = load_run_settings().get("cloud") or {}
 
     gaps = {
         "num_ctx": "Cloud API 에는 컨텍스트 창 지정 파라미터가 없다",
         "seed": "Responses API 에는 seed 파라미터가 없다 — 재현성 조건이 로컬과 다르다",
     }
     if not cloud.get("supports_temperature"):
-        fixed = cloud.get("fixed_temperature")
         gaps["temperature"] = (
-            f"이 모델은 temperature 를 지정할 수 없다. "
-            f"로컬 {local.get('temperature')} / Cloud {fixed} (모델 고정값) 로 다르다"
+            f"이 설정에서는 Cloud temperature 를 지정하지 않는다. "
+            f"로컬 {local.get('temperature')} / Cloud 실제 적용값 미확인"
         )
     return gaps
 

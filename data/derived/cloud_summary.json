@@ -9,56 +9,110 @@
     "Q09",
     "Q10"
   ],
-  "attempts": 0,
-  "success": 0,
+  "attempts": 5,
+  "success": 5,
   "errors": 0,
   "error_run_ids": [],
   "metrics": {
     "elapsed_sec": {
-      "available": false,
-      "mean": null,
-      "n": 0,
-      "min": null,
-      "max": null,
-      "values": [],
-      "source_run_ids": [],
+      "available": true,
+      "mean": 6.9728450199982035,
+      "n": 5,
+      "min": 4.474997400000575,
+      "max": 9.423065099996165,
+      "values": [
+        7.784490300000471,
+        5.030528099996445,
+        4.474997400000575,
+        8.151144199997361,
+        9.423065099996165
+      ],
+      "source_run_ids": [
+        "CLOUD_Q01_r1",
+        "CLOUD_Q04_r1",
+        "CLOUD_Q06_r1",
+        "CLOUD_Q09_r1",
+        "CLOUD_Q10_r1"
+      ],
       "excluded_run_ids": [],
-      "unavailable_reason": "유효한 측정값 없음"
+      "unavailable_reason": null
     },
     "input_tokens": {
-      "available": false,
-      "mean": null,
-      "n": 0,
-      "min": null,
-      "max": null,
-      "values": [],
-      "source_run_ids": [],
+      "available": true,
+      "mean": 37.2,
+      "n": 5,
+      "min": 32.0,
+      "max": 44.0,
+      "values": [
+        37.0,
+        44.0,
+        38.0,
+        35.0,
+        32.0
+      ],
+      "source_run_ids": [
+        "CLOUD_Q01_r1",
+        "CLOUD_Q04_r1",
+        "CLOUD_Q06_r1",
+        "CLOUD_Q09_r1",
+        "CLOUD_Q10_r1"
+      ],
       "excluded_run_ids": [],
-      "unavailable_reason": "유효한 측정값 없음"
+      "unavailable_reason": null
     },
     "output_tokens": {
-      "available": false,
-      "mean": null,
-      "n": 0,
-      "min": null,
-      "max": null,
-      "values": [],
-      "source_run_ids": [],
+      "available": true,
+      "mean": 486.2,
+      "n": 5,
+      "min": 303.0,
+      "max": 768.0,
+      "values": [
+        433.0,
+        380.0,
+        303.0,
+        547.0,
+        768.0
+      ],
+      "source_run_ids": [
+        "CLOUD_Q01_r1",
+        "CLOUD_Q04_r1",
+        "CLOUD_Q06_r1",
+        "CLOUD_Q09_r1",
+        "CLOUD_Q10_r1"
+      ],
       "excluded_run_ids": [],
-      "unavailable_reason": "유효한 측정값 없음"
+      "unavailable_reason": null
     },
     "estimated_cost": {
-      "available": false,
-      "mean": null,
-      "n": 0,
-      "min": null,
-      "max": null,
-      "values": [],
-      "source_run_ids": [],
+      "available": true,
+      "mean": 0.00059088,
+      "n": 5,
+      "min": 0.0003712,
+      "max": 0.000928,
+      "values": [
+        0.0005269999999999999,
+        0.0004648,
+        0.0003712,
+        0.0006633999999999999,
+        0.000928
+      ],
+      "source_run_ids": [
+        "CLOUD_Q01_r1",
+        "CLOUD_Q04_r1",
+        "CLOUD_Q06_r1",
+        "CLOUD_Q09_r1",
+        "CLOUD_Q10_r1"
+      ],
       "excluded_run_ids": [],
-      "unavailable_reason": "유효한 측정값 없음"
+      "unavailable_reason": null
     }
   },
-  "run_ids": [],
+  "run_ids": [
+    "CLOUD_Q01_r1",
+    "CLOUD_Q04_r1",
+    "CLOUD_Q06_r1",
+    "CLOUD_Q09_r1",
+    "CLOUD_Q10_r1"
+  ],
   "_note": "로컬은 질문당 2회, Cloud 는 1회다. 반복 수가 다르므로 표에 함께 표시한다."
 }

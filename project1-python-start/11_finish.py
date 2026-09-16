@@ -13,7 +13,7 @@
 채운 뒤 이 파일을 다시 실행하면 품질 점수가 표에 반영됩니다.
 """
 
-from evalkit import aggregator, exporter, report, scoring, validator
+from evalkit import aggregator, config, exporter, recorder, report, scoring, step07_report, validator
 
 print(report.BAR)
 print("  1. 검사")
@@ -34,6 +34,10 @@ for path in aggregator.write_summaries():
     print("written:", path)
 for path in exporter.write_tables():
     print("written:", path)
+cloud_ids = {r.get("question_id") for r in recorder.iter_records(config.CLOUD_RUNS_PATH)
+             if r.get("phase") == config.PHASE_MAIN}
+if cloud_ids == set(config.cloud_question_ids()):
+    print("written: docs/steps/step07.md (" + step07_report.write() + ")")
 
 print("\n" + report.BAR)
 print("  4. 전체 STEP 06 표")

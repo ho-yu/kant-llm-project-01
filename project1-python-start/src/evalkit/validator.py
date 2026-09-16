@@ -148,9 +148,11 @@ def validate_scores(path: Path | None = None) -> ValidationReport:
     path = path or config.EVAL_RESULTS_PATH
     report = ValidationReport(target=str(path))
 
+    # 채점표에는 로컬과 Cloud 블록이 함께 있으므로 두 기록을 모두 본다
     runs = {
         r["run_id"]: r
-        for r in recorder.iter_records(config.LOCAL_RUNS_PATH)
+        for path in (config.LOCAL_RUNS_PATH, config.CLOUD_RUNS_PATH)
+        for r in recorder.iter_records(path)
         if r.get("run_id")
     }
     qmap = config.question_map()

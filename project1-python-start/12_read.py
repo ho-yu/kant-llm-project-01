@@ -29,7 +29,7 @@
 RESET = True 로 두면 적어 둔 점수를 전부 지우고 빈 양식으로 되돌립니다.
 """
 
-from evalkit import responses, scoresheet
+from evalkit import cloudsheet, responses, scoresheet
 
 # ---------------------------------------------------------------- 여기만 바꿉니다
 
@@ -41,6 +41,7 @@ if RESET:
     print("!! RESET=True — 적어 둔 점수를 모두 지웁니다.\n")
 
 print(scoresheet.sync(preserve=not RESET))
+print(cloudsheet.sync())
 print()
 
 for path in responses.write_all():

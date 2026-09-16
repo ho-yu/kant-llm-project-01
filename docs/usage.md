@@ -29,34 +29,11 @@ uv sync
 
 Ollama 앱이 실행 중이어야 한다.
 
-### 1-2. `data/config/run_settings.json` 채우기
+### 1-2. `data/config/execution_conditions.json` 채우기
 
-**본 실험을 시작하기 전에 확정한다.** 여기 적힌 값이 모든 모델에 동일하게
-적용되고, 회차마다 기록에 복사된다. 실험 도중 바꾸면 앞뒤 회차의 조건이
-달라져 비교가 성립하지 않는다.
-
-| 항목 | 값 | 왜 이 값인가 |
-|---|---|---|
-| `timeout_sec` | `300` | Model F(14B)가 CPU offloading 상태에서 768토큰을 다 채워도 150초 안쪽. 2배 여유. 무한 대기를 막는 것이 목적 |
-| `options.temperature` | `0` | 모델 비교가 목적이므로 샘플링 무작위성을 제거. 답변 차이가 '모델 차이'인지 '운'인지 섞이면 안 된다 |
-| `options.num_predict` | `768` | 가장 긴 답변을 요구하는 Q06/Q08/Q10이 한국어로 400~600 토큰. Model A가 정지 토큰을 못 내고 무한 생성한 실측(40,960토큰/13분)이 있어 한도가 필수 |
-| `options.num_ctx` | `4096` | 입력이 47토큰 수준이라 충분. 6개 모델 전부 기본값이 4096이라 조건도 같아진다. 더 키우면 KV 캐시가 VRAM을 먹어 F의 offloading이 심해진다 |
-| `options.seed` | `0` | `temperature=0` 과 함께 재현성 확보 |
-| `keep_alive` | `"5m"` | **`0` 이면 응답 직후 언로드되어 `size_vram`/`digest`/`context_length` 가 전부 null** |
-| `warmup_question_id` | `"Q01"` | 첫 호출의 모델 로딩 시간을 본 실험에서 걷어내기 위함. 결과는 버리므로 가장 단순한 질문 |
-| `use_system_prompt` | `false` | 모델마다 system 역할 처리가 달라 특정 모델에 유리해질 수 있다 |
-| `repeats` | `2` | 과제 필수 |
-
-**`temperature = 0` 의 한계**: Run1/Run2 차이가 샘플링 변동이 아니라 실행 환경 변동을 재게 된다.
-"Run 간 일관성" 표를 해석할 때 이 점을 밝히고, STEP 8 보고서의 한계 항목에도 적는다.
-
-각 값의 근거는 `data/config/run_settings.json` 의 `_*_note` 필드에 함께 적혀 있다.
-
-값이 `null` 인 옵션은 Ollama 에 전달하지 않는다. 따라서 기록에 남은
-`options` 는 실제로 넘긴 값과 항상 일치한다.
-
-설정을 꼭 바꿔야 한다면 `settings_version` 을 올리고 `changed_reason` 을
-적는다. 집계할 때 서로 다른 버전이 섞여 있으면 경고가 나온다.
+Local·Cloud의 완료된 실험값, 비교 지표, 설정 위치와 보완 항목은
+[실험 조건 및 실행 전 점검표](experiment-conditions.md) 한곳에서 확인한다.
+현재 `execution_conditions.json`의 768토큰 설정이 완료된 실험의 기준이다.
 
 ### 1-3. 환경 정보 수집
 
@@ -90,7 +67,7 @@ OS / Python / Ollama / 패키지 버전, GPU·VRAM·CPU·RAM,
 | Python / Ollama / 패키지 버전 | `environment.json` → `runtime` | **자동** |
 | GPU / VRAM / CPU / 시스템 RAM | `environment.json` → `hardware` | **자동** |
 | 실행 환경 구분 (Local PC vs Colab) | `environment.json` → `platform.execution_type` | 사람이 1회 |
-| 실행 설정 | `data/config/run_settings.json` → `options` | 사람이 1회, 회차마다 기록에 복사됨 |
+| 실행 설정 | `data/config/execution_conditions.json` → `options` | 사람이 1회, 회차마다 기록에 복사됨 |
 | 실험에서 실제 확인한 Context | `runs.jsonl` → `context_length` | **자동** |
 | 문서상 최대 Context | `environment.json` → `doc_max_context` | **사람이 Model Card 에서 확인** |
 | Model Card / License 출처 | `environment.json` → `model_card_url`, `upstream_model_card_url`, `license_*` | `step03.md` 조사 결과를 옮겨둠 |
@@ -151,7 +128,7 @@ LIMIT = 3       # 먼저 3건만
 
 | 증상 | 원인 | 조치 |
 |---|---|---|
-| `VRAM=null` | `keep_alive=0` 이라 응답 직후 언로드됨 | 멈추고 `run_settings.json` 수정. **기록은 append 전용이라 되돌릴 수 없다** |
+| `VRAM=null` | `keep_alive=0` 이라 응답 직후 언로드됨 | 멈추고 `execution_conditions.json` 수정. **기록은 append 전용이라 되돌릴 수 없다** |
 | `생성속도=null` | `eval_duration` 이 0 이하이거나 통계 필드 없음 | 사유가 `!` 줄에 나온다 |
 | `[ERR]` | 호출 실패 | 예외 종류와 메시지가 같이 나온다. 모델 태그를 먼저 의심한다 |
 | `done_reason=length` | `num_predict` 한도에서 잘림 | 실패가 아니다. 채점 시 "내용 부족"과 구분해서 본다 |

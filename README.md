@@ -9,7 +9,8 @@
 | 실행 완료 | 로컬 6개 모델 × 10문항 × 2회 = **120회** |
 | 품질 채점 | 3개 모델 × 10문항 × 2회 = **60블록 완료** (재검토 포함) |
 | 조건 6 판정 | C Fail 2.31 · D Fail 3.00 · **F Pass 3.65** |
-| 남은 작업 | STEP 7 Cloud 비교 · STEP 8 최종 선정 |
+| STEP 7 | Cloud 5/5 실행·채점 완료 (`temperature=0`) — Cloud 4.53 · F 3.50 · D 3.00 · C 2.32 |
+| 진행 상태 | **STEP 1~7 완료 · STEP 8 최종 선정만 남음** |
 
 ```mermaid
 flowchart LR
@@ -23,8 +24,8 @@ flowchart LR
 
     classDef done fill:#dcfce7,stroke:#16a34a,color:#14532d
     classDef todo fill:#f1f5f9,stroke:#94a3b8,color:#475569
-    class S1,S3,S4,S5,S6,SC done
-    class S7,S8 todo
+    class S1,S3,S4,S5,S6,SC,S7 done
+    class S8 todo
 ```
 
 <sub>초록 = 완료 · 회색 = 예정</sub>
@@ -49,7 +50,12 @@ flowchart LR
 
 ## 2. 선정 기준 — 실험 전에 확정
 
-결과를 보고 기준을 바꾸지 않기 위해 **실험 시작 전에** 정했다.
+**선정 목표** — 상품 상세페이지에 제공된 정보를 바탕으로 일반 쇼핑몰 고객의
+한국어 질문에 정확하고 신속하게 답할 수 있는 로컬 모델을 고른다.
+정보가 없거나 불확실하면 내용을 만들어 답하지 않고 확인이 필요하다고 안내해야 한다.
+
+아래 필수 조건과 전체 평균 3.5 통과선은 **실험 시작 전에** 정했다.
+실제 자동 응답에 사용할 수 있는지는 실험 결과를 바탕으로 별도 검토한다.
 
 **모델 선정 기준** — 모델 계열이나 벤치마크 성능보다 **서로 다른 도메인으로
 Fine-tuning 된 모델의 실제 응답 특성 비교**를 우선했다.
@@ -77,9 +83,16 @@ Fine-tuning 된 모델의 실제 응답 특성 비교**를 우선했다.
 | 5 | 이커머스 질의 처리 가능한 Context Length | STEP 3, 6 |
 | 6 | **전체 평균 3.5 이상** (1~5점) | STEP 5~6 |
 
+조건 1~5는 모델 문서 또는 실행 기록으로 근거를 확인한다. 근거가 부족하면
+`Pass`로 추정하지 않고 **미확인**으로 표시한다. 조건 3의 실행 기록은 이번
+실험 환경에서의 안정성을 판단하는 근거이며 장시간 운영 안정성을 뜻하지 않는다.
+조건 5는 문서상 최대 Context와 실험에서 설정한 Context를 구분해 확인한다.
+
 조건 6 판정은 손으로 계산하지 않는다. 통과선 3.5 는 `questions.json` 의
 `score_scale.pass_threshold` 에 값으로 박혀 있고, `11_finish.py` 가 그 값을 읽어
 `Pass / Fail` 을 STEP 06 표에 찍는다.
+전체 평균은 본 실험에서 채점된 항목별 점수를 모두 합산한 값이며,
+사용한 점수 개수 `n`을 함께 적는다.
 
 **선호 우선순위** — 필수 조건을 모두 통과한 후보 사이의 순위를 정한다
 
@@ -126,6 +139,12 @@ flowchart LR
 ```
 
 **필수 조건 6은 Pass/Fail**, **우선순위는 통과한 후보 사이의 순위**다. 둘은 다른 판정이다.
+
+**실제 자동 응답 적합성**은 위 Pass/Fail과 별도로 검토한다. 전체 평균뿐 아니라
+가장 중요한 정보 부족·불확실성 대응(E) 점수와 확인되지 않은 사실을 단정한
+실패 사례를 살핀다. 문제가 남아 있으면 전체 평균이 3.5 이상이어도
+검토 후 응답 등으로 사용 범위를 제한한다. 이 검토는 이미 확정한 통과선이나
+기존 실험의 조건 6 판정을 소급해서 바꾸지 않는다.
 
 원문: [docs/steps/step02.md](docs/steps/step02.md)
 
@@ -191,6 +210,9 @@ flowchart TD
 > [docs/steps/step06.md](docs/steps/step06.md) '실행 기록 삭제 이력' 에 남아 있다.
 
 ## 4. 실험 설계 — 조건을 어떻게 통제했는가
+
+Local·Cloud의 실제 적용 조건(출력 한도 768토큰), 비교 지표와 보완할 기록 항목은
+[실험 조건 및 실행 전 점검표](docs/experiment-conditions.md)에 모았다.
 
 **질문 10개** (정상 6 / 경계 2 / 정보 부족 2), 고객 문의 5 + 셀러 업무 5.
 Cloud 비교용 5문항(Q01·Q04·Q06·Q09·Q10)은 **결과를 보기 전에** 선정했다.
@@ -315,14 +337,55 @@ GPU 부동소수점 연산의 미세한 차이가 비슷한 확률의 두 토큰
 → 두 회차를 각각 채점한다. **점수 차이가 큰 모델은 품질이 불안정하다는 신호**로 본다.
 → STEP 8 한계 항목에 기재한다.
 
-## 7. 남은 작업
+## 7. STEP 07 — Local vs Cloud 비교
+
+공통 5문항(Q01·Q04·Q06·Q09·Q10)에 Cloud 5/5건, Local C·D·F 각 10/10건.
+**Local·Cloud 모두 `temperature=0`** 으로 조건을 맞췄다.
+상세는 [STEP 07 결과](docs/steps/step07.md), Cloud 채점은 [cloud-compare.md](docs/cloud-compare.md).
+
+**품질** — 공통 5문항, 로컬은 Run 1·2 평균
+
+| 질문 | 유형 | C | D | F | **Cloud** |
+|---|---|---|---|---|---|
+| Q01 일반 고객 문의 | 정상 | 3.33 | 4.00 | 4.50 | **4.67** |
+| Q04 책임 소재 불분명 | 경계 | 1.75 | 2.50 | 3.25 | **4.50** |
+| Q06 FAQ 구성 | 정상 | 3.00 | 3.88 | 3.25 | **4.50** |
+| Q09 판매량 감소 판단 | 경계 | 1.50 | 2.62 | 4.00 | **5.00** |
+| Q10 데이터 부족 | 정보 부족 | 2.00 | 2.00 | 2.50 | **4.00** |
+| **평균** | | 2.32 | 3.00 | 3.50 | **4.53** |
+
+| 기준 | C | D | F | Cloud |
+|---|---|---|---|---|
+| A 답변 적합성 | 1.80 | 3.10 | 3.50 | **4.60** |
+| B 논리성/실용성 | 1.80 | 2.70 | 3.00 | **4.20** |
+| C 한국어 표현 | 3.30 | 3.10 | 3.90 | **4.80** |
+| E 불확실성 대응 | 1.50 | 2.50 | 3.17 | **4.33** |
+
+**속도·비용** — 같은 지표가 아니다
+
+| | C | D | F | Cloud |
+|---|---|---|---|---|
+| 평균 응답 시간 | 3.40s | 4.77s | 3.86s | 6.97s |
+| 생성 속도 | 62.25 t/s | 66.36 t/s | 62.89 t/s | **계산 불가** |
+| 평균 출력 토큰 | 179.7 | 282.5 | 204.9 | 486.2 |
+| 종료 상태 | stop 10 | stop 10 | stop 10 | completed 4 / **incomplete 1** |
+
+Cloud 응답 시간에는 **네트워크 왕복이 포함**되고 내부 생성 시간이 없어 tokens/s 를 계산하지 않았다.
+토크나이저가 달라 토큰 수로 답변 길이를 비교하지 않는다.
+
+Cloud 추정 비용 **$0.002954** (입력 186 / 출력 2,431 토큰, $0.20·$1.20 per 1M USD).
+토큰 × 단가이며 실제 청구액이 아니다. Local 은 API 과금이 없으나 장비·전력·관리 비용은 미측정이다.
+
+> **Cloud 가 5문항 모두에서 높았다.** 다만 최종 선정은 **로컬 후보 중에서만** 한다 (STEP 8).
+> Cloud 결과는 운영 방식 권고의 근거로 쓴다.
+
+> Q10 은 Cloud 도 4.00 이다. 다섯 모델 어느 쪽도 "어떤 상품인지" 를 되묻지 않았다.
 
 | | 내용 |
 |---|---|
-| 1 | Cloud(GPT LUNA) 5문항 실행 + 단가 기입 |
-| 2 | `문서상 최대 Context` 3건 확인 — 필수 조건 5 판정 근거 |
-| 3 | STEP 8 최종 선정 + Local–Cloud 운영 권고 |
-| 4 | 본인 재실행 기록 |
+| 1 | `문서상 최대 Context` 3건 확인 — 필수 조건 5 판정 근거 |
+| 2 | STEP 8 최종 Local 선정 + 운영 권고 |
+| 3 | 본인 재실행 기록 |
 
 ---
 
@@ -367,7 +430,7 @@ cd project1-python-start && uv run python 10_run.py
 
 `MODEL` 을 A~F 로 바꿔 가며 6번 실행한다. 중단해도 되고, 다시 실행하면 기록된 회차는 건너뛴다.
 처음에는 `LIMIT = 3` 으로 확인한 뒤 `None` 으로 바꾼다.
-실행 전에 `data/config/run_settings.json` 이 비어 있으면 무엇이 빠졌는지 알려주고 **실행을 거부한다.**
+실행 전에 `data/config/execution_conditions.json`의 필수 설정을 확인한다. 파일이 비어 있거나 JSON 형식이 잘못되면 실행할 수 없다.
 
 **2. 채점 준비**
 
@@ -387,7 +450,7 @@ uv run python 12_read.py
 uv run python 11_finish.py
 ```
 
-검사 → 진행률 → 집계표 생성 → STEP 06 표 출력. `docs/steps/step04.md` · `step06.md` 의 자동 구간이 갱신된다.
+검사 → 진행률 → 집계표 생성 → STEP 06 표 출력. `docs/steps/step04.md` · `step06.md` · `step07.md` 의 자동 구간이 갱신된다.
 
 **5. Cloud 비교**
 
@@ -407,7 +470,7 @@ uv run python 13_cloud.py
 ```mermaid
 flowchart LR
     subgraph IN["입력 — 1회 확정 후 고정"]
-        CFG["models.json<br/>questions.json<br/>run_settings.json"]
+        CFG["models.json<br/>questions.json<br/>execution_conditions.json"]
     end
 
     subgraph RAW["원본 기록 — append 전용"]
@@ -446,7 +509,7 @@ flowchart LR
 |---|---|
 | `data/config/models.json` | 모델 태그 · `tier`(채점 대상 여부) · 주요 특징 · Cloud 모델 |
 | `data/config/questions.json` | 질문 10개 · 평가 기준 · Cloud 대상 문항 · 척도 |
-| `data/config/run_settings.json` | 실행 설정 (설정마다 `_note` 에 이유) |
+| `data/config/execution_conditions.json` | Local·Cloud 실행 조건의 단일 설정 파일 |
 | `data/env/environment.json` | 실행 환경 · 모델 제원 (대부분 자동 수집) |
 
 ## 원본 기록 (append 전용 — 수정·삭제하지 않는다)
@@ -454,7 +517,7 @@ flowchart LR
 | 경로 | 내용 |
 |---|---|
 | `data/raw/local/runs.jsonl` | 로컬 실행 126건 (본 실험 120 + 워밍업 6) |
-| `data/raw/cloud/runs.jsonl` | Cloud 실행 기록 *(STEP 7 실행 시 생성)* |
+| `data/raw/cloud/runs.jsonl` | Cloud 실행 기록 5건 (본 실험) |
 | `docs/eval-results.md` | **채점 입력면** — 여기에 직접 점수·근거를 적는다 |
 
 ## 생성물 (언제든 재생성 가능 — 직접 고치지 않는다)

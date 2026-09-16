@@ -37,7 +37,7 @@ LOCAL_RUN_FIELDS: tuple[FieldSpec, ...] = (
     ("quantization_level", "str|null", True, "details.quantization_level"),
     ("context_length", "int|null", True, "실행 시점 실제 context. 문서상 최대값과 다름"),
     # --- 입력
-    ("settings_version", "str", True, "run_settings.json 의 settings_version"),
+    ("settings_version", "str", True, "execution_conditions.json 의 settings_version"),
     ("questions_version", "str", True, "questions.json 의 questions_version"),
     ("options", "dict", True, "client.chat(options=...) 에 실제로 넘긴 값 전체"),
     ("system_prompt", "str|null", True, "미사용이면 null"),

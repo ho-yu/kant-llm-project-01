@@ -25,7 +25,7 @@ print(report.BAR)
 # 실험 전에 반드시 정해져 있어야 하는 값 확인
 problems = report.preflight()
 if problems:
-    print("\n실험을 시작할 수 없습니다. data/config/run_settings.json 을 먼저 채우세요.\n")
+    print("\n실험을 시작할 수 없습니다. data/config/execution_conditions.json 을 먼저 채우세요.\n")
     for p in problems:
         print(f"  - {p}")
     raise SystemExit(1)

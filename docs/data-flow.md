@@ -8,7 +8,7 @@
 ```
 [1회 작성 후 고정]                      [append 전용]                [생성물 — 재생성 가능]
 
-data/config/run_settings.json  ─┐
+data/config/execution_conditions.json  ─┐
 data/config/models.json        ─┼──> run_local.py ──> data/raw/local/runs.jsonl ─┐
 data/config/questions.json     ─┘                                                │
                                 │                                                │
@@ -42,7 +42,7 @@ data/env/environment.json ──────────────────
 
 | 파일 | 성격 | 쓰는 주체 | 규칙 |
 |---|---|---|---|
-| `data/config/run_settings.json` | 1회 작성 후 고정 | 사람 | 본 실험 시작 후 변경 금지. 바꿨다면 `settings_version` 을 올린다 |
+| `data/config/execution_conditions.json` | 현재 코드의 단일 실행 조건 | 사람 | 완료된 v1 값을 옮겨 보존. 새 조건이면 `settings_version`을 올리고 기존 실행과 분리 |
 | `data/config/models.json` | 1회 작성 후 고정 | 사람 | `model_label` 은 모든 표의 키. 확정 후 변경 금지 |
 | `data/config/questions.json` | 1회 작성 후 고정 | 사람 | `docs/steps/step05.md` 의 전사본. `cloud_compare` 는 결과 보기 전에 확정 |
 | `data/env/environment.json` | 1회 작성 후 고정 | 사람 | 환경이 바뀌면 새 버전 파일 + `applies_from_run_id` |
@@ -137,7 +137,7 @@ aggregator.trace("B_Q01_r1")   # 실행 기록 + 채점 기록을 함께 반환
 모두 `project1-python-start` 에서 `uv run` 으로 실행한다.
 
 ```bash
-# 0) 설정 확정 — run_settings / questions 를 먼저 채운다
+# 0) 설정 확정 — execution_conditions / questions 를 먼저 채운다
 # 1) 환경 정보 자동 수집
 uv run python -m evalkit.collect_env
 

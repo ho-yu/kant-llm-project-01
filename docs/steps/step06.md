@@ -15,8 +15,7 @@
 비교 대상을 3개로 좁힌 기준은 [step08.md](step08.md) 에 적는다.
 
 실행 설정은 6개 모델에 동일 적용했다 — `temperature=0` / `num_predict=768` /
-`num_ctx=4096` / `seed=0` / system prompt 없음. 근거는 `data/config/run_settings.json`
-의 `_*_note` 에 있다.
+`num_ctx=4096` / `seed=0` / system prompt 없음. 실제 적용값의 근거는 원본 실행 기록의 `options`와 `system_prompt`다. 현재 코드는 v1 값을 옮긴 `data/config/execution_conditions.json`을 읽는다.
 
 ## 2. 실행 기록
 
@@ -208,8 +207,8 @@ cd project1-python-start && uv run python 11_finish.py
 | 평균 입력 토큰 수 | 52.7 (n=20) | 44.4 (n=20) | 44.4 (n=20) |
 | 평균 생성 속도 | 61.13 t/s (n=20) | 66.97 t/s (n=20) | 61.58 t/s (n=20) |
 | VRAM (관측 시점) | 5027.5 MiB (n=20) | 4528.1 MiB (n=20) | 4528.1 MiB (n=20) |
-| 평균 품질 점수 | 3.33 (n=6) | 4.00 (n=6) | 4.50 (n=6) |
-| 조건 6 판정 (평균 3.5 이상) | Fail (3.33) | Pass (4.00) | Pass (4.50) |
+| 평균 품질 점수 | 2.31 (n=72) | 3.00 (n=72) | 3.65 (n=72) |
+| 조건 6 판정 (평균 3.5 이상) | Fail (2.31) | Fail (3.00) | Pass (3.65) |
 
 ### 부가 테스트
 

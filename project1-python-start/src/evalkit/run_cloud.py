@@ -44,11 +44,12 @@ def _get_client(api_key: str):
     from openai import OpenAI
 
     settings = config.load_run_settings()
+    cloud = settings["cloud"]
     return OpenAI(
         api_key=api_key,
         base_url="https://api.openai.com/v1",
         timeout=settings.get("timeout_sec"),
-        max_retries=0,
+        max_retries=cloud["max_retries"],
     )
 
 
@@ -64,20 +65,51 @@ def call_cloud(model_id: str, prompt: str, options: dict[str, Any], api_key: str
 
     client = _get_client(api_key)
 
+    cloud = config.load_run_settings()["cloud"]
     kwargs: dict[str, Any] = {
         "model": model_id,
         "input": prompt,          # 독립 질문 — 이전 대화를 이어 붙이지 않는다
-        "reasoning": {"effort": "none"},
-        "tools": [],
-        "tool_choice": "none",
-        "store": False,           # 응답을 서버에 보관하지 않는다
+        "reasoning": cloud["reasoning"],
+        "tools": cloud["tools"],
+        "tool_choice": cloud["tool_choice"],
+        "store": cloud["store"],
     }
+    if cloud.get("system_prompt"):
+        kwargs["instructions"] = cloud["system_prompt"]
     kwargs.update(options)        # temperature / max_output_tokens
 
     start = perf_counter()
     response = client.responses.create(**kwargs)
     elapsed = perf_counter() - start
     return response, elapsed
+
+
+def probe_temperature() -> dict[str, Any]:
+    """temperature=0 지원 여부를 1회 확인하며 실험 로그에는 기록하지 않는다."""
+    model_id = config.load_models()["cloud_model"].get("model_id")
+    if not model_id:
+        raise SystemExit("models.json 의 cloud_model.model_id 를 먼저 채우세요.")
+
+    options = {"temperature": 0, "max_output_tokens": 16}
+    response, elapsed = call_cloud(
+        model_id,
+        "확인이라고만 답해 주세요.",
+        options,
+        get_api_key(),
+    )
+    result = {
+        "accepted": True,
+        "status": getattr(response, "status", None),
+        "temperature": getattr(response, "temperature", None),
+        "elapsed_sec": elapsed,
+        "response_text": getattr(response, "output_text", None),
+    }
+    print("temperature=0 시험 요청이 수락되었습니다.")
+    print(f"  API 상태: {result['status']}")
+    print(f"  반환 temperature: {result['temperature']}")
+    print(f"  응답: {result['response_text']}")
+    print("  기존 data/raw/cloud/runs.jsonl에는 기록하지 않았습니다.")
+    return result
 
 
 def extract_usage(response: Any) -> tuple[int | None, int | None, str | None]:
@@ -111,6 +143,12 @@ def _fill_cost(rec: dict[str, Any], pricing: dict[str, Any]) -> None:
 
 def run_all(dry_run: bool = False) -> recorder.RunLog:
     settings = config.load_run_settings()
+    cloud_conditions = settings["cloud"]
+    if (cloud_conditions["repeats"] != 1 or not cloud_conditions["independent_questions"]
+            or settings.get("rag_search") is not False):
+        raise SystemExit("현재 Cloud 실행기는 질문당 1회·독립 질문만 지원합니다. execution_conditions.json 을 확인하세요.")
+    if cloud_conditions["max_retries"] != 0:
+        raise SystemExit("본 실험의 자동 재시도는 0이어야 합니다. execution_conditions.json 을 확인하세요.")
     questions = config.question_map()
     pricing = config.load_models()["cloud_model"]
     model_id = pricing.get("model_id")

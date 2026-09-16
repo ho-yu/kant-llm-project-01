@@ -622,7 +622,7 @@
 | 반복 | 2회 | |
 | 워밍업 | 모델당 1회 (Q01) | 본 집계에서 제외 |
 
-원본과 각 값의 근거: `data/config/run_settings.json` 의 `_*_note`.
+완료된 실행 조건은 각 원본 기록의 `options`에서 확인한다. 현재 코드는 v1 값을 옮긴 `data/config/execution_conditions.json`을 읽는다. 적용 한계는 `docs/experiment-conditions.md`에 정리했다.
 **실행 기록의 `options` 는 실제로 넘긴 값을 그대로 복사**하므로, 기록만 보고
 무슨 설정으로 돌렸는지 확인할 수 있다.
 
@@ -634,6 +634,6 @@
 - [x] 질문 세트가 저장소에 파일로 존재 → `data/config/questions.json`
 - [x] 동일 입력·동일 설정 적용 기준이 문서화됨 → 위 '고정할 실행 설정' 표
       + 실행 기록 126건의 `options` 가 모두 동일함을 확인
-- [ ] Cloud 5문항에도 같은 기준을 적용 (STEP 7 실행 후)
-      → temperature 는 Cloud 모델이 지정을 허용하지 않아 조건이 갈린다.
+- [x] Cloud 5문항의 공통 조건과 차이를 STEP 7에서 확인
+      → Cloud 요청에는 temperature를 지정하지 않았고 실제 적용값은 확인되지 않았다.
         [step07.md](step07.md) 에 '동일 조건 아님'으로 기재한다

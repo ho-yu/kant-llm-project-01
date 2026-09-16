@@ -1,0 +1,41 @@
+{
+  "_comment": "Local·Cloud 실행 조건의 단일 출처. 기존 원본 기록의 options와 settings_version은 당시 조건을 보존한다. 새 조건의 결과는 기존 run_id와 분리한다.",
+  "settings_version": "v2-cloud-temperature-0",
+  "confirmed_at": "2026-09-16",
+  "changed_reason": "gpt-5.6-luna 시험 요청에서 reasoning.effort=none과 temperature=0 조합이 수락되고 응답 temperature=0.0이 반환되어 이후 Cloud 요청에 0을 명시하도록 변경",
+  "host": "http://127.0.0.1:11434",
+  "timeout_sec": 300,
+  "options": {
+    "temperature": 0,
+    "num_predict": 768,
+    "num_ctx": 4096,
+    "seed": 0
+  },
+  "system_prompt": null,
+  "use_system_prompt": false,
+  "repeats": 2,
+  "warmup_per_model": 1,
+  "warmup_question_id": "Q01",
+  "keep_alive": "5m",
+  "independent_questions": true,
+  "local_tools": [],
+  "rag_search": false,
+  "cloud": {
+    "repeats": 1,
+    "supports_temperature": true,
+    "_supports_temperature_note": "2026-09-16 gpt-5.6-luna 시험 요청에서 temperature=0이 수락되고 응답에도 0.0이 반환된 것을 확인했다.",
+    "fixed_temperature": 0,
+    "tools": [],
+    "tool_choice": "none",
+    "reasoning": {"effort": "none"},
+    "store": false,
+    "system_prompt": null,
+    "independent_questions": true,
+    "max_retries": 0
+  },
+  "recording_policy": {
+    "failed_attempts": "append_error_without_replacement",
+    "retries": "separate_phase_and_run_id",
+    "finish_state": "local_done_reason_and_cloud_api_status"
+  }
+}
