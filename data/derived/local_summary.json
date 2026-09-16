@@ -2436,17 +2436,6 @@
           }
         },
         "by_case_type": {
-          "경계": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
-            "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
-          },
           "정보 부족": {
             "available": false,
             "mean": null,
@@ -2459,6 +2448,17 @@
             "unavailable_reason": "채점된 응답 없음"
           },
           "정상": {
+            "available": false,
+            "mean": null,
+            "n": 0,
+            "min": null,
+            "max": null,
+            "values": [],
+            "source_run_ids": [],
+            "excluded_run_ids": [],
+            "unavailable_reason": "채점된 응답 없음"
+          },
+          "경계": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -2533,17 +2533,6 @@
           }
         },
         "by_case_type": {
-          "경계": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
-            "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
-          },
           "정보 부족": {
             "available": false,
             "mean": null,
@@ -2556,6 +2545,17 @@
             "unavailable_reason": "채점된 응답 없음"
           },
           "정상": {
+            "available": false,
+            "mean": null,
+            "n": 0,
+            "min": null,
+            "max": null,
+            "values": [],
+            "source_run_ids": [],
+            "excluded_run_ids": [],
+            "unavailable_reason": "채점된 응답 없음"
+          },
+          "경계": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -2571,12 +2571,12 @@
       },
       "C": {
         "display_name": "Model C (금융)",
-        "scored_count": 6,
+        "scored_count": 20,
         "per_criterion": {
           "A": {
             "available": true,
-            "mean": 2.3333333333333335,
-            "n": 6,
+            "mean": 1.7,
+            "n": 20,
             "min": 1.0,
             "max": 3.0,
             "values": [
@@ -2585,7 +2585,21 @@
               3.0,
               3.0,
               1.0,
-              1.0
+              1.0,
+              1.0,
+              2.0,
+              1.0,
+              1.0,
+              2.0,
+              2.0,
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              2.0
             ],
             "source_run_ids": [
               "C_Q01_r1",
@@ -2593,15 +2607,29 @@
               "C_Q02_r1",
               "C_Q02_r2",
               "C_Q03_r1",
-              "C_Q03_r2"
+              "C_Q03_r2",
+              "C_Q04_r1",
+              "C_Q04_r2",
+              "C_Q05_r1",
+              "C_Q05_r2",
+              "C_Q06_r1",
+              "C_Q06_r2",
+              "C_Q07_r1",
+              "C_Q07_r2",
+              "C_Q08_r1",
+              "C_Q08_r2",
+              "C_Q09_r1",
+              "C_Q09_r2",
+              "C_Q10_r1",
+              "C_Q10_r2"
             ],
             "excluded_run_ids": [],
             "unavailable_reason": null
           },
           "B": {
             "available": true,
-            "mean": 2.3333333333333335,
-            "n": 6,
+            "mean": 1.7777777777777777,
+            "n": 18,
             "min": 1.0,
             "max": 3.0,
             "values": [
@@ -2610,7 +2638,19 @@
               3.0,
               3.0,
               1.0,
-              1.0
+              1.0,
+              1.0,
+              2.0,
+              2.0,
+              2.0,
+              2.0,
+              2.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              2.0
             ],
             "source_run_ids": [
               "C_Q01_r1",
@@ -2618,16 +2658,28 @@
               "C_Q02_r1",
               "C_Q02_r2",
               "C_Q03_r1",
-              "C_Q03_r2"
+              "C_Q03_r2",
+              "C_Q04_r1",
+              "C_Q04_r2",
+              "C_Q06_r1",
+              "C_Q06_r2",
+              "C_Q07_r1",
+              "C_Q07_r2",
+              "C_Q08_r1",
+              "C_Q08_r2",
+              "C_Q09_r1",
+              "C_Q09_r2",
+              "C_Q10_r1",
+              "C_Q10_r2"
             ],
             "excluded_run_ids": [],
             "unavailable_reason": null
           },
           "C": {
             "available": true,
-            "mean": 4.0,
-            "n": 6,
-            "min": 4.0,
+            "mean": 3.35,
+            "n": 20,
+            "min": 2.0,
             "max": 4.0,
             "values": [
               4.0,
@@ -2635,7 +2687,21 @@
               4.0,
               4.0,
               4.0,
-              4.0
+              4.0,
+              2.0,
+              3.0,
+              2.0,
+              2.0,
+              4.0,
+              4.0,
+              3.0,
+              3.0,
+              4.0,
+              4.0,
+              3.0,
+              3.0,
+              3.0,
+              3.0
             ],
             "source_run_ids": [
               "C_Q01_r1",
@@ -2643,67 +2709,101 @@
               "C_Q02_r1",
               "C_Q02_r2",
               "C_Q03_r1",
-              "C_Q03_r2"
+              "C_Q03_r2",
+              "C_Q04_r1",
+              "C_Q04_r2",
+              "C_Q05_r1",
+              "C_Q05_r2",
+              "C_Q06_r1",
+              "C_Q06_r2",
+              "C_Q07_r1",
+              "C_Q07_r2",
+              "C_Q08_r1",
+              "C_Q08_r2",
+              "C_Q09_r1",
+              "C_Q09_r2",
+              "C_Q10_r1",
+              "C_Q10_r2"
             ],
             "excluded_run_ids": [],
             "unavailable_reason": null
           },
           "D": {
             "available": true,
-            "mean": 4.0,
-            "n": 2,
-            "min": 4.0,
+            "mean": 3.6666666666666665,
+            "n": 6,
+            "min": 3.0,
             "max": 4.0,
             "values": [
               4.0,
-              4.0
+              4.0,
+              4.0,
+              4.0,
+              3.0,
+              3.0
             ],
             "source_run_ids": [
               "C_Q03_r1",
-              "C_Q03_r2"
+              "C_Q03_r2",
+              "C_Q06_r1",
+              "C_Q06_r2",
+              "C_Q08_r1",
+              "C_Q08_r2"
             ],
             "excluded_run_ids": [],
             "unavailable_reason": null
           },
           "E": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 1.375,
+            "n": 8,
+            "min": 1.0,
+            "max": 2.0,
+            "values": [
+              2.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              2.0,
+              2.0
+            ],
+            "source_run_ids": [
+              "C_Q04_r1",
+              "C_Q04_r2",
+              "C_Q05_r1",
+              "C_Q05_r2",
+              "C_Q09_r1",
+              "C_Q09_r2",
+              "C_Q10_r1",
+              "C_Q10_r2"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
+            "unavailable_reason": null
           }
         },
         "by_case_type": {
-          "경계": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
-            "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
-          },
           "정보 부족": {
-            "available": false,
-            "mean": null,
-            "n": 0,
+            "available": true,
+            "mean": 1.665,
+            "n": 4,
             "min": null,
             "max": null,
-            "values": [],
+            "values": [
+              1.33,
+              1.33,
+              1.75,
+              2.25
+            ],
             "source_run_ids": [],
             "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
+            "unavailable_reason": null
           },
           "정상": {
             "available": true,
-            "mean": 3.0533333333333332,
-            "n": 6,
+            "mean": 2.7900000000000005,
+            "n": 12,
             "min": null,
             "max": null,
             "values": [
@@ -2712,7 +2812,29 @@
               3.33,
               3.33,
               2.5,
-              2.5
+              2.5,
+              3.0,
+              3.0,
+              2.33,
+              2.33,
+              2.25,
+              2.25
+            ],
+            "source_run_ids": [],
+            "excluded_run_ids": [],
+            "unavailable_reason": null
+          },
+          "경계": {
+            "available": true,
+            "mean": 1.625,
+            "n": 4,
+            "min": null,
+            "max": null,
+            "values": [
+              1.5,
+              2.0,
+              1.5,
+              1.5
             ],
             "source_run_ids": [],
             "excluded_run_ids": [],
@@ -2722,14 +2844,21 @@
         "by_repeat": {
           "r1": {
             "available": true,
-            "mean": 3.0533333333333332,
-            "n": 3,
+            "mean": 2.282,
+            "n": 10,
             "min": null,
             "max": null,
             "values": [
               3.33,
               3.33,
-              2.5
+              2.5,
+              1.5,
+              1.33,
+              3.0,
+              2.33,
+              2.25,
+              1.5,
+              1.75
             ],
             "source_run_ids": [],
             "excluded_run_ids": [],
@@ -2737,14 +2866,21 @@
           },
           "r2": {
             "available": true,
-            "mean": 3.0533333333333332,
-            "n": 3,
+            "mean": 2.382,
+            "n": 10,
             "min": null,
             "max": null,
             "values": [
               3.33,
               3.33,
-              2.5
+              2.5,
+              2.0,
+              1.33,
+              3.0,
+              2.33,
+              2.25,
+              1.5,
+              2.25
             ],
             "source_run_ids": [],
             "excluded_run_ids": [],
@@ -2754,132 +2890,270 @@
       },
       "D": {
         "display_name": "Model D (코딩)",
-        "scored_count": 5,
+        "scored_count": 20,
         "per_criterion": {
           "A": {
             "available": true,
-            "mean": 3.8,
-            "n": 5,
-            "min": 3.0,
-            "max": 4.0,
+            "mean": 3.1,
+            "n": 20,
+            "min": 1.0,
+            "max": 5.0,
             "values": [
               4.0,
               4.0,
               4.0,
               4.0,
-              3.0
+              3.0,
+              3.0,
+              3.0,
+              2.0,
+              1.0,
+              2.0,
+              5.0,
+              3.0,
+              3.0,
+              5.0,
+              3.0,
+              3.0,
+              3.0,
+              3.0,
+              2.0,
+              2.0
             ],
             "source_run_ids": [
               "D_Q01_r1",
               "D_Q01_r2",
               "D_Q02_r1",
               "D_Q02_r2",
-              "D_Q03_r1"
+              "D_Q03_r1",
+              "D_Q03_r2",
+              "D_Q04_r1",
+              "D_Q04_r2",
+              "D_Q05_r1",
+              "D_Q05_r2",
+              "D_Q06_r1",
+              "D_Q06_r2",
+              "D_Q07_r1",
+              "D_Q07_r2",
+              "D_Q08_r1",
+              "D_Q08_r2",
+              "D_Q09_r1",
+              "D_Q09_r2",
+              "D_Q10_r1",
+              "D_Q10_r2"
             ],
             "excluded_run_ids": [],
             "unavailable_reason": null
           },
           "B": {
             "available": true,
-            "mean": 3.4,
-            "n": 5,
-            "min": 3.0,
-            "max": 4.0,
+            "mean": 2.8333333333333335,
+            "n": 18,
+            "min": 2.0,
+            "max": 5.0,
             "values": [
               4.0,
               4.0,
               3.0,
               3.0,
-              3.0
+              3.0,
+              3.0,
+              2.0,
+              2.0,
+              5.0,
+              2.0,
+              3.0,
+              5.0,
+              2.0,
+              2.0,
+              2.0,
+              2.0,
+              2.0,
+              2.0
             ],
             "source_run_ids": [
               "D_Q01_r1",
               "D_Q01_r2",
               "D_Q02_r1",
               "D_Q02_r2",
-              "D_Q03_r1"
+              "D_Q03_r1",
+              "D_Q03_r2",
+              "D_Q04_r1",
+              "D_Q04_r2",
+              "D_Q06_r1",
+              "D_Q06_r2",
+              "D_Q07_r1",
+              "D_Q07_r2",
+              "D_Q08_r1",
+              "D_Q08_r2",
+              "D_Q09_r1",
+              "D_Q09_r2",
+              "D_Q10_r1",
+              "D_Q10_r2"
             ],
             "excluded_run_ids": [],
             "unavailable_reason": null
           },
           "C": {
             "available": true,
-            "mean": 4.0,
-            "n": 4,
-            "min": 4.0,
+            "mean": 3.15,
+            "n": 20,
+            "min": 1.0,
             "max": 4.0,
             "values": [
               4.0,
               4.0,
               4.0,
-              4.0
+              4.0,
+              4.0,
+              4.0,
+              3.0,
+              3.0,
+              1.0,
+              1.0,
+              4.0,
+              4.0,
+              3.0,
+              3.0,
+              4.0,
+              4.0,
+              3.0,
+              2.0,
+              2.0,
+              2.0
             ],
             "source_run_ids": [
               "D_Q01_r1",
               "D_Q01_r2",
               "D_Q02_r1",
-              "D_Q02_r2"
+              "D_Q02_r2",
+              "D_Q03_r1",
+              "D_Q03_r2",
+              "D_Q04_r1",
+              "D_Q04_r2",
+              "D_Q05_r1",
+              "D_Q05_r2",
+              "D_Q06_r1",
+              "D_Q06_r2",
+              "D_Q07_r1",
+              "D_Q07_r2",
+              "D_Q08_r1",
+              "D_Q08_r2",
+              "D_Q09_r1",
+              "D_Q09_r2",
+              "D_Q10_r1",
+              "D_Q10_r2"
             ],
             "excluded_run_ids": [],
             "unavailable_reason": null
           },
           "D": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 3.6666666666666665,
+            "n": 6,
+            "min": 3.0,
+            "max": 4.0,
+            "values": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              3.0,
+              3.0
+            ],
+            "source_run_ids": [
+              "D_Q03_r1",
+              "D_Q03_r2",
+              "D_Q06_r1",
+              "D_Q06_r2",
+              "D_Q08_r1",
+              "D_Q08_r2"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
+            "unavailable_reason": null
           },
           "E": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 2.25,
+            "n": 8,
+            "min": 1.0,
+            "max": 3.0,
+            "values": [
+              2.0,
+              3.0,
+              1.0,
+              2.0,
+              3.0,
+              3.0,
+              2.0,
+              2.0
+            ],
+            "source_run_ids": [
+              "D_Q04_r1",
+              "D_Q04_r2",
+              "D_Q05_r1",
+              "D_Q05_r2",
+              "D_Q09_r1",
+              "D_Q09_r2",
+              "D_Q10_r1",
+              "D_Q10_r2"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
+            "unavailable_reason": null
           }
         },
         "by_case_type": {
-          "경계": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
-            "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
-          },
           "정보 부족": {
-            "available": false,
-            "mean": null,
-            "n": 0,
+            "available": true,
+            "mean": 1.6675,
+            "n": 4,
             "min": null,
             "max": null,
-            "values": [],
+            "values": [
+              1.0,
+              1.67,
+              2.0,
+              2.0
+            ],
             "source_run_ids": [],
             "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
+            "unavailable_reason": null
           },
           "정상": {
             "available": true,
-            "mean": 3.835,
-            "n": 4,
+            "mean": 3.6183333333333336,
+            "n": 12,
             "min": null,
             "max": null,
             "values": [
               4.0,
               4.0,
               3.67,
-              3.67
+              3.67,
+              3.5,
+              3.5,
+              4.5,
+              3.25,
+              3.0,
+              4.33,
+              3.0,
+              3.0
+            ],
+            "source_run_ids": [],
+            "excluded_run_ids": [],
+            "unavailable_reason": null
+          },
+          "경계": {
+            "available": true,
+            "mean": 2.5625,
+            "n": 4,
+            "min": null,
+            "max": null,
+            "values": [
+              2.5,
+              2.5,
+              2.75,
+              2.5
             ],
             "source_run_ids": [],
             "excluded_run_ids": [],
@@ -2889,13 +3163,21 @@
         "by_repeat": {
           "r1": {
             "available": true,
-            "mean": 3.835,
-            "n": 2,
+            "mean": 2.992,
+            "n": 10,
             "min": null,
             "max": null,
             "values": [
               4.0,
-              3.67
+              3.67,
+              3.5,
+              2.5,
+              1.0,
+              4.5,
+              3.0,
+              3.0,
+              2.75,
+              2.0
             ],
             "source_run_ids": [],
             "excluded_run_ids": [],
@@ -2903,13 +3185,21 @@
           },
           "r2": {
             "available": true,
-            "mean": 3.835,
-            "n": 2,
+            "mean": 3.0420000000000003,
+            "n": 10,
             "min": null,
             "max": null,
             "values": [
               4.0,
-              3.67
+              3.67,
+              3.5,
+              2.5,
+              1.67,
+              3.25,
+              4.33,
+              3.0,
+              2.5,
+              2.0
             ],
             "source_run_ids": [],
             "excluded_run_ids": [],
@@ -2978,17 +3268,6 @@
           }
         },
         "by_case_type": {
-          "경계": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
-            "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
-          },
           "정보 부족": {
             "available": false,
             "mean": null,
@@ -3001,6 +3280,17 @@
             "unavailable_reason": "채점된 응답 없음"
           },
           "정상": {
+            "available": false,
+            "mean": null,
+            "n": 0,
+            "min": null,
+            "max": null,
+            "values": [],
+            "source_run_ids": [],
+            "excluded_run_ids": [],
+            "unavailable_reason": "채점된 응답 없음"
+          },
+          "경계": {
             "available": false,
             "mean": null,
             "n": 0,
@@ -3016,128 +3306,270 @@
       },
       "F": {
         "display_name": "Model F (이커머스)",
-        "scored_count": 4,
+        "scored_count": 20,
         "per_criterion": {
           "A": {
             "available": true,
-            "mean": 4.5,
-            "n": 4,
-            "min": 4.0,
+            "mean": 3.7,
+            "n": 20,
+            "min": 2.0,
             "max": 5.0,
             "values": [
               5.0,
               4.0,
               5.0,
-              4.0
+              4.0,
+              2.0,
+              5.0,
+              3.0,
+              5.0,
+              3.0,
+              3.0,
+              3.0,
+              3.0,
+              5.0,
+              5.0,
+              2.0,
+              5.0,
+              5.0,
+              3.0,
+              2.0,
+              2.0
             ],
             "source_run_ids": [
               "F_Q01_r1",
               "F_Q01_r2",
               "F_Q02_r1",
-              "F_Q02_r2"
+              "F_Q02_r2",
+              "F_Q03_r1",
+              "F_Q03_r2",
+              "F_Q04_r1",
+              "F_Q04_r2",
+              "F_Q05_r1",
+              "F_Q05_r2",
+              "F_Q06_r1",
+              "F_Q06_r2",
+              "F_Q07_r1",
+              "F_Q07_r2",
+              "F_Q08_r1",
+              "F_Q08_r2",
+              "F_Q09_r1",
+              "F_Q09_r2",
+              "F_Q10_r1",
+              "F_Q10_r2"
             ],
             "excluded_run_ids": [],
             "unavailable_reason": null
           },
           "B": {
             "available": true,
-            "mean": 4.5,
-            "n": 4,
-            "min": 4.0,
+            "mean": 3.2777777777777777,
+            "n": 18,
+            "min": 2.0,
             "max": 5.0,
             "values": [
               5.0,
               4.0,
               5.0,
-              4.0
+              4.0,
+              2.0,
+              3.0,
+              2.0,
+              3.0,
+              2.0,
+              2.0,
+              5.0,
+              5.0,
+              2.0,
+              3.0,
+              5.0,
+              3.0,
+              2.0,
+              2.0
             ],
             "source_run_ids": [
               "F_Q01_r1",
               "F_Q01_r2",
               "F_Q02_r1",
-              "F_Q02_r2"
+              "F_Q02_r2",
+              "F_Q03_r1",
+              "F_Q03_r2",
+              "F_Q04_r1",
+              "F_Q04_r2",
+              "F_Q06_r1",
+              "F_Q06_r2",
+              "F_Q07_r1",
+              "F_Q07_r2",
+              "F_Q08_r1",
+              "F_Q08_r2",
+              "F_Q09_r1",
+              "F_Q09_r2",
+              "F_Q10_r1",
+              "F_Q10_r2"
             ],
             "excluded_run_ids": [],
             "unavailable_reason": null
           },
           "C": {
             "available": true,
-            "mean": 4.75,
-            "n": 4,
-            "min": 4.0,
+            "mean": 4.15,
+            "n": 20,
+            "min": 3.0,
             "max": 5.0,
             "values": [
               5.0,
               4.0,
               5.0,
-              5.0
+              5.0,
+              4.0,
+              4.0,
+              3.0,
+              3.0,
+              5.0,
+              5.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
             ],
             "source_run_ids": [
               "F_Q01_r1",
               "F_Q01_r2",
               "F_Q02_r1",
-              "F_Q02_r2"
+              "F_Q02_r2",
+              "F_Q03_r1",
+              "F_Q03_r2",
+              "F_Q04_r1",
+              "F_Q04_r2",
+              "F_Q05_r1",
+              "F_Q05_r2",
+              "F_Q06_r1",
+              "F_Q06_r2",
+              "F_Q07_r1",
+              "F_Q07_r2",
+              "F_Q08_r1",
+              "F_Q08_r2",
+              "F_Q09_r1",
+              "F_Q09_r2",
+              "F_Q10_r1",
+              "F_Q10_r2"
             ],
             "excluded_run_ids": [],
             "unavailable_reason": null
           },
           "D": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 3.6666666666666665,
+            "n": 6,
+            "min": 3.0,
+            "max": 4.0,
+            "values": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              3.0,
+              3.0
+            ],
+            "source_run_ids": [
+              "F_Q03_r1",
+              "F_Q03_r2",
+              "F_Q06_r1",
+              "F_Q06_r2",
+              "F_Q08_r1",
+              "F_Q08_r2"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
+            "unavailable_reason": null
           },
           "E": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
+            "available": true,
+            "mean": 3.125,
+            "n": 8,
+            "min": 2.0,
+            "max": 4.0,
+            "values": [
+              4.0,
+              3.0,
+              3.0,
+              3.0,
+              4.0,
+              4.0,
+              2.0,
+              2.0
+            ],
+            "source_run_ids": [
+              "F_Q04_r1",
+              "F_Q04_r2",
+              "F_Q05_r1",
+              "F_Q05_r2",
+              "F_Q09_r1",
+              "F_Q09_r2",
+              "F_Q10_r1",
+              "F_Q10_r2"
+            ],
             "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
+            "unavailable_reason": null
           }
         },
         "by_case_type": {
-          "경계": {
-            "available": false,
-            "mean": null,
-            "n": 0,
-            "min": null,
-            "max": null,
-            "values": [],
-            "source_run_ids": [],
-            "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
-          },
           "정보 부족": {
-            "available": false,
-            "mean": null,
-            "n": 0,
+            "available": true,
+            "mean": 3.085,
+            "n": 4,
             "min": null,
             "max": null,
-            "values": [],
+            "values": [
+              3.67,
+              3.67,
+              2.5,
+              2.5
+            ],
             "source_run_ids": [],
             "excluded_run_ids": [],
-            "unavailable_reason": "채점된 응답 없음"
+            "unavailable_reason": null
           },
           "정상": {
             "available": true,
-            "mean": 4.5825,
-            "n": 4,
+            "mean": 3.9725,
+            "n": 12,
             "min": null,
             "max": null,
             "values": [
               5.0,
               4.0,
               5.0,
-              4.33
+              4.33,
+              3.0,
+              4.0,
+              3.25,
+              3.25,
+              4.67,
+              4.67,
+              2.75,
+              3.75
+            ],
+            "source_run_ids": [],
+            "excluded_run_ids": [],
+            "unavailable_reason": null
+          },
+          "경계": {
+            "available": true,
+            "mean": 3.625,
+            "n": 4,
+            "min": null,
+            "max": null,
+            "values": [
+              3.0,
+              3.5,
+              4.5,
+              3.5
             ],
             "source_run_ids": [],
             "excluded_run_ids": [],
@@ -3147,13 +3579,21 @@
         "by_repeat": {
           "r1": {
             "available": true,
-            "mean": 5.0,
-            "n": 2,
+            "mean": 3.7340000000000004,
+            "n": 10,
             "min": null,
             "max": null,
             "values": [
               5.0,
-              5.0
+              5.0,
+              3.0,
+              3.0,
+              3.67,
+              3.25,
+              4.67,
+              2.75,
+              4.5,
+              2.5
             ],
             "source_run_ids": [],
             "excluded_run_ids": [],
@@ -3161,13 +3601,21 @@
           },
           "r2": {
             "available": true,
-            "mean": 4.165,
-            "n": 2,
+            "mean": 3.717,
+            "n": 10,
             "min": null,
             "max": null,
             "values": [
               4.0,
-              4.33
+              4.33,
+              4.0,
+              3.5,
+              3.67,
+              3.25,
+              4.67,
+              3.75,
+              3.5,
+              2.5
             ],
             "source_run_ids": [],
             "excluded_run_ids": [],
