@@ -2,15 +2,53 @@
 
 <일반적인 이커머스 고객 문의와 셀러 업무 질문에 적절하게 답변할 수 있는 로컬 LLM을 비교·평가하여 가장 적합한 모델을 선정한다.>
 
-1. Cloud 모델 선정 및 실행
---- STEP 5에서 사전 선정한 5문항(Q01·Q04·Q06·Q09·Q10) × 각 1회 ---
---- Cloud 모델: GPT LUNA (gpt-5.6-luna) / 실행: 13_cloud.py ---
+## 1. Cloud 모델 선정 및 실행
 
+| | |
+|---|---|
+| 모델 | **GPT LUNA** (`gpt-5.6-luna`) — `data/config/models.json` 의 `cloud_model` |
+| 대상 문항 | STEP 5에서 사전 선정한 **Q01·Q04·Q06·Q09·Q10** × 각 1회 |
+| 실행 | `uv run python 13_cloud.py` (`DRY_RUN = False` 로 바꾼 뒤) |
+| 기록 | `data/raw/cloud/runs.jsonl` *(실행 시 생성)* |
+| 상태 | **미실행** |
 
-2. 로컬 동일 문항 결과와 비교
+API 키는 실행 시점에 입력받거나 `OPENAI_API_KEY` 에서 읽고 **어떤 파일에도 저장하지 않는다.**
+자동 재시도를 끄고(`max_retries=0`) 호출한다 — 재시도하면 실패분도 과금되고
+`elapsed_sec` 에 재시도 시간이 섞여 측정 정의가 깨진다.
 
+**실행 전에 채울 것** — `models.json` 의 `cloud_model`
 
-3. 운영 조건 비교
+- [ ] `price_input_per_1m_tokens` / `price_output_per_1m_tokens` / `price_currency`
+- [ ] `price_source_url` / `price_checked_at` (공식 가격 페이지와 확인 날짜)
+
+비우면 호출은 되지만 `estimated_cost` 가 `null` 로 남고 사유가 기록된다.
+
+### 동일 조건이 아닌 축 — 반드시 기재
+
+로컬과 Cloud 는 파라미터 이름이 다르고, Cloud 쪽에 아예 없는 것도 있다.
+`13_cloud.py` 가 실행할 때 화면에 찍고, 각 기록의 `measurement_notes` 에도 남긴다.
+
+| 설정 | 로컬 | Cloud |
+|---|---|---|
+| 출력 한도 | `num_predict` 768 | `max_output_tokens` 768 — **같음** |
+| temperature | `0` | **지정 불가** (모델 고정값 1로 알려짐) |
+| `num_ctx` | 4096 | **지정 불가** — API 에 해당 파라미터가 없다 |
+| `seed` | 0 | **지정 불가** — Responses API 에 없다 |
+| 반복 | 질문당 2회 | 질문당 **1회** |
+
+> temperature 지정이 실제로 가능한 것으로 확인되면 `models.json` 의
+> `supports_temperature` 를 `true` 로 바꾼다. 코드는 건드리지 않아도 된다.
+
+## 2. 로컬 동일 문항 결과와 비교
+
+> Cloud 실행 후 아래 '동일 문항 비교표' 를 채운다.
+> 로컬 점수는 `docs/eval-results.md` 채점 결과에서 나온다 (Q01·Q04·Q06·Q09·Q10).
+
+## 3. 운영 조건 비교
+
+> 실측(품질·비용·속도)과 운영 조건 분석(보안·인프라·운영 난이도·커스터마이징)을
+> **구분해서** 쓴다 — 평가표 #7 요구사항.
+> STEP 1 에서 "데이터 보안 중요하지 않음" 으로 정했으므로, 보안 축의 판단 근거로 재사용한다.
 
 
 ---

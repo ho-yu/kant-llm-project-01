@@ -83,8 +83,11 @@
 
 | 산출물 | 위치 |
 |---|---|
-| 1. GitHub Repository | |
-| 2. Model Comparison Table | |
-| 3. Model Test / Benchmark 결과 (원본) | |
-| 4. Local vs Cloud 비교 | |
-| 5. 최종 Model Selection Report | |
+| 1. GitHub Repository | 저장소 루트 + [README.md](../../README.md) |
+| 2. Model Comparison Table | `data/derived/tables/model_comparison.md` (생성물) · 원본 [step03.md](step03.md) |
+| 3. Model Test / Benchmark 결과 (원본) | `data/raw/local/runs.jsonl` · `data/derived/scores.jsonl` · 집계 `data/derived/tables/local_summary.md` |
+| 4. Local vs Cloud 비교 | `data/derived/tables/local_cloud.md` (생성물) · 서술 [step07.md](step07.md) |
+| 5. 최종 Model Selection Report | **이 문서** |
+
+> 2·3·4 의 표는 `uv run python 11_finish.py` 가 다시 만든다. 손으로 고치지 않는다.
+> 채점 원본은 `docs/eval-results.md` 이고 `scores.jsonl` 은 거기서 뽑아낸 것이다.

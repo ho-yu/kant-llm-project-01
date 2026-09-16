@@ -224,8 +224,10 @@ ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
 
 ### Model Comparison Table 작성용 원본 표
 
-> 필수 요구사항은 **서로 다른 로컬 후보 2개**. 아래는 다운로드 예정인 3개 기준.
-> 빈 칸은 STEP 4~6에서 실측 후 채운다.
+> 필수 요구사항은 **서로 다른 로컬 후보 2개**. 6개를 전부 받아 실행했고,
+> 그중 3개(C·D·F)를 채점·선정 대상으로 삼는다.
+> 실측이 끝난 제원은 `data/derived/tables/model_comparison.md` 가 자동으로 만든다 —
+> 아래 표는 Model Card 확인 기록이다.
 
 **기본 정보** (Model Card 확인 완료분)
 
@@ -280,14 +282,38 @@ ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
 ### 미확정 — 채워야 할 것
 
 - [ ] 후보별 **문서상 최대 Context Length** (Model Card 확인)
-- [ ] **실험에서 실제 설정한 Context Length** (STEP 6 실행 설정) — 위 항목과 반드시 구분 기재
-- [ ] 다운로드 파일 크기 / VRAM / 시스템 RAM **각각 구분해서** 실측 (STEP 4, 6)
-- [x] 최종 비교 대상 후보 확정 → **6개 전부** (6모델 × 10문제 × 2회 = 본 실험 120회). A·F는 CLI 사전 확인에서 문제가 보였으나 본 실험 결과로 판정한다
+      → `data/env/environment.json` 의 `doc_max_context` 에 넣는다.
+        **자동 수집이 안 되는 유일한 항목이고, STEP 2 필수 조건 5 판정 근거다.**
+- [x] **실험에서 실제 설정한 Context Length** → 6개 모델 모두 **4096** (실행 기록의 `context_length`)
+- [x] 다운로드 파일 크기 / VRAM / 시스템 RAM 각각 구분해 실측
+      → 크기 4.36~4.58 GB (모델별) / VRAM 관측 4,528~5,027 MiB / 시스템 RAM 31.4 GB
+- [x] 최종 비교 대상 후보 확정
+      → **실행은 6개 전부** (6모델 × 10문제 × 2회 = 120회, 완료)
+      → **채점·선정은 3개** — C(금융) · D(코딩) · F(이커머스)
+      → 부가 테스트 A(법률) · B(의료·바이오) · E(수학) 은 성능 측정만 쓴다.
+        좁힌 기준은 [step08.md](step08.md) 에 적는다
 - [ ] 각 후보의 architecture / language / benchmark 정보 (본문 `2. 확인할 정보` 목록 중 미기재분)
+
+### 실행 후 확인된 것
+
+| 라벨 | 실행 결과 | 비고 |
+|---|---|---|
+| C (금융) | 20/20 성공 · 100% GPU | 채점 대상 |
+| D (코딩) | 20/20 성공 · 100% GPU | 채점 대상 |
+| F (이커머스) | 20/20 성공 · 100% GPU | 채점 대상 (sam-1-base 로 교체 후) |
+| A (법률) | 20/20 성공 | 20회 전부 `done_reason=length` — 정지 토큰을 내지 못함 |
+| B (의료·바이오) | 20/20 성공 | 14회에서 응답에 통계 필드가 없어 속도 지표 측정 불가 |
+| E (수학) | 20/20 성공 | |
+
+> CLI 사전 확인에서 문제가 보였던 A·F 중, **F 는 모델 교체 후 정상**이고
+> **A 는 본 실험에서도 같은 증상이 재현**됐다. 근거는 `data/raw/local/runs.jsonl` 의
+> `done_reason` 이다.
 
 ### 제출 시 확인
 
 - [ ] License는 **저장소 선언**과 **Base model** 둘 다 기재 (Llama 계열은 상업적 활용 조건 별도 확인)
-- [ ] **Model E의 CreativeML Open RAIL-M** 은 사용 목적 제한 조항이 있는 라이선스다. STEP 2 필수 조건 4(상업적 활용 가능)를 판정하려면 원문 확인 필요
+- [x] **Model E의 CreativeML Open RAIL-M** 은 사용 목적 제한 조항이 있는 라이선스다.
+      E 를 부가 테스트로 돌려 **채점·선정 대상에서 빠졌으므로** 필수 조건 4 판정 대상이 아니다.
+      채점 대상 3개의 License 는 Apache-2.0 (D·F) 과 Meta Llama 3 Community (C) 다
 - [ ] 모델 가중치 파일은 저장소에 올리지 않고 **정확한 태그 + `ollama pull` 명령만** 안내
 - [ ] 후보 선정 이유가 기록되어 있음 (평가표 #2 증빙)
