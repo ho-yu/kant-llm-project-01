@@ -104,8 +104,15 @@ def render_question(question: dict[str, Any], criteria: dict[str, str]) -> list[
         "",
         f"**평가 목적:** {question.get('purpose', '')}",
         "",
-        "**평가 기준:** "
-        + ", ".join(f"{c}. {criteria[c]}" for c in question["criteria_codes"]),
+        "**평가 기준** — 이 질문에는 아래 항목만 적용한다 (1~5점)",
+        "",
+        "| 코드 | 기준 | 무엇을 보는가 |",
+        "|---|---|---|",
+    ]
+    detail = config.load_questions().get("criteria_detail") or {}
+    for c in question["criteria_codes"]:
+        out.append(f"| {c} | {criteria[c]} | {detail.get(c, '')} |")
+    out += [
         "",
         "**기대 결과 / 확인 항목**",
         "",
@@ -115,6 +122,54 @@ def render_question(question: dict[str, Any], criteria: dict[str, str]) -> list[
     out += [f"- {x}" for x in question.get("penalty_points", [])]
     out.append("")
     return out
+
+
+NOTES_RE = re.compile(r"^## (Q\d+) 관찰 메모\s*$")
+
+#: 관찰 메모 양식의 안내문. 이 줄만 남아 있으면 아직 안 쓴 것으로 본다.
+NOTES_HINT = (
+    "> 대표 실패 사례와 눈에 띈 패턴을 적는다 (산출물 5의 '개선이 필요한 실패 사례').",
+    "> 점수 평균·n 은 적지 않는다 — `11_finish.py` 가 계산한다.",
+)
+
+
+def _existing_notes(text: str) -> dict[str, list[str]]:
+    """이미 써 둔 관찰 메모를 질문별로 모은다.
+
+    블록 점수와 같은 이유로 보존한다 — 채점표를 다시 만들 때
+    직접 쓴 서술이 지워지면 안 된다.
+    """
+    out: dict[str, list[str]] = {}
+    cur: str | None = None
+    buf: list[str] = []
+    fence = False
+    for line in text.split("\n"):
+        if line.lstrip().startswith("```"):
+            fence = not fence
+        if not fence:
+            m = NOTES_RE.match(line)
+            if m:
+                if cur:
+                    out[cur] = buf
+                cur, buf = m.group(1), []
+                continue
+            if line.startswith("# ") or line.startswith("## "):
+                if cur:
+                    out[cur] = buf
+                cur, buf = None, []
+                continue
+        if cur is not None:
+            buf.append(line)
+    if cur:
+        out[cur] = buf
+
+    # 안내문만 있는 것은 미작성으로 본다
+    cleaned = {}
+    for qid, body in out.items():
+        kept = [l for l in _trim(body) if l.strip() and l.strip() not in NOTES_HINT]
+        if kept:
+            cleaned[qid] = _trim(body)
+    return cleaned
 
 
 def render_notes(question: dict[str, Any]) -> list[str]:
@@ -179,6 +234,8 @@ def build(text: str, *, preserve: bool = True) -> str:
         head_end -= 1
 
     kept = _existing_blocks(text) if preserve else {}
+    # 관찰 메모는 직접 쓴 서술이므로 초기화 대상이 아니다. 항상 보존한다.
+    notes = _existing_notes(text)
 
     questions = config.load_questions()
     criteria = questions["criteria"]
@@ -195,7 +252,11 @@ def build(text: str, *, preserve: bool = True) -> str:
                 body += [f"## {qid} / Model {label} / Run {rep}", ""]
                 body += _ensure_fields(kept.get(run_id)) or blank_block(q, criteria)
                 body.append("")
-        body += render_notes(q)
+        kept_note = notes.get(qid)
+        if kept_note:
+            body += [f"## {qid} 관찰 메모", ""] + kept_note + ["", ""]
+        else:
+            body += render_notes(q)
 
     return "\n".join(lines[:head_end] + [""] + body).rstrip("\n") + "\n"
 

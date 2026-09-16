@@ -57,11 +57,13 @@ def render(question_id: str) -> str:
         "",
         f"**평가 목적:** {q.get('purpose', '')}",
         "",
-        "**이 질문의 평가 기준**",
+        "**이 질문의 평가 기준** — 1~5점. 상세 정의는 docs/steps/step05.md",
         "",
     ]
+    detail = config.load_questions().get("criteria_detail") or {}
+    out += ["| 코드 | 기준 | 무엇을 보는가 |", "|---|---|---|"]
     for code in q["criteria_codes"]:
-        out.append(f"- `{code}` {crit.get(code, '')}")
+        out.append(f"| {code} | {crit.get(code, '')} | {detail.get(code, '')} |")
 
     out += ["", "**기대 결과 / 확인 항목**", ""]
     out += [f"- {x}" for x in q.get("expected_points", [])]
