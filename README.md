@@ -10,6 +10,26 @@
 | 채점 대상 | 3개 모델 × 10문항 × 2회 = **60블록** |
 | 현재 진행 | 채점 **15 / 60** · Cloud 비교 미실행 |
 
+```mermaid
+flowchart LR
+    S1["STEP 1·2<br/>문제·기준 정의"] --> S3["STEP 3<br/>후보 6개 조사"]
+    S3 --> S4["STEP 4<br/>환경·연결 확인"]
+    S4 --> S5["STEP 5<br/>질문 10개 확정"]
+    S5 --> S6["STEP 6<br/>로컬 실험 120회"]
+    S6 --> SC["품질 채점<br/>60블록"]
+    SC --> S7["STEP 7<br/>Cloud 비교"]
+    S7 --> S8["STEP 8<br/>최종 선정"]
+
+    classDef done fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef doing fill:#fef9c3,stroke:#ca8a04,color:#713f12
+    classDef todo fill:#f1f5f9,stroke:#94a3b8,color:#475569
+    class S1,S3,S4,S5,S6 done
+    class SC doing
+    class S7,S8 todo
+```
+
+<sub>초록 = 완료 · 노랑 = 진행 중 · 회색 = 예정</sub>
+
 ---
 
 ## 1. 문제 정의 — 무엇을 풀려고 하는가
@@ -78,6 +98,36 @@ Fine-tuning 된 모델의 실제 응답 특성 비교**를 우선했다.
 > 1순위의 주축인 기준 E 는 4문항, 4순위의 D 는 3문항에서만 출제된다.
 > **가장 중요한 순위의 표본이 가장 작다** — 순위 판단에 이 한계를 함께 적는다.
 
+### 요구사항이 어떻게 판정으로 이어지는가
+
+```mermaid
+flowchart LR
+    R1["없는 정보를<br/>지어내면 안 된다"] --> C_E["기준 E<br/>불확실성 대응<br/>(4문항)"]
+    R2["질문 의도를<br/>정확히 파악"] --> C_A["기준 A<br/>답변 적합성<br/>(10문항)"]
+    R3["한국어 성능<br/>중요"] --> C_C["기준 C<br/>한국어 표현<br/>(10문항)"]
+    R4["형식·조건<br/>준수"] --> C_D["기준 D<br/>지시사항 준수<br/>(3문항)"]
+    R5["응답 속도<br/>중요"] --> M["실측<br/>시간·속도·VRAM"]
+
+    C_E --> P1["1순위"]
+    C_A --> P2["2순위"]
+    C_C --> P3["3순위"]
+    C_D --> P4["4순위"]
+    M --> P5["5순위"]
+
+    C_E & C_A & C_C & C_D --> COND6["필수 조건 6<br/>전체 평균 3.5 이상"]
+    P1 & P2 & P3 & P4 & P5 --> SEL["STEP 8<br/>최종 선정"]
+    COND6 --> SEL
+
+    classDef req fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+    classDef crit fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef out fill:#ede9fe,stroke:#7c3aed,color:#4c1d95
+    class R1,R2,R3,R4,R5 req
+    class C_E,C_A,C_C,C_D,M crit
+    class P1,P2,P3,P4,P5,COND6,SEL out
+```
+
+**필수 조건 6은 Pass/Fail**, **우선순위는 통과한 후보 사이의 순위**다. 둘은 다른 판정이다.
+
 원문: [docs/steps/step02.md](docs/steps/step02.md)
 
 ## 3. 후보 모델 — 도메인이 다른 6개를 돌리고 3개로 좁힘
@@ -106,6 +156,29 @@ Fine-tuning 된 모델의 실제 응답 특성 비교**를 우선했다.
 | A | 20/20 회 출력 한도까지 생성(`done_reason=length`) · 12회에서 `<\|im_end\|>` 특수토큰 노출 · 평균 12.45초 | 답변이 언제 끝나는지 모델이 판단하지 못해 **정상 조건에서 채점 불가** |
 | B | 20회 중 **14회에서 응답에 통계 필드가 없음** — 속도·토큰 지표를 6회분으로만 산출 | 다른 모델과 **같은 n 으로 비교되지 않음** |
 | E | **문제 없음** (20/20 `stop`, 결측 0, 평균 4.74초) | 제외 사유 아님. **추후 사이드 비교 모델** 로 쓸 목적으로 이번 범위에서만 뺌 |
+
+```mermaid
+flowchart TD
+    ALL["후보 6개<br/>도메인이 전부 다름<br/>7~8B · Q4_K_M 통일"]
+    ALL --> RUN["전부 실행<br/>120회 · 호출 성공 120/120"]
+
+    RUN --> A["A 법률<br/>length 20/20<br/>특수토큰 12/20"]
+    RUN --> B["B 의료·바이오<br/>통계 결측 14/20"]
+    RUN --> E["E 수학<br/>이상 없음"]
+    RUN --> CDF["C 금융 · D 코딩 · F 이커머스<br/>이상 없음"]
+
+    A --> X1["제외<br/>정상 조건 채점 불가"]
+    B --> X2["제외<br/>같은 n 으로 비교 불가"]
+    E --> X3["사이드 비교용<br/>이번 범위에서만 제외"]
+    CDF --> SEL["채점·선정 대상 3개<br/>60블록"]
+
+    classDef keep fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef drop fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
+    classDef hold fill:#f1f5f9,stroke:#94a3b8,color:#475569
+    class CDF,SEL keep
+    class A,B,X1,X2 drop
+    class E,X3 hold
+```
 
 세 모델의 **실행 기록 120회분과 성능 측정값은 지우지 않는다** — 제외 근거도 산출물이다.
 상세: [docs/steps/step08.md](docs/steps/step08.md)
@@ -294,6 +367,42 @@ uv run python 13_cloud.py
 ---
 
 # 파일 위치
+
+```mermaid
+flowchart LR
+    subgraph IN["입력 — 1회 확정 후 고정"]
+        CFG["models.json<br/>questions.json<br/>run_settings.json"]
+    end
+
+    subgraph RAW["원본 기록 — append 전용"]
+        RUNS["runs.jsonl<br/>실행 126건"]
+        EVAL["eval-results.md<br/>채점 입력면"]
+    end
+
+    subgraph GEN["생성물 — 언제든 재생성"]
+        RESP["responses/Q01~Q10.md"]
+        SCORES["scores.jsonl"]
+        TABLES["tables/*.md<br/>step04·06 자동 구간"]
+    end
+
+    CFG -->|"10_run.py"| RUNS
+    CFG -->|"12_read.py"| EVAL
+    RUNS -->|"12_read.py"| RESP
+    RESP -.->|"사람이 읽고 채점"| EVAL
+    EVAL -->|"11_finish.py"| SCORES
+    RUNS -->|"11_finish.py"| TABLES
+    SCORES --> TABLES
+
+    classDef inp fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+    classDef raw fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef gen fill:#f1f5f9,stroke:#94a3b8,color:#475569
+    class CFG inp
+    class RUNS,EVAL raw
+    class RESP,SCORES,TABLES gen
+```
+
+**사람이 직접 쓰는 곳은 `eval-results.md` 하나뿐**이다. 나머지 생성물은 고치지 않는다 —
+다시 만들면 덮어써진다. 모든 집계값은 `run_id` 로 원본 회차까지 역추적된다.
 
 ## 입력 (1회 확정 후 고정)
 
