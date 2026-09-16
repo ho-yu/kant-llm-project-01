@@ -215,6 +215,18 @@ def validate_scores(path: Path | None = None) -> ValidationReport:
                         f"{run_id}: 적어 둔 평균 {b['average']} 과 점수 평균 {calc} 이 다릅니다"
                     )
 
+    # 재검토 — 평가표 6 은 개인 수행자에게 2차 확인을 요구한다.
+    # 채점을 마친 뒤 다시 보라는 것이므로, 채점된 블록에 대해서만 센다.
+    if scored:
+        not_reviewed = [b["run_id"] for b in scored if not b.get("reviewed")]
+        if not_reviewed:
+            shown = ", ".join(not_reviewed[:5])
+            more = f" 외 {len(not_reviewed) - 5}건" if len(not_reviewed) > 5 else ""
+            report.warnings.append(
+                f"재검토 미수행 {len(not_reviewed)}/{len(scored)}건: {shown}{more}"
+                " — 채점을 마친 뒤 다시 보고 `재검토:` 줄을 채운다 (평가표 6)"
+            )
+
     if scored:
         report.warnings.insert(0, scoring.summary())
 

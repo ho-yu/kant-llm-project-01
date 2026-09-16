@@ -72,11 +72,15 @@ def _trim(lines: list[str]) -> list[str]:
 
 
 def blank_block(question: dict[str, Any], criteria: dict[str, str]) -> list[str]:
-    """빈 채점 양식. 그 질문의 평가 기준만 넣는다."""
+    """빈 채점 양식. 그 질문의 평가 기준만 넣는다.
+
+    재검토 두 줄은 평가표 6 의 '개인은 재검토를 수행한다' 요건 때문에 있다.
+    한 번 채점하고 끝내지 않고 다시 본 사실을 남긴다.
+    """
     out = ["원본 기록 ID:", "상태: 성공 / 오류", ""]
     for code in question["criteria_codes"]:
         out += [f"{criteria[code]}:", "근거:", "", ""]
-    out.append("평균:")
+    out += ["평균:", "", "재검토: 아직", "수정 사유:"]
     return out
 
 
@@ -131,6 +135,26 @@ def render_notes(question: dict[str, Any]) -> list[str]:
     ]
 
 
+#: 양식에 나중에 추가된 줄. 먼저 채점한 블록에도 빠짐없이 넣는다.
+LATER_FIELDS = (("재검토", "아직"), ("수정 사유", ""))
+
+
+def _ensure_fields(body: list[str] | None) -> list[str] | None:
+    """보존한 블록에 뒤늦게 생긴 항목이 없으면 끝에 붙인다.
+
+    양식이 바뀌어도 이미 채운 점수를 다시 쓰지 않게 하려는 것이다.
+    이미 있으면 건드리지 않는다.
+    """
+    if not body:
+        return body
+    out = list(body)
+    for name, default in LATER_FIELDS:
+        if any(line.startswith(f"{name}:") for line in out):
+            continue
+        out += ["", f"{name}: {default}".rstrip()]
+    return out
+
+
 def build(text: str, *, preserve: bool = True) -> str:
     """파일 전체를 다시 만든다. 앞머리는 그대로 두고 질문 구간만 교체한다."""
     lines = text.split("\n")
@@ -169,7 +193,7 @@ def build(text: str, *, preserve: bool = True) -> str:
             for rep in range(1, repeats + 1):
                 run_id = f"{label}_{qid}_r{rep}"
                 body += [f"## {qid} / Model {label} / Run {rep}", ""]
-                body += kept.get(run_id) or blank_block(q, criteria)
+                body += _ensure_fields(kept.get(run_id)) or blank_block(q, criteria)
                 body.append("")
         body += render_notes(q)
 

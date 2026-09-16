@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import aggregator, config, scoring
+from . import aggregator, config, recorder, scoring
 
 
 def _rel(path) -> str:
@@ -233,53 +233,136 @@ def local_cloud_table(
 
 
 def model_comparison_table() -> str:
-    """산출물 2 — 제원 비교. environment.json 에서 읽는다(실행 기록 아님)."""
+    """산출물 2 — 제원 비교.
+
+    과제가 요구하는 항목을 행으로 두고 모델을 열로 둔다 (deliverables.md 형식).
+    제원은 environment.json, VRAM 은 실행 기록, 주요 특징은 models.json 에서 온다.
+    실측값과 문서 기반 값을 섞지 않도록 출처를 표 아래에 적는다.
+    """
     env = config.load_environment()
-    entries = [m for m in env.get("models", []) if m.get("model_label")]
-
-    header = [
-        "구분", "라벨", "모델 태그", "digest", "양자화",
-        "다운로드 크기", "문서상 최대 Context", "실험 Context", "License(선언)", "License(Base)",
-    ]
-    # 비교 대상을 먼저 (산출물 2 의 후보 열 순서와 맞춘다)
-    entries.sort(key=lambda m: 0 if config.is_primary(m["model_label"]) else 1)
-
-    if not entries:
-        return (
-            _table(header, [["(environment.json 미작성)"] + [""] * (len(header) - 1)])
-            + "\n\n> `data/env/environment.json` 을 먼저 채운다."
-        )
-
+    entries = {m["model_label"]: m for m in env.get("models", []) if m.get("model_label")}
+    meta = {m["model_label"]: m for m in config.enabled_models()}
     local = aggregator.aggregate_local()
-    rows = []
-    for m in entries:
-        label = m["model_label"]
-        ctx = None
+
+    labels = [l for l in config.primary_labels() if l in entries]
+    if not labels:
+        return "> `data/env/environment.json` 을 먼저 채운다."
+
+    def ctx_of(label: str) -> str:
         for rid in local["models"].get(label, {}).get("run_ids", []):
             t = aggregator.trace(rid)
             if t and t["run"].get("context_length"):
-                ctx = t["run"]["context_length"]
-                break
+                return str(t["run"]["context_length"])
+        return ""
 
-        size = m.get("download_size_bytes")
-        rows.append([
-            "비교 대상" if config.is_primary(label) else "부가",
-            label,
-            f"`{m.get('model_tag') or ''}`",
-            (m.get("digest") or "")[:12],
-            m.get("quantization_level") or "",
-            f"{size / 1_073_741_824:.2f} GB" if size else "",
-            str(m.get("doc_max_context") or ""),
-            str(ctx or ""),
-            m.get("license_declared") or "",
-            m.get("license_base_model") or "",
-        ])
+    def vram_of(label: str) -> str:
+        return _stat(local["models"].get(label, {}).get("metrics", {}), "size_vram_mib", 1)
 
-    out = [_table(header, rows), ""]
+    def name_of(label: str) -> str:
+        """표시용 모델 이름. 태그의 저장소명에서 뽑는다."""
+        tag = entries[label].get("model_tag") or ""
+        return tag.split("/")[-1].split(":")[0] or label
+
+    def size_of(label: str) -> str:
+        n = entries[label].get("download_size_bytes")
+        return f"{n / 1_073_741_824:.2f} GB" if n else ""
+
+    rows: list[tuple[str, object]] = [
+        ("Model Name", name_of),
+        ("Parameter", lambda l: entries[l].get("parameter_size") or ""),
+        ("License (선언)", lambda l: entries[l].get("license_declared") or ""),
+        ("License (Base)", lambda l: entries[l].get("license_base_model") or ""),
+        ("문서상 최대 Context", lambda l: str(entries[l].get("doc_max_context") or "(미확인)")),
+        ("실험 Context", ctx_of),
+        ("Quantization", lambda l: entries[l].get("quantization_level") or ""),
+        ("VRAM (관측 시점)", vram_of),
+        ("다운로드 크기", size_of),
+        ("주요 특징", lambda l: "<br>".join(meta.get(l, {}).get("highlights") or [])),
+        ("Model Card (GGUF)", lambda l: entries[l].get("model_card_url") or ""),
+        ("Model Card (원본)", lambda l: entries[l].get("upstream_model_card_url") or ""),
+        ("모델 태그", lambda l: f"`{entries[l].get('model_tag') or ''}`"),
+        ("digest", lambda l: f"`{(entries[l].get('digest') or '')[:12]}`"),
+    ]
+
+    header = ["항목"] + [meta.get(l, {}).get("display_name") or l for l in labels]
+    body = [[label] + [str(fn(l)) for l in labels] for label, fn in rows]
+
+    out = [_table(header, body), ""]
     out.append(_tier_note())
-    out.append("> `문서상 최대 Context` 는 Model Card 값, `실험 Context` 는 실행 기록의 context_length 다.")
-    out.append(f"> 출처: `{_rel(config.ENVIRONMENT_PATH)}`, `{_rel(config.LOCAL_RUNS_PATH)}`")
+    out.append("> `문서상 최대 Context` 는 Model Card 값(문서 기반), `실험 Context` 는 실행 기록의 context_length(실측)다.")
+    out.append("> VRAM 은 응답 직후 관측값의 평균이며 최대 VRAM 이 아니다.")
+    out.append("> `주요 특징` 은 Model Card 기반 설명이며 측정 결과가 아니다.")
+    out.append(f"> 출처: `{_rel(config.ENVIRONMENT_PATH)}`, `{_rel(config.LOCAL_RUNS_PATH)}`, `{_rel(config.MODELS_PATH)}`")
+
+    extra = [l for l in entries if not config.is_primary(l)]
+    if extra:
+        out += ["", "### 부가 테스트 (참고)", ""]
+        ex_header = ["라벨", "Model Name", "Parameter", "License (선언)", "모델 태그"]
+        ex_rows = [
+            [l, name_of(l), entries[l].get("parameter_size") or "",
+             entries[l].get("license_declared") or "",
+             f"`{entries[l].get('model_tag') or ''}`"]
+            for l in extra
+        ]
+        out.append(_table(ex_header, ex_rows))
+        out.append("")
+        out.append("> 채점·선정 대상이 아니다. 제외 근거로 남긴다.")
+
     return "\n".join(out)
+
+
+# ---------------------------------------------------------------- 채점 원본 내보내기
+
+
+def write_scores_jsonl() -> str:
+    """채점 결과를 JSONL 로 내보낸다.
+
+    과제는 원본 결과를 '다시 읽을 수 있는 형식'으로 요구한다.
+    실행 기록은 runs.jsonl 로 이미 그 조건을 채우지만, 점수와 근거는
+    eval-results.md 안에만 있어 사람만 읽을 수 있었다.
+
+    채점 입력면은 그대로 두고 여기서 뽑아낸다. 이 파일은 생성물이므로
+    직접 고치지 않는다 — 고칠 곳은 언제나 eval-results.md 다.
+
+    실행 기록과 run_id 로 조인해 질문·모델이 어긋나지 않는지 확인하고,
+    응답 원문 대신 그 위치를 남긴다(원문은 runs.jsonl 에 있다).
+    """
+    import json
+
+    runs = {
+        r["run_id"]: r
+        for r in recorder.iter_records(config.LOCAL_RUNS_PATH)
+        if r.get("run_id")
+    }
+    criteria = config.load_questions()["criteria"]
+
+    rows = []
+    for rec in scoring.scored_only():
+        run = runs.get(rec["run_id"], {})
+        rows.append({
+            "run_id": rec["run_id"],
+            "source_file": "local",
+            "question_id": rec["question_id"],
+            "model_label": rec["model_label"],
+            "model_tag": run.get("model_tag"),
+            "repeat": rec["repeat"],
+            "scores": rec["scores"],
+            "criteria_names": {c: criteria[c] for c in rec["scores"]},
+            "rationales": rec["rationales"],
+            "average": rec["average"],
+            "average_source": rec["average_source"],
+            "reviewed": rec["reviewed"],
+            "revision_reason": rec["revision_reason"],
+            "status_note": rec["status_note"],
+            "run_status": run.get("status"),
+            "source": rec["source"],
+        })
+
+    config.DERIVED_DIR.mkdir(parents=True, exist_ok=True)
+    with config.SCORES_PATH.open("w", encoding="utf-8") as f:
+        for row in rows:
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+    return f"{config.SCORES_PATH} ({len(rows)}건)"
 
 
 # ---------------------------------------------------------------- 파일로 쓰기
@@ -306,7 +389,7 @@ def write_tables() -> list[str]:
         "local_cloud.md": ["# Local vs Cloud (생성물)", "", local_cloud_table(local, cloud)],
     }
 
-    written = []
+    written = [write_scores_jsonl()]
     for name, parts in docs.items():
         path = config.TABLES_DIR / name
         body = "\n".join(parts)

@@ -80,6 +80,8 @@ def parse(path: Path | None = None) -> list[dict[str, Any]]:
                 "rationales": {},
                 "average": None,
                 "average_source": None,  # "입력" | "계산"
+                "reviewed": False,
+                "revision_reason": None,
                 "status_note": None,
                 "source": f"{path.name}:{qid}/{label}/r{rep}",
             }
@@ -106,6 +108,18 @@ def parse(path: Path | None = None) -> list[dict[str, Any]]:
         if name == "근거":
             if pending_code:
                 cur["rationales"][pending_code] = value or cur["rationales"].get(pending_code)
+            continue
+
+        if name == "재검토":
+            # "완료"/"했음"/"O" 처럼 무엇이든 적혀 있으면 수행한 것으로 본다.
+            # "아직" 은 양식의 기본값이므로 미수행이다.
+            cur["reviewed"] = bool(value) and value not in PLACEHOLDERS and value != "아직"
+            pending_code = None
+            continue
+
+        if name == "수정 사유":
+            cur["revision_reason"] = value or None
+            pending_code = None
             continue
 
         if name == "평균":

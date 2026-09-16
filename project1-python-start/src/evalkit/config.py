@@ -44,6 +44,8 @@ STEP06_DOC = DOCS_DIR / "steps" / "step06.md"
 
 LOCAL_SUMMARY_PATH = DERIVED_DIR / "local_summary.json"
 CLOUD_SUMMARY_PATH = DERIVED_DIR / "cloud_summary.json"
+#: 채점 결과의 기계 판독용 원본. eval-results.md 에서 뽑아낸다.
+SCORES_PATH = DERIVED_DIR / "scores.jsonl"
 
 APPEND_ONLY_PATHS = (LOCAL_RUNS_PATH, CLOUD_RUNS_PATH)
 
