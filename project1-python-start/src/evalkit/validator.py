@@ -198,6 +198,16 @@ def validate_scores(path: Path | None = None) -> ValidationReport:
             if not b["rationales"].get(code):
                 report.warnings.append(f"{run_id}: {code} 점수는 있는데 근거가 비어 있습니다")
 
+        # 직접 적은 평균이 점수들과 맞는지. 계산해 채운 값은 검사할 필요가 없다.
+        if b.get("average_source") == "입력" and b["average"] is not None:
+            values = [b["scores"].get(code) for code in q["criteria_codes"]]
+            if values and all(v is not None for v in values):
+                calc = round(sum(values) / len(values), 2)
+                if abs(b["average"] - calc) > 0.05:
+                    report.warnings.append(
+                        f"{run_id}: 적어 둔 평균 {b['average']} 과 점수 평균 {calc} 이 다릅니다"
+                    )
+
     if scored:
         report.warnings.insert(0, scoring.summary())
 
