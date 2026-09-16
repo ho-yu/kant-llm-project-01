@@ -8,17 +8,17 @@
 > **이 파일이 품질 채점 입력면이다.** 여기에 직접 점수와 근거를 적는다.
 > 블록 제목이 곧 실행 기록의 `run_id` 가 되므로 따로 적을 것은 없다.
 >
-> `## Q01 / Model B / Run 1` → `run_id = B_Q01_r1`
+> `## Q01 / Model C / Run 1` → `run_id = C_Q01_r1`
 >
 > 채운 뒤 `uv run python 11_finish.py` 를 실행하면 집계표에 반영된다.
 
 ### 채점 대상
 
-이 파일에는 **Model C (금융) · Model D (코딩) · Model F (이커머스)** 의 60블록만 있다.
-(3개 모델 × 10문항 × 2회)
+이 파일에는 **Model C (금융) · Model D (코딩) · Model F (이커머스)** 만 있다.
+3개 모델 × 10문항 × 2회 = 60블록.
 
-부가 테스트로 돌린 A (법률) · B (의료·바이오) · E (수학) 은 채점하지 않는다.
-실행 기록 120회분과 성능 측정값은 `data/raw/local/runs.jsonl` 과 STEP 6 표에 남아 있다.
+부가 테스트로 돌린 A · B · E 는 채점하지 않으므로 이 파일에 블록이 없다.
+그쪽 실행 기록은 `data/raw/local/runs.jsonl`, 성능 측정값은 STEP 6 표에 있다.
 
 > **이 파일의 질문 구간은 생성물이다.** `uv run python 12_read.py` 가
 > `questions.json` 과 `models.json` 의 `tier` 를 보고 다시 만든다.
@@ -29,9 +29,9 @@
 **작성 예시**
 
 ```
-## Q01 / Model B / Run 1
+## Q01 / Model C / Run 1
 
-원본 기록 ID: B_Q01_r1
+원본 기록 ID: C_Q01_r1
 상태: 성공
 
 답변 적합성: 4
@@ -91,27 +91,20 @@ Required-by:
 
 ## 모델 목록
 
-실행은 6개 전부 했고, **품질 채점은 위 3개**만 한다. `(부가)` 는 성능 측정(STEP 6)에는
-들어가지만 이 파일에 채점 블록이 없고 필수 조건 6 판정에서도 빠진다.
-
 | 라벨 | 도메인 | 모델 | 크기 / 양자화 | 모델 태그 |
 |---|---|---|---|---|
 | Model C | 금융 | Llama-3.1-Kor-BCCard-Finance-8B | 8B / Q4_K_M | `hf.co/featherless-ai-quants/BCCard-Llama-3.1-Kor-BCCard-Finance-8B-GGUF:Q4_K_M` |
 | Model D | 코딩 | Qwen2.5-Coder-7B-Instruct | 7B / Q4_K_M | `hf.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M` |
 | Model F | 이커머스 | sam-1-base | 7.62B / Q4_K_M | `hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M` |
-| Model A (부가) | 법률 | Llama-3.1-Korean-8B-Instruct | 8B / Q4_K_M | `hf.co/Arc1el/Llama-3.1-Korean-8B-Instruct-Law-GGUF:Q4_K_M` |
-| Model B (부가) | 의료·바이오 | KoBioMed-Llama-3.1-8B-Instruct | 8B / Q4_K_M | `hf.co/mradermacher/KoBioMed-Llama-3.1-8B-Instruct-i1-GGUF:Q4_K_M` |
-| Model E (부가) | 수학 | Math-IIO-7B-Instruct | 7B / Q4_K_M | `hf.co/QuantFactory/Math-IIO-7B-Instruct-GGUF:Q4_K_M` |
+
+부가 테스트로 돌린 A (법률) · B (의료·바이오) · E (수학) 의 제원은
+[steps/step03.md](steps/step03.md) 와 `data/derived/tables/model_comparison.md` 에 있다.
 
 ## STEP 4 CLI 스모크 테스트에서 관찰된 문제
 
-아래 두 모델은 사전 확인에서 문제가 보였다. **제외가 아니라 본 실험 결과로 판정한다.**
+사전 확인에서 문제가 보인 모델이다. **제외가 아니라 본 실험 결과로 판정한다.**
 본 실험에서도 같은 증상이 재현되면 STEP 2 필수 조건 3(현재 PC에서 안정 실행) 미충족으로
 판정하고, 그 근거를 여기 기록과 실행 기록에서 인용한다.
-
-**Model A — 사전 관찰**
-
-CLI 실행 시 프롬프트를 그대로 반복하고 `<|im_start|>`/`<|im_end|>` 특수토큰이 응답에 노출됨 (chat template 불일치로 추정). `done_reason=length` 로 정지 토큰을 내지 못하고 출력 한도까지 생성함. PROCESSOR 100% GPU, CONTEXT 4096.
 
 **Model F — 사전 관찰 및 모델 교체**
 
@@ -128,11 +121,10 @@ output that does not match the expected peg-native format type:server_error]` �
 
 ## 대상 확정
 
-**실행**은 6개 모델 × 질문 10개 × 각 2회 = **120회** 전부 완료했다.
-**품질 채점**은 비교 대상 3개(C·D·F) × 10문항 × 2회 = **60블록**만 한다.
-(과제 필수 최소치는 로컬 2개 × 40회이며, 3개는 그 이상이다.)
+**품질 채점**은 비교 대상 3개(C·D·F) × 질문 10개 × 각 2회 = **60블록**이다.
+과제 필수 최소치는 로컬 후보 2개이며, 3개는 그 이상이다.
 
-부가 테스트 3개(A·B·E)의 120회분 기록과 성능 측정값은 그대로 남는다.
+실행 자체는 6개 모델 120회를 모두 마쳤다. 부가 3개의 기록과 성능 측정값을
 지우지 않는 이유는 제외 근거도 산출물이기 때문이다.
 
 ## 실행 설정 (모든 모델 동일 적용)
@@ -148,6 +140,7 @@ output that does not match the expected peg-native format type:server_error]` �
 실행 환경: [steps/step04.md](steps/step04.md) 참조
 
 원본 기록 파일 (JSON/JSONL): 
+
 
 
 
