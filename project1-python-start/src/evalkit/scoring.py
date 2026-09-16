@@ -171,10 +171,28 @@ def scored_only(records: list[dict[str, Any]] | None = None) -> list[dict[str, A
 
 
 def summary() -> str:
+    """진행률은 채점 대상(primary) 기준으로 센다.
+
+    부가 테스트 모델의 블록도 파일에는 있고 채점하면 반영되지만,
+    "다 했나"를 판단하는 분모에는 넣지 않는다.
+    """
     records = parse()
     scored = scored_only(records)
+    primary = set(config.primary_labels())
+
+    target = [r for r in records if r["model_label"] in primary]
+    done = [r for r in scored if r["model_label"] in primary]
+    extra = [r for r in scored if r["model_label"] not in primary]
+
     by_model: dict[str, int] = {}
-    for r in scored:
+    for r in done:
         by_model[r["model_label"]] = by_model.get(r["model_label"], 0) + 1
     detail = ", ".join(f"{k} {v}건" for k, v in sorted(by_model.items())) or "없음"
-    return f"블록 {len(records)}개 중 채점됨 {len(scored)}개 ({detail})"
+
+    out = f"채점 대상 {len(target)}개 중 {len(done)}개 완료 ({detail})"
+    if extra:
+        by_extra: dict[str, int] = {}
+        for r in extra:
+            by_extra[r["model_label"]] = by_extra.get(r["model_label"], 0) + 1
+        out += "  |  부가 테스트 " + ", ".join(f"{k} {v}건" for k, v in sorted(by_extra.items()))
+    return out

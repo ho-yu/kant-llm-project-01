@@ -184,6 +184,13 @@ def validate_scores(path: Path | None = None) -> ValidationReport:
         if b not in scored:
             continue  # 아직 채점 전 — 그 자체는 문제가 아니다
 
+        if not config.is_primary(b["model_label"]):
+            # 부가 테스트 모델. 채점했다면 형식은 검사하되
+            # 집계와 판정에서는 빠진다는 사실만 알려 준다.
+            report.warnings.append(
+                f"{run_id}: 부가 테스트 모델이라 최종 선정 판정에는 반영되지 않습니다"
+            )
+
         if run_id not in runs:
             report.errors.append(f"{run_id}: 대응하는 실행 기록이 없습니다 — 역추적 불가")
         elif runs[run_id].get("status") == config.STATUS_ERROR:

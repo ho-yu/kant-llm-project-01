@@ -148,11 +148,21 @@ def step06(model_label: str | None = None) -> str:
     models = summary["models"]
     labels = [model_label] if model_label and model_label in models else list(models)
 
-    lines = [
-        "## STEP 06 — 성능 측정",
-        "",
-        "| 지표 | " + " | ".join(models[l]["display_name"] or l for l in labels) + " |",
-        "|---|" + "---|" * len(labels),
+    primary = [l for l in labels if config.is_primary(l)]
+    extra = [l for l in labels if not config.is_primary(l)]
+    # 한 모델만 볼 때는 나누지 않는다 (10_run.py 에서 방금 돌린 모델을 보는 경우)
+    if model_label:
+        primary, extra = labels, []
+
+    lines = ["## STEP 06 — 성능 측정", ""]
+    if extra:
+        lines += [
+            "**비교 대상** — 품질 채점과 최종 선정은 이 모델들로 한다.",
+            "",
+        ]
+    lines += [
+        "| 지표 | " + " | ".join(models[l]["display_name"] or l for l in primary) + " |",
+        "|---|" + "---|" * len(primary),
     ]
 
     rows = [
@@ -165,19 +175,36 @@ def step06(model_label: str | None = None) -> str:
         ("VRAM (관측 시점)", lambda m: _fmt(m["metrics"].get("size_vram_mib"), " MiB", 1)),
     ]
     for label, fn in rows:
-        lines.append(f"| {label} | " + " | ".join(fn(models[l]) for l in labels) + " |")
+        lines.append(f"| {label} | " + " | ".join(fn(models[l]) for l in primary) + " |")
 
     # 품질 평균과 STEP 2 필수 조건 6 판정 — 채점이 시작된 뒤에만 보여준다
     quality = aggregator.aggregate_quality()["models"]
     scale = config.load_questions().get("score_scale") or {}
     threshold = scale.get("pass_threshold")
-    if any(quality.get(l, {}).get("scored_count") for l in labels):
-        lines.append("| 평균 품질 점수 | " + " | ".join(_overall(quality.get(l, {})) for l in labels) + " |")
+    if any(quality.get(l, {}).get("scored_count") for l in primary):
+        lines.append("| 평균 품질 점수 | " + " | ".join(_overall(quality.get(l, {})) for l in primary) + " |")
         if threshold is not None:
             lines.append(
                 f"| 조건 6 판정 (평균 {threshold} 이상) | "
-                + " | ".join(_condition6(quality.get(l, {}), threshold) for l in labels)
+                + " | ".join(_condition6(quality.get(l, {}), threshold) for l in primary)
                 + " |"
+            )
+
+    if extra:
+        lines += [
+            "",
+            "### 부가 테스트",
+            "",
+            "같은 조건으로 돌린 기록이다. 품질 채점과 필수 조건 판정 대상에서는 빠진다.",
+            "",
+            "| 지표 | " + " | ".join(models[l]["display_name"] or l for l in extra) + " |",
+            "|---|" + "---|" * len(extra),
+        ]
+        for label, fn in rows:
+            lines.append(f"| {label} | " + " | ".join(fn(models[l]) for l in extra) + " |")
+        if any(quality.get(l, {}).get("scored_count") for l in extra):
+            lines.append(
+                "| 평균 품질 점수 | " + " | ".join(_overall(quality.get(l, {})) for l in extra) + " |"
             )
 
     lines += [
@@ -234,16 +261,20 @@ def progress(model_label: str | None = None) -> str:
     total = len(config.load_questions()["questions"]) * settings["repeats"]
     records = list(recorder.iter_records(config.LOCAL_RUNS_PATH))
 
-    lines = [f"{'모델':<22} {'본실험':>9} {'성공':>6} {'실패':>6} {'워밍업':>7}"]
+    lines = [f"{'모델':<22} {'구분':>6} {'본실험':>9} {'성공':>6} {'실패':>6} {'워밍업':>7}"]
     for m in config.enabled_models():
         label = m["model_label"]
+        tier = "비교" if config.is_primary(label) else "부가"
         rows = [r for r in records if r.get("model_label") == label]
         main = [r for r in rows if r.get("phase") == config.PHASE_MAIN]
         ok = sum(1 for r in main if r.get("status") == config.STATUS_SUCCESS)
         warm = "있음" if any(r.get("phase") == config.PHASE_WARMUP for r in rows) else "없음"
         mark = " <-" if label == model_label else ""
         name = m.get("display_name") or label
-        lines.append(f"{name:<22} {f'{len(main)}/{total}':>9} {ok:>6} {len(main) - ok:>6} {warm:>7}{mark}")
+        lines.append(
+            f"{name:<22} {tier:>6} {f'{len(main)}/{total}':>9} "
+            f"{ok:>6} {len(main) - ok:>6} {warm:>7}{mark}"
+        )
     return "\n".join(lines)
 
 

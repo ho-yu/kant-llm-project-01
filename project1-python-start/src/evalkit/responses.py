@@ -22,7 +22,14 @@ def _runs_for(question_id: str) -> list[dict[str, Any]]:
         for r in recorder.iter_records(config.LOCAL_RUNS_PATH)
         if r.get("question_id") == question_id and r.get("phase") == config.PHASE_MAIN
     ]
-    rows.sort(key=lambda r: (order.get(r.get("model_label"), 99), r.get("repeat") or 0))
+    # 채점 대상을 먼저. 부가 테스트를 스크롤로 지나치지 않아도 된다.
+    rows.sort(
+        key=lambda r: (
+            0 if config.is_primary(r.get("model_label")) else 1,
+            order.get(r.get("model_label"), 99),
+            r.get("repeat") or 0,
+        )
+    )
     return rows
 
 
@@ -39,6 +46,9 @@ def render(question_id: str) -> str:
         "",
         "> 채점용으로 원본 기록에서 뽑아낸 것이다. 생성물이므로 직접 고치지 않는다.",
         f"> 점수는 [eval-results.md](../../docs/eval-results.md) 의 `## {question_id} / Model X / Run N` 블록에 적는다.",
+        "",
+        "**채점 대상:** "
+        + ", ".join(m.get("display_name") or m["model_label"] for m in config.primary_models()),
         "",
         f"**구분:** {q['category']} / {q['case_type']} 사례 / 난이도 {q['difficulty']}"
         f" / Cloud 비교 {'Yes' if q.get('cloud_compare') else 'No'}",
@@ -65,8 +75,19 @@ def render(question_id: str) -> str:
         out += ["", "---", "", "_아직 이 질문의 실행 기록이 없습니다._"]
         return "\n".join(out)
 
+    shown_extra_header = False
     for r in rows:
         label = r["model_label"]
+        if not config.is_primary(label) and not shown_extra_header:
+            shown_extra_header = True
+            out += [
+                "",
+                "---",
+                "",
+                "# 여기부터 부가 테스트",
+                "",
+                "> 채점하지 않아도 된다. 같은 조건으로 돌린 기록을 참고용으로 남긴 것이다.",
+            ]
         out += [
             "",
             "---",

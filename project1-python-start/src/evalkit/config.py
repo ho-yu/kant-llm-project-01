@@ -155,9 +155,42 @@ def load_environment() -> dict[str, Any]:
     return _load_json(ENVIRONMENT_PATH)
 
 
+#: 품질 채점과 최종 선정의 비교 대상
+TIER_PRIMARY = "primary"
+#: 실행 기록은 남기되 채점·판정에서는 빠지는 부가 테스트
+TIER_SUPPLEMENTARY = "supplementary"
+
+
 def enabled_models() -> list[dict[str, Any]]:
-    """본 실험 대상 모델만. models.json 에 적힌 순서를 유지한다."""
+    """실행한 모델 전부. models.json 에 적힌 순서를 유지한다.
+
+    등급과 무관하다. 원본 기록·환경 정보·성능 측정은 6개 모두 산출물이므로
+    여기서 걸러내지 않는다. 채점 대상만 추릴 때는 primary_models() 를 쓴다.
+    """
     return [m for m in load_models()["models"] if m.get("enabled")]
+
+
+def models_of_tier(tier: str) -> list[dict[str, Any]]:
+    """해당 등급의 모델만. tier 가 없는 항목은 primary 로 본다."""
+    return [m for m in enabled_models() if m.get("tier", TIER_PRIMARY) == tier]
+
+
+def primary_models() -> list[dict[str, Any]]:
+    """품질 채점·필수 조건 판정·최종 선정의 대상."""
+    return models_of_tier(TIER_PRIMARY)
+
+
+def supplementary_models() -> list[dict[str, Any]]:
+    """부가 테스트. 기록은 남지만 채점 진행률과 판정에서 빠진다."""
+    return models_of_tier(TIER_SUPPLEMENTARY)
+
+
+def primary_labels() -> list[str]:
+    return [m["model_label"] for m in primary_models()]
+
+
+def is_primary(model_label: str | None) -> bool:
+    return model_label in set(primary_labels())
 
 
 def question_map() -> dict[str, dict[str, Any]]:
@@ -172,6 +205,12 @@ def cloud_question_ids() -> list[str]:
 def expected_main_run_count() -> int:
     settings = load_run_settings()
     return len(enabled_models()) * len(load_questions()["questions"]) * settings["repeats"]
+
+
+def expected_scored_block_count() -> int:
+    """채점해야 하는 블록 수. 부가 테스트는 빼고 센다."""
+    settings = load_run_settings()
+    return len(primary_models()) * len(load_questions()["questions"]) * settings["repeats"]
 
 
 # ---------------------------------------------------------------- run_id
