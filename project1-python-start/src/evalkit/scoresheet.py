@@ -113,26 +113,22 @@ def render_question(question: dict[str, Any], criteria: dict[str, str]) -> list[
     return out
 
 
-def render_aggregate(question: dict[str, Any], criteria: dict[str, str]) -> list[str]:
-    """질문별 집계표. 채점 대상 모델만 행으로 둔다."""
-    qid = question["question_id"]
-    names = [criteria[c] for c in question["criteria_codes"]]
-    header = ["모델"] + names + ["평균", "n", "성공/시도", "비고"]
-    repeats = config.load_run_settings()["repeats"]
+def render_notes(question: dict[str, Any]) -> list[str]:
+    """질문별 관찰 메모.
 
-    out = [
-        f"## {qid} 집계",
+    집계표는 두지 않는다. 점수를 여기 다시 옮겨 적으면 블록과 어긋나기만 하고,
+    같은 값을 11_finish.py 가 채점 기록에서 계산해 준다.
+    여기에는 계산되지 않는 것만 적는다 — 대표 실패 사례, 눈에 띈 패턴.
+    """
+    qid = question["question_id"]
+    return [
+        f"## {qid} 관찰 메모",
         "",
-        "| " + " | ".join(header) + " |",
-        "|" + "---|" * len(header),
+        "> 대표 실패 사례와 눈에 띈 패턴을 적는다 (산출물 5의 '개선이 필요한 실패 사례').",
+        "> 점수 평균·n 은 적지 않는다 — `11_finish.py` 가 계산한다.",
+        "",
+        "",
     ]
-    for m in config.primary_models():
-        cells = [m.get("display_name") or m["model_label"]]
-        cells += [""] * (len(names) + 2)
-        cells += [f"/{repeats}", ""]
-        out.append("| " + " | ".join(cells) + " |")
-    out += ["", f"**{qid} 관찰 메모**", "", ""]
-    return out
 
 
 def build(text: str, *, preserve: bool = True) -> str:
@@ -175,7 +171,7 @@ def build(text: str, *, preserve: bool = True) -> str:
                 body += [f"## {qid} / Model {label} / Run {rep}", ""]
                 body += kept.get(run_id) or blank_block(q, criteria)
                 body.append("")
-        body += render_aggregate(q, criteria)
+        body += render_notes(q)
 
     return "\n".join(lines[:head_end] + [""] + body).rstrip("\n") + "\n"
 

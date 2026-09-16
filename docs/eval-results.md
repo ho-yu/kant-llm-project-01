@@ -62,88 +62,15 @@
 | D | 지시사항 준수 | 요구한 형식·개수·순서를 지켰는가 |
 | E | 정보 부족 / 불확실성 대응 | 확인 불가한 내용을 단정하지 않고 추가 확인 정보를 제시하는가 |
 
-## 실행 환경
-
-(1) Execution Environment
-- OS: Windows
-- Execution Type: Local PC
-- Colab: 사용하지 않음
-- LLM Runtime: Ollama
-- Python: 로컬 Python/uv 환경
-
-(2) Python / Ollama 주요 패키지 버전 확인
-
-```
-Python 3.12.10
-ollama version is 0.34.0
-
-Name: ollama
-Version: 0.6.2
-Summary: The official Python client for Ollama.
-Location: C:\Users\dbdnj\Downloads\1ho\Project\01\project1-python-start\.venv\Lib\site-packages
-Requires: httpx, pydantic
-Required-by:
-```
-
-(3) GPU / VRAM
-- GPU: NVIDIA GeForce RTX 5060 Laptop GPU
-- VRAM: 8GB (8151 MiB)
-
-## 모델 목록
-
-| 라벨 | 도메인 | 모델 | 크기 / 양자화 | 모델 태그 |
-|---|---|---|---|---|
-| Model C | 금융 | Llama-3.1-Kor-BCCard-Finance-8B | 8B / Q4_K_M | `hf.co/featherless-ai-quants/BCCard-Llama-3.1-Kor-BCCard-Finance-8B-GGUF:Q4_K_M` |
-| Model D | 코딩 | Qwen2.5-Coder-7B-Instruct | 7B / Q4_K_M | `hf.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M` |
-| Model F | 이커머스 | sam-1-base | 7.62B / Q4_K_M | `hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M` |
-
-부가 테스트로 돌린 A (법률) · B (의료·바이오) · E (수학) 의 제원은
-[steps/step03.md](steps/step03.md) 와 `data/derived/tables/model_comparison.md` 에 있다.
-
-## STEP 4 CLI 스모크 테스트에서 관찰된 문제
-
-사전 확인에서 문제가 보인 모델이다. **제외가 아니라 본 실험 결과로 판정한다.**
-본 실험에서도 같은 증상이 재현되면 STEP 2 필수 조건 3(현재 PC에서 안정 실행) 미충족으로
-판정하고, 그 근거를 여기 기록과 실행 기록에서 인용한다.
-
-**Model F — 사전 관찰 및 모델 교체**
-
-당초 이커머스 후보는 **POLAR-14B-v0.5** (`hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M`) 였다.
-CLI 및 Python 호출 모두에서 `Error: llama-server chat error: map[code:500 message:The model produced
-output that does not match the expected peg-native format type:server_error]` 가 발생해 응답 자체를
-받지 못했다. PROCESSOR 36%/64% (CPU/GPU) — 8GB VRAM 에서 14B 가중치(7.97 GiB)가 온전히 올라가지
-못하고 일부 CPU 로 내려간 상태였다. CONTEXT 4096.
-
-12:43 과 14:42 두 차례 모두 동일하게 실패해 일회성 오류가 아님을 확인하고,
-같은 이커머스 도메인의 **sam-1-base** (Qwen2.5-7B-Instruct 기반, 7.62B) 로 교체했다.
-교체 후 정상 동작한다 (`done_reason=stop`, 231토큰, 100% GPU, 4528 MiB).
-실패한 POLAR 기록의 삭제 이력은 [steps/step06.md](steps/step06.md) '실행 기록 삭제 이력' 절에 있다.
-
-## 대상 확정
-
-**품질 채점**은 비교 대상 3개(C·D·F) × 질문 10개 × 각 2회 = **60블록**이다.
-과제 필수 최소치는 로컬 후보 2개이며, 3개는 그 이상이다.
-
-실행 자체는 6개 모델 120회를 모두 마쳤다. 부가 3개의 기록과 성능 측정값을
-지우지 않는 이유는 제외 근거도 산출물이기 때문이다.
-
-## 실행 설정 (모든 모델 동일 적용)
-
-| 설정 | 값 |
-|---|---|
-| temperature | |
-| num_predict | |
-| num_ctx | |
-| system prompt | |
-| timeout | |
-
-실행 환경: [steps/step04.md](steps/step04.md) 참조
-
-원본 기록 파일 (JSON/JSONL): 
-
-
-
-
+> **채점에 필요한 것만 둔다.** 실행 환경·설정·모델 제원은 아래에 있고 여기서 중복하지 않는다.
+>
+> | 찾는 것 | 어디에 |
+> |---|---|
+> | 실행 환경 (OS·GPU·버전) | [steps/step04.md](steps/step04.md), `data/env/environment.json` |
+> | 실행 설정 (temperature 등) | `data/config/run_settings.json`, [usage.md](usage.md) |
+> | 모델 제원·License | [steps/step03.md](steps/step03.md), `data/derived/tables/model_comparison.md` |
+> | 성능 측정 (속도·VRAM) | [steps/step06.md](steps/step06.md) |
+> | Model F 교체 이력 | [steps/step03.md](steps/step03.md), [steps/step06.md](steps/step06.md) |
 
 ---
 
@@ -286,15 +213,10 @@ output that does not match the expected peg-native format type:server_error]` �
 
 평균:
 
-## Q01 집계
+## Q01 관찰 메모
 
-| 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 평균 | n | 성공/시도 | 비고 |
-|---|---|---|---|---|---|---|---|
-| Model C (금융) |  |  |  |  |  | /2 |  |
-| Model D (코딩) |  |  |  |  |  | /2 |  |
-| Model F (이커머스) |  |  |  |  |  | /2 |  |
-
-**Q01 관찰 메모**
+> 대표 실패 사례와 눈에 띈 패턴을 적는다 (산출물 5의 '개선이 필요한 실패 사례').
+> 점수 평균·n 은 적지 않는다 — `11_finish.py` 가 계산한다.
 
 
 ---
@@ -437,15 +359,10 @@ output that does not match the expected peg-native format type:server_error]` �
 
 평균:
 
-## Q02 집계
+## Q02 관찰 메모
 
-| 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 평균 | n | 성공/시도 | 비고 |
-|---|---|---|---|---|---|---|---|
-| Model C (금융) |  |  |  |  |  | /2 |  |
-| Model D (코딩) |  |  |  |  |  | /2 |  |
-| Model F (이커머스) |  |  |  |  |  | /2 |  |
-
-**Q02 관찰 메모**
+> 대표 실패 사례와 눈에 띈 패턴을 적는다 (산출물 5의 '개선이 필요한 실패 사례').
+> 점수 평균·n 은 적지 않는다 — `11_finish.py` 가 계산한다.
 
 
 ---
@@ -613,15 +530,10 @@ output that does not match the expected peg-native format type:server_error]` �
 
 평균:
 
-## Q03 집계
+## Q03 관찰 메모
 
-| 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 지시사항 준수 | 평균 | n | 성공/시도 | 비고 |
-|---|---|---|---|---|---|---|---|---|
-| Model C (금융) |  |  |  |  |  |  | /2 |  |
-| Model D (코딩) |  |  |  |  |  |  | /2 |  |
-| Model F (이커머스) |  |  |  |  |  |  | /2 |  |
-
-**Q03 관찰 메모**
+> 대표 실패 사례와 눈에 띈 패턴을 적는다 (산출물 5의 '개선이 필요한 실패 사례').
+> 점수 평균·n 은 적지 않는다 — `11_finish.py` 가 계산한다.
 
 
 ---
@@ -789,15 +701,10 @@ output that does not match the expected peg-native format type:server_error]` �
 
 평균:
 
-## Q04 집계
+## Q04 관찰 메모
 
-| 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 정보 부족 / 불확실성 대응 | 평균 | n | 성공/시도 | 비고 |
-|---|---|---|---|---|---|---|---|---|
-| Model C (금융) |  |  |  |  |  |  | /2 |  |
-| Model D (코딩) |  |  |  |  |  |  | /2 |  |
-| Model F (이커머스) |  |  |  |  |  |  | /2 |  |
-
-**Q04 관찰 메모**
+> 대표 실패 사례와 눈에 띈 패턴을 적는다 (산출물 5의 '개선이 필요한 실패 사례').
+> 점수 평균·n 은 적지 않는다 — `11_finish.py` 가 계산한다.
 
 
 ---
@@ -941,15 +848,10 @@ output that does not match the expected peg-native format type:server_error]` �
 
 평균:
 
-## Q05 집계
+## Q05 관찰 메모
 
-| 모델 | 답변 적합성 | 한국어 표현 | 정보 부족 / 불확실성 대응 | 평균 | n | 성공/시도 | 비고 |
-|---|---|---|---|---|---|---|---|
-| Model C (금융) |  |  |  |  |  | /2 |  |
-| Model D (코딩) |  |  |  |  |  | /2 |  |
-| Model F (이커머스) |  |  |  |  |  | /2 |  |
-
-**Q05 관찰 메모**
+> 대표 실패 사례와 눈에 띈 패턴을 적는다 (산출물 5의 '개선이 필요한 실패 사례').
+> 점수 평균·n 은 적지 않는다 — `11_finish.py` 가 계산한다.
 
 
 ---
@@ -1116,15 +1018,10 @@ output that does not match the expected peg-native format type:server_error]` �
 
 평균:
 
-## Q06 집계
+## Q06 관찰 메모
 
-| 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 지시사항 준수 | 평균 | n | 성공/시도 | 비고 |
-|---|---|---|---|---|---|---|---|---|
-| Model C (금융) |  |  |  |  |  |  | /2 |  |
-| Model D (코딩) |  |  |  |  |  |  | /2 |  |
-| Model F (이커머스) |  |  |  |  |  |  | /2 |  |
-
-**Q06 관찰 메모**
+> 대표 실패 사례와 눈에 띈 패턴을 적는다 (산출물 5의 '개선이 필요한 실패 사례').
+> 점수 평균·n 은 적지 않는다 — `11_finish.py` 가 계산한다.
 
 
 ---
@@ -1268,15 +1165,10 @@ output that does not match the expected peg-native format type:server_error]` �
 
 평균:
 
-## Q07 집계
+## Q07 관찰 메모
 
-| 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 평균 | n | 성공/시도 | 비고 |
-|---|---|---|---|---|---|---|---|
-| Model C (금융) |  |  |  |  |  | /2 |  |
-| Model D (코딩) |  |  |  |  |  | /2 |  |
-| Model F (이커머스) |  |  |  |  |  | /2 |  |
-
-**Q07 관찰 메모**
+> 대표 실패 사례와 눈에 띈 패턴을 적는다 (산출물 5의 '개선이 필요한 실패 사례').
+> 점수 평균·n 은 적지 않는다 — `11_finish.py` 가 계산한다.
 
 
 ---
@@ -1444,15 +1336,10 @@ output that does not match the expected peg-native format type:server_error]` �
 
 평균:
 
-## Q08 집계
+## Q08 관찰 메모
 
-| 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 지시사항 준수 | 평균 | n | 성공/시도 | 비고 |
-|---|---|---|---|---|---|---|---|---|
-| Model C (금융) |  |  |  |  |  |  | /2 |  |
-| Model D (코딩) |  |  |  |  |  |  | /2 |  |
-| Model F (이커머스) |  |  |  |  |  |  | /2 |  |
-
-**Q08 관찰 메모**
+> 대표 실패 사례와 눈에 띈 패턴을 적는다 (산출물 5의 '개선이 필요한 실패 사례').
+> 점수 평균·n 은 적지 않는다 — `11_finish.py` 가 계산한다.
 
 
 ---
@@ -1620,15 +1507,10 @@ output that does not match the expected peg-native format type:server_error]` �
 
 평균:
 
-## Q09 집계
+## Q09 관찰 메모
 
-| 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 정보 부족 / 불확실성 대응 | 평균 | n | 성공/시도 | 비고 |
-|---|---|---|---|---|---|---|---|---|
-| Model C (금융) |  |  |  |  |  |  | /2 |  |
-| Model D (코딩) |  |  |  |  |  |  | /2 |  |
-| Model F (이커머스) |  |  |  |  |  |  | /2 |  |
-
-**Q09 관찰 메모**
+> 대표 실패 사례와 눈에 띈 패턴을 적는다 (산출물 5의 '개선이 필요한 실패 사례').
+> 점수 평균·n 은 적지 않는다 — `11_finish.py` 가 계산한다.
 
 
 ---
@@ -1796,12 +1678,7 @@ output that does not match the expected peg-native format type:server_error]` �
 
 평균:
 
-## Q10 집계
+## Q10 관찰 메모
 
-| 모델 | 답변 적합성 | 논리성/실용성 | 한국어 표현 | 정보 부족 / 불확실성 대응 | 평균 | n | 성공/시도 | 비고 |
-|---|---|---|---|---|---|---|---|---|
-| Model C (금융) |  |  |  |  |  |  | /2 |  |
-| Model D (코딩) |  |  |  |  |  |  | /2 |  |
-| Model F (이커머스) |  |  |  |  |  |  | /2 |  |
-
-**Q10 관찰 메모**
+> 대표 실패 사례와 눈에 띈 패턴을 적는다 (산출물 5의 '개선이 필요한 실패 사례').
+> 점수 평균·n 은 적지 않는다 — `11_finish.py` 가 계산한다.

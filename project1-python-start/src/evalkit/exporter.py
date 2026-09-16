@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import aggregator, config
+from . import aggregator, config, scoring
 
 
 def _rel(path) -> str:
@@ -151,6 +151,36 @@ def repeat_consistency_table(quality: dict[str, Any] | None = None) -> str:
     return _table(header, rows)
 
 
+def per_question_table() -> str:
+    """질문별 × 모델별 품질 평균. 채점 블록에서 바로 계산한다.
+
+    예전에는 eval-results.md 안에 질문마다 집계표를 두고 손으로 옮겨 적었다.
+    같은 값을 두 곳에 쓰면 어긋나므로 여기서 만든다.
+    """
+    labels = config.primary_labels()
+    names = {m["model_label"]: m.get("display_name") or m["model_label"]
+             for m in config.primary_models()}
+    by = {}
+    for rec in scoring.scored_only():
+        by.setdefault(rec["question_id"], {}).setdefault(rec["model_label"], []).append(rec)
+
+    header = ["질문"] + [names[l] for l in labels]
+    rows = []
+    for q in config.load_questions()["questions"]:
+        qid = q["question_id"]
+        cells = [f"{qid} {q['title']}"]
+        for l in labels:
+            recs = by.get(qid, {}).get(l, [])
+            vals = [r["average"] for r in recs if r.get("average") is not None]
+            cells.append(f"{sum(vals) / len(vals):.2f} (n={len(vals)})" if vals else "미채점")
+        rows.append(cells)
+
+    out = [_table(header, rows), ""]
+    out.append("> 각 칸은 그 질문 Run 1·Run 2 의 블록 평균이다. n 은 채점된 회차 수.")
+    out.append(f"> 원본: `{_rel(config.EVAL_RESULTS_PATH)}`")
+    return "\n".join(out)
+
+
 def error_table(summary: dict[str, Any] | None = None) -> str:
     """축 1(호출 실패)만 모은 표. 품질 점수와 섞지 않는다."""
     summary = summary or aggregator.aggregate_local()
@@ -268,6 +298,7 @@ def write_tables() -> list[str]:
             "# 로컬 모델 성능 집계 (생성물)", "",
             local_summary_table(local), "",
             "## 품질 점수", "", quality_table(quality), "",
+            "## 질문별", "", per_question_table(), "",
             "## 사례 유형별", "", case_type_table(quality), "",
             "## Run 간 일관성", "", repeat_consistency_table(quality), "",
             "## 호출 실패", "", error_table(local),
