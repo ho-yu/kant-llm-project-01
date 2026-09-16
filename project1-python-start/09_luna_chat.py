@@ -2,7 +2,7 @@ from getpass import getpass
 
 from openai import APIError, APITimeoutError, OpenAI
 
-QUESTION = "프롬프트 엔지니어링이 무엇인지 초보자에게 두 문장으로 설명해 주세요."
+QUESTION = "온라인에서 주문한 상품의 배송 예정일이 지났는데 아직 상품을 받지 못했습니다. 어떤 순서로 확인하면 좋을까요?"
 
 # 키는 실행할 때 입력합니다. 화면에 표시되거나 파일에 저장되지 않습니다.
 api_key = getpass("OpenAI API 키를 붙여넣고 Enter (화면에 보이지 않음): ").strip()
@@ -21,6 +21,7 @@ try:
         model="gpt-5.6-luna",
         input=QUESTION,
         reasoning={"effort": "none"},
+        temperature=0,
         max_output_tokens=256,
         tools=[],
         tool_choice="none",
