@@ -99,12 +99,22 @@ def quality_table(quality: dict[str, Any] | None = None) -> str:
     primary, extra = _split_tiers(models)
     criteria = quality["criteria"]
 
+    # 기준마다 출제 문항이 다르다 — n 이 왜 다른지 표에서 바로 보이게 함께 적는다
+    asked: dict[str, list[str]] = {}
+    for q in config.load_questions()["questions"]:
+        for code in q["criteria_codes"]:
+            asked.setdefault(code, []).append(q["question_id"])
+
     def block(labels: list[str]) -> str:
-        header = ["평가 기준"] + [models[l]["display_name"] or l for l in labels]
-        rows = [
-            [f"{code}. {name}"] + [_stat(models[l]["per_criterion"], code) for l in labels]
-            for code, name in criteria.items()
-        ]
+        header = ["평가 기준", "출제 문항"] + [models[l]["display_name"] or l for l in labels]
+        rows = []
+        for code, name in criteria.items():
+            qids = asked.get(code, [])
+            where = f"{'·'.join(qids)} ({len(qids)}문항)" if qids else "출제 없음"
+            rows.append(
+                [f"{code}. {name}", where]
+                + [_stat(models[l]["per_criterion"], code) for l in labels]
+            )
         return _table(header, rows)
 
     out = [block(primary), ""]
@@ -117,7 +127,8 @@ def quality_table(quality: dict[str, Any] | None = None) -> str:
             "",
         ]
     out.append(_tier_note())
-    out.append("> 기준마다 출제 문항 수가 달라 n 이 다르다.")
+    out.append("> n 은 그 기준으로 매겨진 모델당 개별 점수의 개수다 — 출제 문항 수 × 반복 2회.")
+    out.append("> 기준마다 출제 문항이 달라 n 이 다르다.")
     out.append(f"> 원본: `{_rel(config.EVAL_RESULTS_PATH)}` (블록 제목이 run_id 가 된다)")
     return "\n".join(out)
 
