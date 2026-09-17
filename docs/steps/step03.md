@@ -275,12 +275,12 @@ ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
 
 | 라벨 | 문서상 최대 Context | 실험에 사용한 Context | 다운로드 파일 크기 | VRAM 사용량 | 시스템 RAM 사용량 |
 |---|---|---|---|---|---|
-| A | | | | | |
-| B | | | | | |
-| C | | | | | |
-| D | | | | | |
-| E | | | | | |
-| F | | | | | |
+| A | (미확인 — 부가 테스트) | 4096 | 4.58 GB | (부가 테스트 — 본 실험 미집계) | 31.4 GB |
+| B | (미확인 — 부가 테스트) | 4096 | 4.58 GB | (부가 테스트 — 본 실험 미집계) | 31.4 GB |
+| C | 131072 | 4096 | 4.58 GB | 5,027.5 MiB (n=20) | 31.4 GB |
+| D | 32768 | 4096 | 4.36 GB | 4,528.1 MiB (n=20) | 31.4 GB |
+| E | (미확인 — 부가 테스트) | 4096 | 4.36 GB | (부가 테스트 — 본 실험 미집계) | 31.4 GB |
+| F | 32768 | 4096 | 4.36 GB | 4,528.1 MiB (n=20) | 31.4 GB |
 
 > 라벨 A~F는 [eval-results.md](../eval-results.md)의 Model A~F와 동일하다.
 > `문서상 최대 Context`와 `실험에 사용한 Context`는 반드시 구분해서 기재한다 (산출물 요구사항).
@@ -301,9 +301,13 @@ ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
 
 ### 미확정 — 채워야 할 것
 
-- [ ] 후보별 **문서상 최대 Context Length** (Model Card 확인)
-      → `data/env/environment.json` 의 `doc_max_context` 에 넣는다.
+- [x] 후보별 **문서상 최대 Context Length** (Model Card 확인) — 비교 대상 C·D·F 확정
+      → `data/env/environment.json` 의 `doc_max_context` 에 기록.
         **자동 수집이 안 되는 유일한 항목이고, STEP 2 필수 조건 5 판정 근거다.**
+      - C (금융): **131,072** — base model `meta-llama/Llama-3.1-8B` config.json `max_position_embeddings` 값을 그대로 상속 (BCCard 파인튜닝 모델 카드에는 별도 명시 없음)
+      - D (코딩): **32,768** — `Qwen/Qwen2.5-Coder-7B-Instruct` config.json 기본값. 모델 카드는 YaRN 적용 시 131,072까지 확장 가능하다고 안내하지만 이번 실험은 YaRN 미적용
+      - F (이커머스): **32,768** — `snapcart-ai/sam-1-base` 모델 카드에 명시. base model `Qwen2.5-7B-Instruct` 상속
+      - A·B·E(부가 테스트 대상)는 미확인 상태로 남겨 둔다 — 도전 실습 진행 시 채운다.
 - [x] **실험에서 실제 설정한 Context Length** → 6개 모델 모두 **4096** (실행 기록의 `context_length`)
 - [x] 다운로드 파일 크기 / VRAM / 시스템 RAM 각각 구분해 실측
       → 크기 4.36~4.58 GB (모델별) / VRAM 관측 4,528~5,027 MiB / 시스템 RAM 31.4 GB

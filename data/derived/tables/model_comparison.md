@@ -9,7 +9,7 @@
 | Parameter | 8.03B | 7.62B | 7.62B |
 | License (선언) | Meta Llama 3 Community | Apache-2.0 | Apache-2.0 |
 | License (Base) | Llama 3.1 Community | Apache-2.0 | Apache-2.0 |
-| 문서상 최대 Context | (미확인) | (미확인) | (미확인) |
+| 문서상 최대 Context | 131072 | 32768 | 32768 |
 | 실험 Context | 4096 | 4096 | 4096 |
 | Quantization | Q4_K_M | Q4_K_M | unknown |
 | VRAM (관측 시점) | 5027.5 (n=20) | 4528.1 (n=20) | 4528.1 (n=20) |

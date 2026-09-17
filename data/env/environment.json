@@ -54,7 +54,7 @@
       "quantization_level": "Q4_K_M",
       "digest": "3dc693e518d811f3fe7641bf4a8832a2a402807702bc10aeab84ba8044482dfe",
       "download_size_bytes": 4920735812,
-      "doc_max_context": null,
+      "doc_max_context": 131072,
       "model_card_url": "https://huggingface.co/featherless-ai-quants/BCCard-Llama-3.1-Kor-BCCard-Finance-8B-GGUF",
       "upstream_model_card_url": "https://huggingface.co/BCCard/Llama-3.1-Kor-BCCard-Finance-8B",
       "license_declared": "Meta Llama 3 Community",
@@ -67,7 +67,7 @@
       "quantization_level": "Q4_K_M",
       "digest": "f218460127aff9749cbcb1bdb7fb2a0ba0f07ec571201386ba7967516f804057",
       "download_size_bytes": 4683076387,
-      "doc_max_context": null,
+      "doc_max_context": 32768,
       "model_card_url": "https://huggingface.co/bartowski/Qwen2.5-Coder-7B-Instruct-GGUF",
       "upstream_model_card_url": "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct",
       "license_declared": "Apache-2.0",
@@ -93,7 +93,7 @@
       "quantization_level": "unknown",
       "digest": "90130fbbb57b5b4c59e7d1b6ae5466642094a790767b0ad9c6762c5ab27a28bc",
       "download_size_bytes": 4683076803,
-      "doc_max_context": null,
+      "doc_max_context": 32768,
       "model_card_url": "https://huggingface.co/mradermacher/sam-1-base-GGUF",
       "upstream_model_card_url": "https://huggingface.co/snapcart-ai/sam-1-base",
       "license_declared": "Apache-2.0",
@@ -103,6 +103,9 @@
   "notes": {
     "models[F]": "client.list() 목록에 없음 — 아직 pull 하지 않았을 수 있음",
     "models[B].quantization_level": "Ollama 가 'unknown' 으로 보고함 — 모델 태그 기준값을 함께 기재할 것",
-    "models[F].quantization_level": "Ollama 가 'unknown' 으로 보고함 — 모델 태그 기준값을 함께 기재할 것"
+    "models[F].quantization_level": "Ollama 가 'unknown' 으로 보고함 — 모델 태그 기준값을 함께 기재할 것",
+    "models[C].doc_max_context": "base model meta-llama/Llama-3.1-8B 의 config.json max_position_embeddings=131072 을 그대로 적용 (BCCard 파인튜닝 모델 카드에는 명시 없음, base 상속). 실험 num_ctx=4096 과 구분해서 기록.",
+    "models[D].doc_max_context": "Qwen2.5-Coder-7B-Instruct 의 config.json 기본 max_position_embeddings=32768. 모델 카드에는 YaRN 적용 시 131072 까지 확장 가능하다고 별도 안내되어 있으나, 이번 실험은 YaRN 을 켜지 않았으므로 기본값을 기록. 실험 num_ctx=4096 과 구분.",
+    "models[F].doc_max_context": "sam-1-base 모델 카드에 명시된 32768. base model Qwen2.5-7B-Instruct 상속. 실험 num_ctx=4096 과 구분."
   }
 }
