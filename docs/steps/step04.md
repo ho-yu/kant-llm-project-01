@@ -99,7 +99,7 @@
 |---|---|
 | OS | Windows 10.0.26200 |
 | Python | 3.12.13 |
-| Ollama | 0.34.0 |
+| Ollama | 0.34.1 |
 | Python `ollama` 패키지 | 0.6.2 |
 | Python `openai` 패키지 | 3.8.0 |
 | GPU | NVIDIA GeForce RTX 5060 Laptop GPU |
@@ -144,7 +144,7 @@ run_id   : A_warmup
 |---|---|
 | OS | Windows 10.0.26200 |
 | Python | 3.12.13 |
-| Ollama | 0.34.0 |
+| Ollama | 0.34.1 |
 | Python `ollama` 패키지 | 0.6.2 |
 | Python `openai` 패키지 | 3.8.0 |
 | GPU | NVIDIA GeForce RTX 5060 Laptop GPU |
@@ -187,7 +187,7 @@ run_id   : B_warmup
 |---|---|
 | OS | Windows 10.0.26200 |
 | Python | 3.12.13 |
-| Ollama | 0.34.0 |
+| Ollama | 0.34.1 |
 | Python `ollama` 패키지 | 0.6.2 |
 | Python `openai` 패키지 | 3.8.0 |
 | GPU | NVIDIA GeForce RTX 5060 Laptop GPU |
@@ -204,7 +204,7 @@ run_id   : B_warmup
 | digest | `3dc693e518d811f3...` | 실행 기록 |
 | 양자화 | Q4_K_M (ps 보고: unknown) | `client.list()` |
 | 실험에 사용한 Context | 4096 | 실행 기록 |
-| 문서상 최대 Context | (미기재) | Model Card |
+| 문서상 최대 Context | 131072 | Model Card |
 | 다운로드 크기 | 4.58 GB | `client.list()` |
 | CPU/GPU 적재 | 100% GPU | 실행 기록 |
 
@@ -232,7 +232,7 @@ run_id   : C_warmup
 |---|---|
 | OS | Windows 10.0.26200 |
 | Python | 3.12.13 |
-| Ollama | 0.34.0 |
+| Ollama | 0.34.1 |
 | Python `ollama` 패키지 | 0.6.2 |
 | Python `openai` 패키지 | 3.8.0 |
 | GPU | NVIDIA GeForce RTX 5060 Laptop GPU |
@@ -249,7 +249,7 @@ run_id   : C_warmup
 | digest | `f218460127aff974...` | 실행 기록 |
 | 양자화 | Q4_K_M (ps 보고: unknown) | `client.list()` |
 | 실험에 사용한 Context | 4096 | 실행 기록 |
-| 문서상 최대 Context | (미기재) | Model Card |
+| 문서상 최대 Context | 32768 | Model Card |
 | 다운로드 크기 | 4.36 GB | `client.list()` |
 | CPU/GPU 적재 | 100% GPU | 실행 기록 |
 
@@ -279,7 +279,7 @@ run_id   : D_warmup
 |---|---|
 | OS | Windows 10.0.26200 |
 | Python | 3.12.13 |
-| Ollama | 0.34.0 |
+| Ollama | 0.34.1 |
 | Python `ollama` 패키지 | 0.6.2 |
 | Python `openai` 패키지 | 3.8.0 |
 | GPU | NVIDIA GeForce RTX 5060 Laptop GPU |
@@ -328,7 +328,7 @@ run_id   : E_warmup
 |---|---|
 | OS | Windows 10.0.26200 |
 | Python | 3.12.13 |
-| Ollama | 0.34.0 |
+| Ollama | 0.34.1 |
 | Python `ollama` 패키지 | 0.6.2 |
 | Python `openai` 패키지 | 3.8.0 |
 | GPU | NVIDIA GeForce RTX 5060 Laptop GPU |
@@ -343,9 +343,9 @@ run_id   : E_warmup
 | 모델 태그 | `hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M` | `models.json` |
 | Parameter | 7.62B | `client.list()` |
 | digest | `90130fbbb57b5b4c...` | 실행 기록 |
-| 양자화 | unknown | `client.list()` |
+| 양자화 | Q4_K_M (ps 보고: unknown) | `client.list()` |
 | 실험에 사용한 Context | 4096 | 실행 기록 |
-| 문서상 최대 Context | (미기재) | Model Card |
+| 문서상 최대 Context | 32768 | Model Card |
 | 다운로드 크기 | 4.36 GB | `client.list()` |
 | CPU/GPU 적재 | 100% GPU | 실행 기록 |
 
@@ -361,6 +361,53 @@ run_id   : F_warmup
 1. 배송 상태 확인하기: 배송업체의 웹사이트나 앱을 통해 배송 상태를 확인해보세요. 배송업체의 추정 도착일은 정확하지 않을 수 있으니, 실제 배송 상태를 확인하는 것이 중요합니다.
 2. 배송업체 연락하기: 배송업체에 연락하여 배송상태를 확인하거나, 배송이 지연된 이유를 물어보세요.
 3. 판매자에게 문의하기: 온라인 쇼핑몰이나 판매자에게 배송상태를 문의해보 …
+```
+
+---
+
+## STEP 04 — 실행 환경 / G 연결 확인
+
+### 실행 환경
+
+| 항목 | 값 |
+|---|---|
+| OS | Windows 10.0.26200 |
+| Python | 3.12.13 |
+| Ollama | 0.34.1 |
+| Python `ollama` 패키지 | 0.6.2 |
+| Python `openai` 패키지 | 3.8.0 |
+| GPU | NVIDIA GeForce RTX 5060 Laptop GPU |
+| VRAM | 8151 MiB |
+| CPU | Intel64 Family 6 Model 198 Stepping 2, GenuineIntel |
+| 시스템 RAM | 31.4 GB |
+
+### Model G (베이스) 식별값
+
+| 항목 | 값 | 출처 |
+|---|---|---|
+| 모델 태그 | `qwen2.5:7b-instruct` | `models.json` |
+| Parameter | 7.6B | `client.list()` |
+| digest | `845dbda0ea48ed74...` | 실행 기록 |
+| 양자화 | Q4_K_M | `client.list()` |
+| 실험에 사용한 Context | 4096 | 실행 기록 |
+| 문서상 최대 Context | (미기재) | Model Card |
+| 다운로드 크기 | 4.36 GB | `client.list()` |
+| CPU/GPU 적재 | 100% GPU | 실행 기록 |
+
+### 저장 후 다시 읽어 확인한 기록 1건
+
+```
+파일     : data/raw/local/runs.jsonl
+run_id   : G_warmup
+질문     : Q01
+설정     : {'temperature': 0, 'num_predict': 768, 'num_ctx': 4096, 'seed': 0}
+상태     : success / done_reason=stop
+응답 앞부분:
+온라인 주문 상품의 배송이 예정일을 넘어서도 도착하지 않는 경우에는 다음과 같은 순서로 확인해 보시는 것이 좋습니다:
+
+1. **배송 상태 확인하기**: 먼저 배송 상태를 확인해 보세요. 배송업체의 웹사이트나 앱을 통해 주문번호를 입력하여 배송 정보를 확인하거나, 판매자에게 직접 문의해 보세요.
+
+2. **판매자에게 문의하기**: 판매자에게 배송 상태를 문 …
 ```
 
 <!-- evalkit:auto:end -->

@@ -1,6 +1,6 @@
 {
   "_comment": "STEP 04(실행 환경 확인)과 산출물 2(Model Comparison Table)에 필요한 정보만 담는다. 대부분 10_run.py 실행 시 자동 수집되고, doc_max_context 만 사람이 Model Card 에서 확인한다. doc_max_context(문서상 최대 Context)와 실행 기록의 context_length(실험에서 실제 설정한 값)는 산출물에서 반드시 구분해서 적어야 하므로 서로 다른 곳에 저장한다. 측정하지 못한 값은 0 이 아니라 null 로 두고 notes 에 사유를 남긴다.",
-  "recorded_at": "2026-09-15T16:22:08+09:00",
+  "recorded_at": "2026-09-17T14:47:59+09:00",
   "platform": {
     "os": "Windows",
     "os_version": "10.0.26200",
@@ -8,7 +8,7 @@
   },
   "runtime": {
     "python_version": "3.12.13",
-    "ollama_version": "0.34.0",
+    "ollama_version": "0.34.1",
     "packages": {
       "ollama": "0.6.2",
       "openai": "3.8.0"
@@ -96,7 +96,7 @@
       "model_label": "F",
       "model_tag": "hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M",
       "parameter_size": "7.62B",
-      "quantization_level": "unknown",
+      "quantization_level": "Q4_K_M",
       "digest": "90130fbbb57b5b4c59e7d1b6ae5466642094a790767b0ad9c6762c5ab27a28bc",
       "download_size_bytes": 4683076803,
       "doc_max_context": 32768,
@@ -107,14 +107,30 @@
       "upstream_model_card_url": "https://huggingface.co/snapcart-ai/sam-1-base",
       "license_declared": "Apache-2.0",
       "license_base_model": "Apache-2.0"
+    },
+    {
+      "model_label": "G",
+      "model_tag": "qwen2.5:7b-instruct",
+      "parameter_size": "7.6B",
+      "quantization_level": "Q4_K_M",
+      "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+      "download_size_bytes": 4683087332,
+      "doc_max_context": null,
+      "model_card_url": null,
+      "upstream_model_card_url": null,
+      "license_declared": null,
+      "license_base_model": null
     }
   ],
   "notes": {
     "models[F]": "이 파일을 수집한 시점(2026-09-15)에는 pull 전이라 client.list() 목록에 없었다. 이후 pull 하여 본 실험 20/20 을 정상 실행했다.",
     "models[B].quantization_level": "Ollama 가 'unknown' 으로 보고함 — 모델 태그 기준값을 함께 기재할 것",
-    "models[F].quantization_level": "Ollama 가 'unknown' 으로 보고함 — 모델 태그 기준값을 함께 기재할 것",
     "models[C].doc_max_context": "base model meta-llama/Llama-3.1-8B 의 config.json max_position_embeddings=131072 을 그대로 적용 (BCCard 파인튜닝 모델 카드에는 명시 없음, base 상속). 실험 num_ctx=4096 과 구분해서 기록.",
     "models[D].doc_max_context": "Qwen2.5-Coder-7B-Instruct 의 config.json 기본 max_position_embeddings=32768. 모델 카드에는 YaRN 적용 시 131072 까지 확장 가능하다고 별도 안내되어 있으나, 이번 실험은 YaRN 을 켜지 않았으므로 기본값을 기록. 실험 num_ctx=4096 과 구분.",
-    "models[F].doc_max_context": "sam-1-base 모델 카드에 명시된 32768. base model Qwen2.5-7B-Instruct 상속. 실험 num_ctx=4096 과 구분."
+    "models[F].doc_max_context": "sam-1-base 모델 카드에 명시된 32768. base model Qwen2.5-7B-Instruct 상속. 실험 num_ctx=4096 과 구분.",
+    "models[A]": "client.list() 목록에 없음 — 아직 pull 하지 않았을 수 있음",
+    "models[B]": "client.list() 목록에 없음 — 아직 pull 하지 않았을 수 있음",
+    "models[E]": "client.list() 목록에 없음 — 아직 pull 하지 않았을 수 있음",
+    "models[G]": "태그를 hf.co/bartowski/Qwen2.5-7B-Instruct-GGUF:Q4_K_M 에서 Ollama 공식 라이브러리 qwen2.5:7b-instruct 로 정정(2026-09-17) — 실제로 받은 모델과 일치시킴. ollama show 확인: Q4_K_M, 7.6B, context 32768, Apache-2.0. collect_env 재실행 시 digest·다운로드 크기가 자동으로 채워진다"
   }
 }

@@ -80,6 +80,20 @@
         "상품 검색, 추천, 비교, 리뷰 요약 등 커머스 작업 비교에 적합",
         "SAM-Bench 90.55/100 (모델 카드 기준, 이번 실험에서 재현한 값 아님)"
       ]
+    },
+    {
+      "model_label": "G",
+      "display_name": "Model G (베이스)",
+      "model_tag": "qwen2.5:7b-instruct",
+      "enabled": true,
+      "tier": "supplementary",
+      "highlights": [
+        "F(sam-1-base)의 파인튜닝 이전 베이스 모델 그 자체 — Qwen2.5-7B-Instruct",
+        "도메인 파인튜닝 없이 일반 Instruct 튜닝만 적용됨",
+        "F와 Quantization(Q4_K_M)·파라미터 규모가 동일해 'LoRA 파인튜닝 유무' 하나만 다르게 통제됨",
+        "Ollama 공식 라이브러리 태그(qwen2.5:7b-instruct)로 받음 — hf.co/bartowski 재패키징본과 동일 Q4_K_M 양자화·7.6B·Apache-2.0 확인",
+        "도전 실습: 베이스 모델 대비 도메인 파인튜닝의 실제 효과를 확인하는 목적. 필수 채점·STEP 8 선정 대상이 아니다"
+      ]
     }
   ],
   "excluded": [],

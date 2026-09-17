@@ -14,7 +14,7 @@
 | Benchmark (문서상) | 공개 벤치마크 없음 — 모델 카드에 사용 예시와 Q&A 샘플만 있고 평가 수치 미제시 | 모델 카드에 수치 미기재 — 공식 블로그(qwenlm.github.io/blog/qwen2.5-coder-family) 참조 안내만 있음 | SAM-Bench 90.55/100 (719 태스크). Query Understanding 98.37 / Attribute Extraction 97.57 / Product Comparison 94.88 / Purchase Decision 94.11 / Review Synthesis 92.45 / Price Analysis 89.39 / Product Recommendation 77.76 / Personalization 77.59. 모델 카드 기준이며 이번 실험에서 재현한 값이 아니다 |
 | 문서상 최대 Context | 131072 | 32768 | 32768 |
 | 실험 Context | 4096 | 4096 | 4096 |
-| Quantization | Q4_K_M | Q4_K_M | unknown |
+| Quantization | Q4_K_M | Q4_K_M | Q4_K_M |
 | VRAM (관측 시점) | 5027.5 (n=20) | 4528.1 (n=20) | 4528.1 (n=20) |
 | 다운로드 크기 | 4.58 GB | 4.36 GB | 4.36 GB |
 | 주요 특징 | 한국어 금융 Q&A 특화<br>BC Card 금융 데이터 기반 Fine-tuning<br>금융 용어, 카드, 결제, 금융 상품 관련 질의 비교용<br>한국어 금융 도메인 Fine-tuning 효과 확인에 적합 | 코드 생성 특화<br>코드 수정 및 디버깅<br>코드 설명<br>알고리즘 및 프로그래밍 문제 해결<br>한국어 프롬프트 사용 가능 | 커머스 특화 LLM — 모델 카드는 English only 를 명시하며 한국어는 공식 지원 범위가 아니다<br>Qwen2.5-7B-Instruct 기반 (LoRA 병합) — 한국어 응답은 base 의 다국어 능력을 상속한 것으로 보인다<br>상품 검색, 추천, 비교, 리뷰 요약 등 커머스 작업 비교에 적합<br>SAM-Bench 90.55/100 (모델 카드 기준, 이번 실험에서 재현한 값 아님) |
@@ -36,5 +36,6 @@
 | A | Llama-3.1-Korean-8B-Instruct-Law-GGUF | 8.03B | Apache-2.0 | `hf.co/Arc1el/Llama-3.1-Korean-8B-Instruct-Law-GGUF:Q4_K_M` |
 | B | KoBioMed-Llama-3.1-8B-Instruct-i1-GGUF | 8.03B | Llama 3.1 Community | `hf.co/mradermacher/KoBioMed-Llama-3.1-8B-Instruct-i1-GGUF:Q4_K_M` |
 | E | Math-IIO-7B-Instruct-GGUF | 7.62B | CreativeML Open RAIL-M | `hf.co/QuantFactory/Math-IIO-7B-Instruct-GGUF:Q4_K_M` |
+| G | qwen2.5 | 7.6B |  | `qwen2.5:7b-instruct` |
 
 > 채점·선정 대상이 아니다. 제외 근거로 남긴다.
