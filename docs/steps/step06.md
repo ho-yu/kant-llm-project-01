@@ -20,7 +20,7 @@
 ## 2. 실행 기록
 
 `data/raw/local/runs.jsonl` — 126건 (본 실험 120 + 워밍업 6). append 전용.
-아래 '실행 기록 삭제 이력' 의 예외를 제외하고 지우지 않는다.
+아래 '기록 삭제 예외 1건' 을 제외하고 지우지 않는다.
 
 측정값·성공 여부는 이 파일에서만 나오며, 집계표의 모든 수치는
 `run_id` 로 원본까지 역추적할 수 있다.
@@ -48,46 +48,18 @@ cd project1-python-start && uv run python 11_finish.py
 > - 대표 성공·실패 사례 (질문별 '관찰 메모' 에서 가져온다)
 > - 한계: 10문항, 반복 2회, VRAM 8GB, 채점자 1인
 
-## 실행 기록 삭제 이력
+## 기록 삭제 예외 1건
 
-원본 기록은 append 전용이며 삭제하지 않는 것이 원칙이다.
-아래는 그 예외이며, 무엇을 왜 지웠는지 남긴다.
+원본 기록은 append 전용이며 삭제하지 않는 것이 원칙이다. 예외는 한 번 있었다.
 
-**2026-09-15 — Model F 기록 2건 삭제**
-
-| run_id | phase | timestamp | status |
-|---|---|---|---|
-| `F_warmup` | warmup | 2026-09-15T12:43:43+09:00 | error / ResponseError |
-| `F_Q01_r1` | main | 2026-09-15T12:44:46+09:00 | error / ResponseError |
-
-- 대상 모델 태그: `hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M`
-- 오류 내용 (2건 동일):
-
-  ```
-  llama-server chat error: map[code:500 message:The model produced output that
-  does not match the expected peg-native format type:server_error] (status code: 500)
-  ```
-
-- **삭제 사유**: 해당 GGUF 변환본이 응답 포맷 오류로 호출 자체가 불가능해,
-  다른 변환본을 새로 내려받아 같은 라벨(F)로 재실험하기로 했다.
-  `run_id` 가 같으면 중복으로 건너뛰므로 이전 기록을 제거했다.
-- 삭제 시점 이후의 F 기록은 **교체된 모델의 결과**이며, 위 오류는 이 표로만 남는다.
-- CLI 사전 확인에서 관측한 같은 증상은
-  [eval-results.md](../eval-results.md) 'STEP 4 CLI 스모크 테스트에서 관찰된 문제' 절에도 기록되어 있다.
-
-**2026-09-15 14:42 — Model F 기록 2건 추가 삭제**
-
-| run_id | phase | timestamp | status |
-|---|---|---|---|
-| `F_warmup` | warmup | 2026-09-15T14:42:22+09:00 | error / ResponseError |
-| `F_Q01_r1` | main | 2026-09-15T14:42:22+09:00 | error / ResponseError |
-
-- 대상 모델 태그: `hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M` (위와 동일)
-- 오류 내용: 위와 동일한 `peg-native format` 500 오류
-- **삭제 사유**: 첫 삭제 뒤 모델 태그를 바꾸기 전에 같은 변환본으로 한 번 더
-  실행되어 같은 오류가 재기록되었다. 교체 모델로 재실험하기 위해 제거했다.
-- **의미**: 이 변환본은 서로 다른 시각에 **두 차례(12:43, 14:42) 모두 동일하게 실패**했다.
-  일회성 오류가 아님을 보여주는 근거다.
+**2026-09-15 — Model F 교체에 따른 호출 실패 기록 4건 삭제.**
+교체 전 이커머스 후보였던 `hf.co/RichardErkhov/x2bee_-_POLAR-14B-v0.5-gguf:Q4_K_M` 이
+`peg-native format` 500 오류로 호출 자체가 불가능했고, 12:43·14:42 두 차례 모두 같은
+오류가 재현됐다. 같은 라벨(F)로 교체 모델을 재실험하려면 `run_id` 중복을 피해야 해
+해당 오류 기록(`F_warmup`·`F_Q01_r1` × 2회)을 지웠다. **지운 것은 모두 호출 실패
+기록이며 집계에 쓰인 성공 응답은 없다.** 현재 F 기록 전부는 교체 후 모델의 결과다.
+같은 증상의 CLI 사전 확인 기록은 [eval-results.md](../eval-results.md)
+'STEP 4 CLI 스모크 테스트에서 관찰된 문제' 절에 남아 있다.
 
 
 

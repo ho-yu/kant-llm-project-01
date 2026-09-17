@@ -193,15 +193,30 @@ Ollama Pull:
 ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
 
 
+Architecture: `Qwen2ForCausalLM` (Qwen2.5 계열, LoRA 를 병합한 형태)
+
+Language (모델 카드 기준): **English only**
+> "English only. The model has been fine-tuned and evaluated exclusively on
+> English-language tasks." — 카드 메타데이터도 `language: en` 단독이며 한국어 언급이 없다.
+
+Benchmark (모델 카드 기준): SAM-Bench **90.55/100** (719 태스크)
+> Query Understanding 98.37 / Attribute Extraction 97.57 / Product Comparison 94.88 /
+> Purchase Decision 94.11 / Review Synthesis 92.45 / Price Analysis 89.39 /
+> Product Recommendation 77.76 / Personalization 77.59
+> 이 값은 모델 카드가 제시한 수치이며 이번 실험에서 재현한 것이 아니다.
+
 특징:
-- 한국어 기반 커머스 특화 LLM
+- 커머스 특화 LLM — 상품 검색, 추천, 비교, 리뷰 요약 등 커머스 작업 비교에 적합
 - Qwen2.5-7B-Instruct 기반
-- 상품 검색, 추천, 비교, 리뷰 요약 등 커머스 작업 비교에 적합
+- **한국어는 공식 지원 범위가 아니다.** 그럼에도 본 실험에서 한국어 표현 점수 4.15 로
+  세 후보 중 가장 높았다 — base 인 Qwen2.5-7B-Instruct 의 다국어 능력을 상속한 것으로
+  보인다. 필수 조건 1(한국어 Chat/QA 가능) 판정은 문서가 아니라 **실측 근거**로 내렸고,
+  공식 지원 언어가 아니라는 점은 운영 리스크로 [step08.md](step08.md) 한계에 적었다
 
 교체 이력:
 - 당초 이커머스 후보는 POLAR-14B-v0.5 였으나, GGUF 변환본이
   `peg-native format` 500 오류로 호출 자체가 불가능해 교체했다
-  (12:43·14:42 두 차례 동일 실패 — [step06.md](step06.md) '실행 기록 삭제 이력')
+  (12:43·14:42 두 차례 동일 실패 — [step06.md](step06.md) '기록 삭제 예외 1건')
 - 14B → 7.62B 로 내려가면서 8GB VRAM 에 온전히 적재되어
   CPU/RAM Offloading 이 사라졌다 (실측 100% GPU, 4528 MiB)
 
@@ -299,7 +314,7 @@ ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
 > A·F는 사전 확인에서 문제가 보였으나 제외하지 않고 본 실험을 돌린다. 재현되면 필수 조건 3 미충족으로 판정한다.
 > 상세 로그는 [eval-results.md](../eval-results.md) 'STEP 4 CLI 스모크 테스트에서 관찰된 문제' 절 참조.
 
-### 미확정 — 채워야 할 것
+### 조사 결과 정리
 
 - [x] 후보별 **문서상 최대 Context Length** (Model Card 확인) — 비교 대상 C·D·F 확정
       → `data/env/environment.json` 의 `doc_max_context` 에 기록.
@@ -307,7 +322,12 @@ ollama pull hf.co/mradermacher/sam-1-base-GGUF:Q4_K_M
       - C (금융): **131,072** — base model `meta-llama/Llama-3.1-8B` config.json `max_position_embeddings` 값을 그대로 상속 (BCCard 파인튜닝 모델 카드에는 별도 명시 없음)
       - D (코딩): **32,768** — `Qwen/Qwen2.5-Coder-7B-Instruct` config.json 기본값. 모델 카드는 YaRN 적용 시 131,072까지 확장 가능하다고 안내하지만 이번 실험은 YaRN 미적용
       - F (이커머스): **32,768** — `snapcart-ai/sam-1-base` 모델 카드에 명시. base model `Qwen2.5-7B-Instruct` 상속
-      - A·B·E(부가 테스트 대상)는 미확인 상태로 남겨 둔다 — 도전 실습 진행 시 채운다.
+      - A·B·E(부가 테스트 대상)는 확인하지 않았다 — 판정에 쓰지 않는다.
+- [x] 후보별 **Architecture / Language / Benchmark** (Model Card 확인) — 비교 대상 C·D·F
+      → `data/env/environment.json` 의 `architecture` · `language_declared` · `benchmark_declared`
+      - C: `LlamaForCausalLM` / Korean 명시 / 공개 벤치마크 없음
+      - D: `Qwen2ForCausalLM` / 카드에 언어 목록 미명시(태그 English, Qwen2.5 계열 다국어) / 카드에 수치 없음
+      - F: `Qwen2ForCausalLM` / **English only 명시** / SAM-Bench 90.55
 - [x] **실험에서 실제 설정한 Context Length** → 6개 모델 모두 **4096** (실행 기록의 `context_length`)
 - [x] 다운로드 파일 크기 / VRAM / 시스템 RAM 각각 구분해 실측
       → 크기 4.36~4.58 GB (모델별) / VRAM 관측 4,528~5,027 MiB / 시스템 RAM 31.4 GB

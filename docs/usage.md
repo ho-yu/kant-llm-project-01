@@ -1,12 +1,15 @@
 # 사용법
 
-실행 파일은 네 개다.
+본 실험은 파일 세 개로 돌아간다. 앞의 두 개(`01`·`09`)는 연결만 확인하는 선택 도구다.
 
 | 파일 | 언제 | 바꿀 값 |
 |---|---|---|
+| `01_ollama_chat.py` | 로컬 연결 확인 (선택) | `MODEL_LABEL` (A~F), `QUESTION` |
+| `09_luna_chat.py` | Cloud 연결 확인 (선택) | `QUESTION` |
 | `10_run.py` | 모델마다 | `MODEL`, `LIMIT` |
 | `12_read.py` | 채점 전 / 채점 대상을 바꾼 뒤 | `RESET` (평소 False) |
 | `11_finish.py` | 채점하는 동안 수시로 / 다 채운 뒤 한 번 | 없음 |
+| `13_cloud.py` | STEP 7 Cloud 실행 | `DRY_RUN` |
 
 ```bash
 cd project1-python-start
@@ -92,10 +95,11 @@ OS / Python / Ollama / 패키지 버전, GPU·VRAM·CPU·RAM,
 **마커 밖에 직접 쓴 서술은 건드리지 않는다.** 복사해 붙일 필요도,
 두 곳을 오가며 볼 필요도 없다. 마커 안쪽만 수정하지 않으면 된다.
 
-### 지금 남은 수동 항목
+### 자동 수집이 안 되는 항목
 
-`doc_max_context` (모델 6개) 하나뿐이다. GGUF 저장소 카드에 없으면
-`environment.json` 의 `upstream_model_card_url` 에 적힌 원본 모델 카드에서 확인한다.
+`doc_max_context` 하나뿐이다. GGUF 저장소 카드에 없으면 `environment.json` 의
+`upstream_model_card_url` 에 적힌 원본 모델 카드에서 확인한다.
+비교 대상 C·D·F 는 채워져 있고, 부가 테스트 A·B·E 는 비어 있다.
 
 **실험에서 실제 설정한 Context(4096)와 반드시 구분해서 적어야 하는 산출물 요구사항이다.**
 
@@ -352,8 +356,9 @@ B_Q03_r1: elapsed_sec 가 null 인데 measurement_notes 에 사유 없음
 
 ## 8. Cloud 비교 (STEP 7)
 
-`run_cloud` 의 호출부는 아직 구현 전이다. `data/config/models.json` 의
-`cloud_model` (모델 ID, 단가)을 먼저 채워야 한다.
+`13_cloud.py` 로 실행한다. `data/config/models.json` 의 `cloud_model`
+(모델 ID, 단가)이 채워져 있어야 한다. `DRY_RUN = True` 로 두면 호출 없이
+대상과 요청 파라미터만 출력한다.
 
 API 키는 실행 시점에 입력받고 **어떤 파일에도 저장하지 않는다.**
 코드·저장소·실험 로그·스크린샷 어디에도 남기지 않는다.

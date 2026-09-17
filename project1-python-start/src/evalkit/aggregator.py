@@ -174,7 +174,8 @@ def aggregate_quality(phases: Iterable[str] = config.AGGREGATED_PHASES) -> dict[
 
         # 사례 유형별
         by_case: dict[str, Any] = {}
-        for case_type in {q["case_type"] for q in qmap.values()}:
+        # 집합을 그대로 순회하면 실행할 때마다 순서가 달라져 생성물에 헛diff 가 난다
+        for case_type in sorted({q["case_type"] for q in qmap.values()}):
             qids = {qid for qid, q in qmap.items() if q["case_type"] == case_type}
             vals = [
                 v

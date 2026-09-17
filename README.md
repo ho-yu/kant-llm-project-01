@@ -10,7 +10,9 @@
 | 품질 채점 | 3개 모델 × 10문항 × 2회 = **60블록 완료** (재검토 포함) |
 | 조건 6 판정 | C Fail 2.31 · D Fail 3.00 · **F Pass 3.65** |
 | STEP 7 | Cloud 5/5 실행·채점 완료 (`temperature=0`) — Cloud 4.53 · F 3.50 · D 3.00 · C 2.32 |
-| 진행 상태 | **STEP 1~7 완료 · STEP 8 최종 선정만 남음** |
+| STEP 8 | 최종 선정 **Model F (이커머스 특화)** — 필수 조건 7개 전부 충족한 유일한 후보 |
+| 최종 산출물 | **[docs/deliverables.md](docs/deliverables.md)** — 발제문 7·8장 대응 |
+| 진행 상태 | **STEP 1~8 완료** |
 
 ```mermaid
 flowchart LR
@@ -23,12 +25,9 @@ flowchart LR
     S7 --> S8["STEP 8<br/>최종 선정"]
 
     classDef done fill:#dcfce7,stroke:#16a34a,color:#14532d
-    classDef todo fill:#f1f5f9,stroke:#94a3b8,color:#475569
-    class S1,S3,S4,S5,S6,SC,S7 done
-    class S8 todo
+    class S1,S3,S4,S5,S6,SC,S7,S8 done
 ```
 
-<sub>초록 = 완료 · 회색 = 예정</sub>
 
 ---
 
@@ -48,13 +47,15 @@ flowchart LR
 
 원문: [docs/steps/step01.md](docs/steps/step01.md)
 
-## 2. 선정 기준 — 실험 전에 확정
+## 2. 선정 기준
 
 **선정 목표** — 상품 상세페이지에 제공된 정보를 바탕으로 일반 쇼핑몰 고객의
 한국어 질문에 정확하고 신속하게 답할 수 있는 로컬 모델을 고른다.
 정보가 없거나 불확실하면 내용을 만들어 답하지 않고 확인이 필요하다고 안내해야 한다.
 
-아래 필수 조건과 전체 평균 3.5 통과선은 **실험 시작 전에** 정했다.
+필수 조건 1~6과 전체 평균 3.5 통과선은 **실험 시작 전에** 정했다.
+조건 7(응답 속도)은 STEP 8 검토 중 추가했고, 선호 우선순위의 순서는 채점 도중
+한 차례 조정했다 — 둘 다 아래에 시점을 적어 둔다.
 실제 자동 응답에 사용할 수 있는지는 실험 결과를 바탕으로 별도 검토한다.
 
 **모델 선정 기준** — 모델 계열이나 벤치마크 성능보다 **서로 다른 도메인으로
@@ -112,6 +113,7 @@ STEP 1부터 있던 요구사항이지만 처음엔 선호 우선순위 5위에�
 | 5 | 실행 효율성 — 생성 속도 · VRAM · 반복 안정성 | 실측 |
 
 이커머스 고객 응대에서 **없는 정보를 지어내는 것이 가장 큰 위험**이라 사실 정확성을 1순위에 두었다.
+이 순서는 채점 도중 한 차례 조정한 결과이며, 필수 조건·통과선·채점 기준 A~E·질문 세트는 바꾸지 않았다.
 5순위는 이미 실측이 끝났다 (5절). 1~4순위는 채점 결과로 정해진다.
 평균 응답 시간(전체 응답 시간)은 더 이상 이 순위가 아니라 **필수 조건 7**로 판정한다.
 
@@ -148,13 +150,11 @@ flowchart LR
 ```
 
 **필수 조건 6·7은 Pass/Fail**, **우선순위는 통과한 후보 사이의 순위**다. 둘은 다른 판정이다.
-조건 7은 STEP 8 검토 중 추가한 조건이라 실험 전 확정은 아니다 (위 표 참조).
 
 **실제 자동 응답 적합성**은 위 Pass/Fail과 별도로 검토한다. 전체 평균뿐 아니라
 가장 중요한 정보 부족·불확실성 대응(E) 점수와 확인되지 않은 사실을 단정한
 실패 사례를 살핀다. 문제가 남아 있으면 전체 평균이 3.5 이상이어도
-검토 후 응답 등으로 사용 범위를 제한한다. 이 검토는 이미 확정한 통과선이나
-기존 실험의 조건 6 판정을 소급해서 바꾸지 않는다.
+검토 후 응답 등으로 사용 범위를 제한한다.
 
 원문: [docs/steps/step02.md](docs/steps/step02.md)
 
@@ -208,16 +208,16 @@ flowchart TD
     class E,X3 hold
 ```
 
-세 모델의 **실행 기록 120회분과 성능 측정값은 지우지 않는다** — 제외 근거도 산출물이다.
+제외한 세 모델의 **실행 기록 60회분과 성능 측정값도 그대로 남겼다** — 제외 근거도 산출물이다.
 상세: [docs/steps/step08.md](docs/steps/step08.md)
 
 제원·License·Model Card 출처: [data/derived/tables/model_comparison.md](data/derived/tables/model_comparison.md)
 후보 조사 원문: [docs/steps/step03.md](docs/steps/step03.md)
 
-> **Model F 교체 이력** — 당초 이커머스 후보는 POLAR-14B-v0.5 였으나 GGUF 변환본이
-> 응답 포맷 오류(500)로 호출 자체가 불가능했다. 12:43·14:42 두 차례 동일 실패를 확인하고
-> 같은 도메인의 sam-1-base 로 교체했다. 삭제한 기록과 사유는
-> [docs/steps/step06.md](docs/steps/step06.md) '실행 기록 삭제 이력' 에 남아 있다.
+> **Model F 는 교체된 후보다.** 당초 이커머스 후보는 POLAR-14B-v0.5 였으나 GGUF 변환본이
+> 응답 포맷 오류(500)로 호출 자체가 불가능했다(12:43·14:42 두 차례 동일 실패). 같은 도메인의
+> sam-1-base 로 교체했고, 교체 과정에서 지운 호출 실패 기록 4건의 사유는
+> [docs/steps/step06.md](docs/steps/step06.md) '기록 삭제 예외 1건' 에 남아 있다.
 
 ## 4. 실험 설계 — 조건을 어떻게 통제했는가
 
@@ -391,10 +391,54 @@ Cloud 추정 비용 **$0.002954** (입력 186 / 출력 2,431 토큰, $0.20·$1.2
 
 > Q10 은 Cloud 도 4.00 이다. 다섯 모델 어느 쪽도 "어떤 상품인지" 를 되묻지 않았다.
 
-| | 내용 |
-|---|---|
-| 1 | STEP 8 최종 Local 선정 + 운영 권고 |
-| 2 | 본인 재실행 기록 |
+## 8. 최종 선정 — Model F
+
+**선정 모델: Model F (이커머스 특화, `sam-1-base` Q4_K_M)**
+
+필수 통과 조건 7개를 모두 충족한 유일한 후보다. 조건 1~5·7은 세 후보가 모두 통과했고,
+갈린 것은 **조건 6(품질 평균 3.5 이상)** 하나다.
+
+| # | 필수 조건 | C | D | F |
+|---|---|---|---|---|
+| 1~5 | 한국어 · Ollama · 안정 실행 · License · Context | Pass | Pass | Pass |
+| 6 | **품질 평균 3.5 이상** | **Fail 2.31** | **Fail 3.00** | **Pass 3.65** |
+| 7 | 평균 응답 5초 이내 | Pass 2.89s | Pass 4.05s | Pass 3.33s |
+| | **최종** | **Fail** | **Fail** | **Pass** |
+
+집계 방식을 바꿔도 결론이 같다 — 기준 A~E 동일 가중 평균 3.58, 문항 10개 동일 가중 평균 3.73.
+셋 다 3.5를 넘는 후보는 F 하나뿐이다.
+
+**격차는 위험한 사례에서 벌어진다** — 이것이 선정의 핵심 근거다.
+
+| 사례 유형 | C | D | F | F − D |
+|---|---|---|---|---|
+| 정상 (n=12) | 2.79 | 3.62 | **3.97** | +9.7% |
+| 경계 (n=4) | 1.62 | 2.56 | **3.62** | +41.4% |
+| 정보 부족 (n=4) | 1.67 | 1.67 | **3.08** | **+84.4%** |
+
+일상 문의에서는 세 모델이 비슷하지만, 상세페이지에 없는 정보를 묻는 구간에서
+C·D 는 나란히 1.67 로 무너지고 F 만 3점대를 유지한다. 이커머스 자동 응대에서
+사고가 나는 지점이 바로 여기다.
+
+**도입 판단은 조건부 가능**이다. 통과 여유가 +0.15(기준 동일 가중 시 +0.08)로 얇고
+1순위 기준 E 가 3.12 라 전면 자동화는 권장하지 않는다. 정보 부족 사례는
+상담원 전환 경로를 두는 것을 권고한다.
+
+선정 근거·탈락 사유·한계·Local–Cloud 운영 권고 전문: [docs/steps/step08.md](docs/steps/step08.md)
+
+## 최종 산출물
+
+발제문 7장(주요 산출물 5종)·8장(필수 완료 기준·평가표)에 대응하는 제출 문서를
+**[docs/deliverables.md](docs/deliverables.md)** 한곳에 모았다.
+
+| | 산출물 | 실체 |
+|---|---|---|
+| 1 | GitHub Repository | 이 저장소 + [README](README.md) |
+| 2 | Model Comparison Table | [`tables/model_comparison.md`](data/derived/tables/model_comparison.md) · 원문 [step03.md](docs/steps/step03.md) |
+| 3 | Model Test / Benchmark 결과 | `data/raw/*/runs.jsonl` (원본) · [eval-results.md](docs/eval-results.md) (채점) · [`tables/local_summary.md`](data/derived/tables/local_summary.md) (집계) |
+| 4 | Local vs Cloud 비교 | [step07.md](docs/steps/step07.md) · [cloud-compare.md](docs/cloud-compare.md) |
+| 5 | 최종 Model Selection Report | [step08.md](docs/steps/step08.md) |
+
 
 ---
 
@@ -422,14 +466,19 @@ ollama pull hf.co/mradermacher/KoBioMed-Llama-3.1-8B-Instruct-i1-GGUF:Q4_K_M
 ollama pull hf.co/QuantFactory/Math-IIO-7B-Instruct-GGUF:Q4_K_M
 ```
 
-## 실행 파일은 네 개
+## 실행 파일
 
 | 파일 | 언제 | 바꿀 값 |
 |---|---|---|
+| `01_ollama_chat.py` | 연결 확인 (선택) | `MODEL_LABEL` (A~F), `QUESTION` |
+| `09_luna_chat.py` | Cloud 연결 확인 (선택) | `QUESTION` |
 | `10_run.py` | 모델마다 | `MODEL` (A~F), `LIMIT` |
 | `12_read.py` | 채점 전 / 채점 대상을 바꾼 뒤 | `RESET` (평소 False) |
 | `11_finish.py` | 채점 중 수시로 | 없음 |
 | `13_cloud.py` | STEP 7 | `DRY_RUN` |
+
+본 실험은 `10_run.py` 부터다. `01`·`09` 는 모델 하나에 질문 한 개를 보내
+연결을 확인하는 용도이며 실험 기록에 저장되지 않는다.
 
 **1. 로컬 실험**
 
@@ -521,7 +570,7 @@ flowchart LR
 | `data/config/execution_conditions.json` | Local·Cloud 실행 조건의 단일 설정 파일 |
 | `data/env/environment.json` | 실행 환경 · 모델 제원 (대부분 자동 수집) |
 
-## 원본 기록 (append 전용 — 수정·삭제하지 않는다)
+## 원본 기록 (append 전용)
 
 | 경로 | 내용 |
 |---|---|
@@ -546,10 +595,9 @@ flowchart LR
 | 경로 | 내용 |
 |---|---|
 | `docs/steps/step01~08.md` | 단계별 작업 기록 |
-| `docs/deliverables.md` | 산출물 체크리스트 + 요구사항 충족도 평가표 |
+| `docs/deliverables.md` | **최종 산출물** — 발제문 7·8장(산출물 5종 · 필수 완료 기준 · 평가표) |
 | `docs/usage.md` | 설정값 의미 · 사용법 · 문제 상황별 대처 |
 | `docs/data-flow.md` | 데이터 흐름 · 파일 역할 |
-| `docs/roadmap.md` | 장기 로드맵 |
 
 ## 실행 코드
 
@@ -568,8 +616,10 @@ flowchart LR
 | `src/evalkit/aggregator.py` | 원본에서 집계 계산 |
 | `src/evalkit/exporter.py` | 집계 결과 → 마크다운 표 · `scores.jsonl` |
 | `src/evalkit/report.py` | STEP 04/06 형식 출력 |
-| `src/evalkit/peek.py` | 기록 훑어보기 |
-| `0*_*.py`, `99_*.py` | 모델별 단발 호출 예제 (수동 확인용) |
+| `src/evalkit/step07_report.py` | STEP 07 Local–Cloud 비교 서술 생성 |
+| `src/evalkit/cloudsheet.py` | STEP 07 Cloud 채점면 생성 |
+| `01_ollama_chat.py` | 로컬 모델 단발 호출 (STEP 04 연결 확인용) |
+| `09_luna_chat.py` | Cloud 단발 호출 (STEP 07 출발점) |
 
 ## 저장소에 없는 것
 
